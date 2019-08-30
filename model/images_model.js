@@ -1,13 +1,13 @@
-const client = require("../../clean_matcha_git/database/connection")	
+const client = require("../../clean_matcha_git/database/connection")
 
-// get all images for 1 user	
-function get_images_from_user_id(id) {	
-  const statement =	
-   `SELECT * FROM images WHERE user_id = $1;`	
+// get all images for 1 user
+function get_images_from_user_id(id) {
+  const statement =
+   `SELECT * FROM images WHERE user_id = $1;`
 
-  return client.query(statement, [ id ])	
-}	
+  return client.query(statement, [ id ])
+}
 
-module.exports = {	
-  get_images_from_user_id	
-} 
+module.exports = {
+  get_images_from_user_id
+}
