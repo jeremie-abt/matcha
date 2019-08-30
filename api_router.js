@@ -12,10 +12,12 @@ let api_router = express.Router()
 
 // user routes
 //bad name -> index should be show
-api_router.get("/users/:user_id", users_controller.index)
+api_router.get('/users/:user_id', users_controller.index)
 
 //images routes
-api_router.get("/:user_id/images", images_controller.show)
+api_router.get('/:user_id/images', images_controller.show)
+api_router.put('/images/update', images_controller.update)
+api_router.post('/images/add', images_controller.add)
 
 // pour l'instant c'est hardcoder
 module.exports.api_router = api_router
