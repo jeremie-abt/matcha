@@ -1,13 +1,17 @@
 const express = require("express")
 const app = express()
+const bodyParser = require('body-parser')
 // temporaire a voir comment faire des imports propres.
 
 const api_router = require("./api_router")
 
 // template engine
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs')
 
-app.use('/api', api_router.api_router)
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use('/api', api_router)
+
 
 // la je fais mes routes ici comme un gros sale mais bon
 // va falloir penser apres a comment les faires

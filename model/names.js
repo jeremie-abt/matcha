@@ -5,5 +5,5 @@
 
 
 module.exports = {
-  users_table_name: "users"
+    users_table_name: "users"
 }
