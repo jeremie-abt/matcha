@@ -9,11 +9,11 @@ const show = (req, res) => {
     .then((response) => {
       if (!response.rows.length)
         res.status(404).send("boloosssss")
-      else 
+      else
         res.render('images/index', { url: response.rows[0].url })
     })
     .catch(e => { throw e })
-  // need front here
+    // need front here
 }
 
 module.exports = {
