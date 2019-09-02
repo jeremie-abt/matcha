@@ -4,7 +4,7 @@ let user_model = require("../model/users_model")
 // ~! prob de tab
 
 // mapper sur /api/user/id en get
-module.exports.show = function(req, res) {
+function show(req, res) {
   if (!("user_id" in req.params)){
     res.status(404).send("user_id not given ! Report this beug")
     res.end()
@@ -35,7 +35,7 @@ module.exports.show = function(req, res) {
 }
 
 // mapper sur /api/user/id en post
-module.exports.create = function(req, res) {
+function create(req, res) {
 
   const args_wanted = [
     'firstname', 'lastname', 'email', 'password', 'username'
@@ -77,8 +77,8 @@ module.exports.create = function(req, res) {
       }
     })
     .catch(err => { 
-    res.status(404).send("")
-    throw err // encore une fois voir comment gerer ca
+      res.status(404).send("")
+      throw err // encore une fois voir comment gerer ca
     })
     .finally(() => {
       res.end()
@@ -89,7 +89,7 @@ module.exports.create = function(req, res) {
 
 // je fais un simple update pour linstant a voir si 
 // on veut plus pousser apres
-module.exports.update = function(req, res) {
+function update(req, res) {
   
   const fields_wanted = [
     'firstname', 'lastname', 'email',
@@ -112,7 +112,6 @@ module.exports.update = function(req, res) {
         throw err
       })
       .then( response => {
-        console.log("bojnours ", response.rowCount)
         if (response.rowCount === 0) {
           res.status(404).send("Update failed")
           // c ok comme fassons de gerer les erreurs ?
@@ -126,7 +125,7 @@ module.exports.update = function(req, res) {
   }
 }
 
-module.exports.delete = function(req, res) {
+function del(req, res) {
   // je pars du principe quon delete en fonction du user_id 
   // apres de toute maniere on pourra changer ca 
   // avec nos jolies fonctions modulaires
@@ -156,6 +155,13 @@ module.exports.delete = function(req, res) {
       res.status(404).send(err)
     })
     .finally(() => {
-w      res.end()
+      res.end()
     })
+}
+
+module.exports = {
+  show,
+  create,
+  update,
+  del
 }

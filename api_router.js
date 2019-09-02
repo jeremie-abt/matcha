@@ -12,7 +12,7 @@ let api_router = express.Router()
 api_router.get("/users/:user_id", users_controller.show)
 api_router.post("/users", users_controller.create)
 api_router.put("/users/:user_id", users_controller.update)
-api_router.delete("/users/:user_id", users_controller.delete)
+api_router.delete("/users/:user_id", users_controller.del)
 
 
 

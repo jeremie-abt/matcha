@@ -109,7 +109,4 @@ class Req_formatter {
   }
 }
 
-
-
-
 module.exports = Req_formatter
