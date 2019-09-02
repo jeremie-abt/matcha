@@ -17,7 +17,7 @@ const show = (req, res) => {
         res.render('images/index', { url: response.rows[0].url })
     })
     .catch(e => { throw e })
-  // need front here
+    // need front here
 }
 
 const update = (req, res) => {

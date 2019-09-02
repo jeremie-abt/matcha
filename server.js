@@ -5,14 +5,14 @@ const bodyParser = require('body-parser')
 
 const api_router = require("./api_router")
 
-// template engine
-app.set('view engine', 'ejs');
+//// template engine
+app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use('/api', api_router.api_router)
+app.use('/api', api_router)
 
-// la je fais mes routes ici comme un gros sale mais bon
-// va falloir penser apres a comment les faires
+//// la je fais mes routes ici comme un gros sale mais bon
+//// va falloir penser apres a comment les faires
 
 app.listen(8081)
