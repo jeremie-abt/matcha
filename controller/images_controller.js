@@ -7,8 +7,7 @@ const show = (req, res) => {
     return
   }
 
-  const req_promise = image_model.get_images_from_user_id(user_id)
-  req_promise
+  image_model.get_images_from_user_id(user_id)
     .then(response => {
       if (!response.rows.length) {
         res.status(404).send("boloosssss")
@@ -23,7 +22,6 @@ const show = (req, res) => {
 
 const update = (req, res) => {
   // check value params
-  console.log(req.body)
   if (!req.body['image_id'] || !req.body['position'])
     res.status(400).send('manque un params')
 
@@ -53,17 +51,19 @@ const del = (req, res) => {
   }
   // parseInt = atoi (just to be safe)
   const image_id = parseInt(req.body['image_id'])
-  if (!image_id) return 'Not an int batard ou null'
   const user_id = parseInt(req.body['user_id'])
-
-  image_model.delete_user_image(user_id, image_id)
+  if (!image_id || !user_id) return 'Not an int batard ou null'
+  if (image_id < 0 || user_id < 0) return 'must be valid number' 
+  image_model.delete_user_image(image_id, user_id)
     .then(response => {
-      if (!response.rows.length) {
+      console.log(response)
+      if (response.rowCount) {
+        res.status(200).send('It was destroyed')
+      }
+      else {
         res.status(404).send('bolossss')
         return
       }
-      else 
-        res.status(200).send('It was destroyed')
     })
     .catch(e => { throw e })
     // change render and 'then'
@@ -80,12 +80,13 @@ const add = async (req, res) => {
   const user_images =
     await image_model.check_user_nb_images(user_id)
   if (user_images.rows.length >= 5) {
-    res.status(403).send('maximum number of images reached')
+    res.status(403).send('maximum number of images reached, pls delete one')
     return
   }
   image_model.add_image(user_id, position, url)
     .then(result => {
-      return
+      res.status(200).send('ok')
+      return 'image added'
     })
     .catch(e => { throw e })
 }

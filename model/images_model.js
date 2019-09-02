@@ -8,13 +8,12 @@ function get_images_from_user_id(id) {
   return client.query(query, [ id ])
 }
 
-function delete_user_image(user_id, image_id) {
+function delete_user_image(image_id, user_id) {
   const query = 
-    `DELETE FROM images`
-    + `WHERE user_id = $1 AND id = $2;`
-  // IS RETURNING TRUE ?? 
+    `DELETE FROM images WHERE id = $1`
+    + `AND user_id = $2`
   // count row deleted to check if it was deleted or not
-  return client.query(query, [ user_id, image_id ])
+  return client.query(query, [ image_id, user_id ])
 }
 
 function update_image_position(position, image_id) {
