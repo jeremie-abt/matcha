@@ -1,4 +1,4 @@
-const client = require("../../clean_matcha_git/database/connection")
+const client = require("../database/connection")
 
 // get all images for 1 user
 function get_images_from_user_id(id) {
