@@ -31,22 +31,22 @@ function create_user(user_info) {
   return client.query(statement, values)
 }
 
-function update_user(update_info) {
+function update_user(update_info, user_id) {
 
   // update info contient ces info :
   // lastname / firstname / email / username
   // obliger sinon ca va plenter
   // bon c'est un peu shlag je vais faire la lib juste apres
   // pour generer des requettes et ce sera full modulaire
-
   const statement = `UPDATE users `
                     + `SET firstname = $1, `
                     + `lastname = $2, `
                     + `username = $3, `
                     + 'email = $4'
+                    + `WHERE user_id = $5`
   const values = [
     update_info.firstname, update_info.lastname,
-    update_info.username, update_info.email
+    update_info.username, update_info.email, user_id
   ]
   return client.query(statement, values)
 }

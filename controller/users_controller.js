@@ -10,6 +10,7 @@ module.exports.show = function(req, res) {
     res.end()
   }
   user_model.get_user_from_id(req.params.user_id)
+    .catch(e => { throw e })
     .then((response) => {
       if (response.rows.length !== 1) {
         if (response.rows.length === 0) {
@@ -20,15 +21,17 @@ module.exports.show = function(req, res) {
               + `rentrer ici`
           )
         }
+        return 
       }
       const bind = response.rows[0]
-      response_object = {
-        firstname: bind.firstname,
-        lastname: bind.lastname
-      }
-      res.json(response_object)   
+      res.json({
+          firstname: bind.firstname,
+          lastname: bind.lastname
+      })
     })
-    .catch(e => { throw e })
+    .finally(() => {
+      res.end()
+    })
 }
 
 // mapper sur /api/user/id en post
@@ -37,7 +40,7 @@ module.exports.create = function(req, res) {
   const args_wanted = [
     'firstname', 'lastname', 'email', 'password', 'username'
   ]
-  let user_account_infos = {}
+  const user_account_infos = {}
   args_wanted.forEach((element) => {
     if (!(element in req.body)) {
       throw `${element} not present !`
@@ -104,11 +107,12 @@ module.exports.update = function(req, res) {
     // c'est ok ca ?
   }
   else {
-    user_model.update_user(to_update_fields)
+    user_model.update_user(to_update_fields, req.params.user_id)
       .catch(err => {
         throw err
       })
       .then( response => {
+        console.log("bojnours ", response.rowCount)
         if (response.rowCount === 0) {
           res.status(404).send("Update failed")
           // c ok comme fassons de gerer les erreurs ?
@@ -140,7 +144,6 @@ module.exports.delete = function(req, res) {
   // David ton avis ?
   user_model.delete_user(req.params.user_id)
     .catch(err => {
-      console.log("oui")
       res.status(404).send(err)
     })
     .then (response => {
@@ -153,6 +156,6 @@ module.exports.delete = function(req, res) {
       res.status(404).send(err)
     })
     .finally(() => {
-      res.end()
+w      res.end()
     })
 }
