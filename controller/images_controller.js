@@ -4,7 +4,7 @@ const show = (req, res) => {
   const user_id = parseInt(req.params['user_id'])
   if (!user_id) {
     res.status(400).send('manque un params')
-    return
+    res.end()
   }
 
   image_model.get_images_from_user_id(user_id)
@@ -22,50 +22,63 @@ const show = (req, res) => {
 
 const update = (req, res) => {
   // check value params
-  if (!req.body['image_id'] || !req.body['position'])
-    res.status(400).send('manque un params')
+  if (!req.body['image_id'] || !req.body['position']) {
+    res.status(400).send('A params is missing')
+    res.end()
+  }
 
   const img_id = parseInt(req.body['image_id'])
   const position = parseInt(req.body['position'])
   if (position < 1 || position > 5) {
-    res.status(400).send('minimum 1 max 5')
-    return
+    res.status(400).send('minimum 1 image, max 5')
+    res.end()
   }
-  if (!img_id || !position) res.status(400).send('> 1 bitchies')
+  if (!img_id || !position) {
+    res.status(400).send('value must be positive')
+    res.end()
+  }
   image_model.update_image_position(position, img_id)
+    .catch(err => res.status(404).send(err))
     .then(result => {
       if (result.rowCount)
         res.status(200).send('updated ma man')
       else {
-        res.status(400).send('nop nop')
-        return
+        throw 'error during update'
       }
     })
-    .catch(e => { throw e })
+    .catch(err => res.status(404).send(err))
+    .finally(() => res.end())
 }
 
 const del = (req, res) => {
   if (!req.body['user_id'] || !req.body['image_id']) {
-    res.status(400).send('error bitch user_id ou image_id missing')
+    res.status(400).send('A params is missing')
     return
   }
   // parseInt = atoi (just to be safe)
   const image_id = parseInt(req.body['image_id'])
   const user_id = parseInt(req.body['user_id'])
-  if (!image_id || !user_id) return 'Not an int batard ou null'
-  if (image_id < 0 || user_id < 0) return 'must be valid number' 
+  if (
+    !image_id ||
+    !user_id ||
+    image_id < 0 ||
+    user_id < 0
+  ) {
+    res.status(404).send('Need a valid int')
+    res.end()
+  }
   image_model.delete_user_image(image_id, user_id)
+    .catch(err => { throw err })
     .then(response => {
-      console.log(response)
       if (response.rowCount) {
         res.status(200).send('It was destroyed')
       }
       else {
-        res.status(404).send('bolossss')
-        return
+        throw 'image not found'
       }
     })
-    .catch(e => { throw e })
+    .catch(err => res.satus(404).send(err))
+    .finally(() => res.end())
     // change render and 'then'
 }
 
@@ -84,11 +97,13 @@ const add = async (req, res) => {
     return
   }
   image_model.add_image(user_id, position, url)
+    .catch(err => { throw err })
     .then(result => {
-      res.status(200).send('ok')
-      return 'image added'
+      if (result.rowCount) res.status(200).send('ok')
+      else throw 'error during image upload'
     })
-    .catch(e => { throw e })
+    .catch(err => res.status(404).sned(err))
+    .finally(() => res.end())
 }
 
 module.exports = {
