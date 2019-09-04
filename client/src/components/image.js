@@ -11,7 +11,7 @@ class Image extends React.Component {
   async componentDidMount() {
     this.state.url = 
       await axios
-        .get('http://localhost:8081/api/2/images')
+        .get('/2/images')
         .then(({ data: { url } }) => {
           this.setState({ url: url })
         })
