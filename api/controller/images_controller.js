@@ -13,10 +13,13 @@ const show = (req, res) => {
         res.status(404).send('No images found')
         return
       }
-      else 
-        res.render('images/index', { url: response.rows[0].url })
+      else {
+        const url = response.rows[0].url
+        res.json({ url: url })
+      }
     })
     .catch(e => { throw e })
+    .finally(() => res.end())
     // need front here
 }
 

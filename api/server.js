@@ -1,8 +1,9 @@
 const express = require("express")
+const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
 // temporaire a voir comment faire des imports propres.
-
+app.use(cors())
 const api_router = require("./api_router")
 
 //// template engine
