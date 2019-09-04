@@ -109,8 +109,6 @@ class Req_formatter {
    * @param {string || Array} fields_name 
    */
   set_group_by(fields_name) {    
-    // generate an INSERT statement
-    // !~ voir pour generer un insert quand y'a que des values
 
     let group_by_statement = ''
     if (this._group_by === '') {
@@ -131,12 +129,17 @@ class Req_formatter {
    * @param {string} end 
    */
   set_limit(begin, end=null) {
+   
+    begin = parseInt(begin)
     
-    if (end !== null) {
-      this._limit = ` LIMIT ${begin} OFFSET ${end}` 
-    } else {
-      this._limit = ` LIMIT ${begin}`
+    if (isNaN(begin))
+      return
+    let limit_statement = ""
+    limit_statement = ` LIMIT ${begin}`
+    if (end !== null && !isNaN(parseInt(end))) {
+      limit_statement += ` OFFSET ${end}` 
     }
+    this._limit = limit_statement
     return this
   }
 
@@ -144,6 +147,7 @@ class Req_formatter {
    * @param {string || Array} fields 
    */
   set_order_by(order_by_conditions) {
+
     /**
      * cette partie est totalement discutable,
      * enfaite en demandant un input de ce type :
@@ -153,14 +157,12 @@ class Req_formatter {
      * et pour order by l'ordre de tri compte !
      */
     
-    // !~ a tester la feature setter
-    // faire deux call a cette fonction et verif que ca marche bien
     let order_by_statement = ''
 
     if (this._order_by === ''){
       order_by_statement = "ORDER BY "
     } else {
-      order_by_statement = this._order_by + ' '
+      order_by_statement = this._order_by + ', '
     }
     order_by_conditions.forEach( elem => {
       order_by_statement += `${elem[0]} ${elem[1].toUpperCase()}, `
@@ -183,7 +185,7 @@ class Req_formatter {
    *    and values pushed into this._field_values 
    */  
   add_fields(fields) {
- 
+
     if (Array.isArray(fields)) {
       this._field_names = this._field_names.concat(fields)
     } else {
@@ -212,11 +214,6 @@ class Req_formatter {
     )
     return this
   }
- 
-
-  bo() {
-    return this
-  }
 
   /**
    * @param {Object} args 
@@ -236,7 +233,7 @@ class Req_formatter {
         }
       }
     }
-    
+
     if ("or" in args) {
       sub_procedure(args["or"], "or")
     }
@@ -256,6 +253,7 @@ class Req_formatter {
    *    je trouve ca ok a voir 
    */
   generate_query(type){
+
     const type_handlers = {
       "select" : _get_select,
       "insert" : _get_insert,
@@ -282,6 +280,7 @@ class Req_formatter {
     }
 
     function _get_select(that) {
+
       let statement = "SELECT "
       let field_statement = ""
   
@@ -293,7 +292,7 @@ class Req_formatter {
           field_statement += "*"
         }
       }
-      else if (field_values.length > 1) {
+      else if (field_values.length >= 1) {
         for (let i = 0; i < field_names.length; i++) {
           field_statement += `${field_names[i]} AS ${field_values[i]}, `
         }
@@ -306,6 +305,7 @@ class Req_formatter {
     }
   
     function _get_insert(that) {
+
       let statement = `INSERT INTO ${that.table} (`
       
       if (field_values.length <= 0)
@@ -326,6 +326,7 @@ class Req_formatter {
     }
 
     function _get_update(that) {
+
       let statement = `UPDATE ${that.table} SET `
       
       if (field_names.length !== field_values.length ||
@@ -381,8 +382,8 @@ class Req_formatter {
   }
   
   _range = (field, value) => {
-    // un peu sale mais bon
-    
+
+    // un peu sale mais bon    
     if (value.length !== 2) {
       throw `_range awaiting an array with two elements`
     }
@@ -394,8 +395,6 @@ class Req_formatter {
     this._value_index += 2
     this._where_statement += statement
   }
-
-  
 }
 
 // a voir si c'est clair ou pas !
@@ -429,36 +428,6 @@ class Req_formatter {
  *      - set_order_by :
  *        obj.set_order_by([['lastname', 'asc'], ['username', 'desc']])
  *        // outpout : ... ORDER BY lastname ASC, username DESC;
- *      ```
- * 
- */
+*/
 
-let ma_var = new Req_formatter()
-
-obj = new Req_formatter()
-obj
-  .add_fields({
-  lastname: "jean",
-  firstname: "jacque",
-  username: "jejems"
-})
-  .where({
-  and: {
-    le: {
-      user_id: 29
-    }
-  }
-})
-  .add_aggregation({
-  field: {
-    lastname: ["count", "avg"],
-    firstname: "count"
-  }
-})
-  .set_order_by([['lastname', 'asc'], ['username', 'desc']])
-
-//.set_limit(5)
-
-let ret = obj.generate_query("select")
-console.log("request : ", ret[0])
 module.exports = Req_formatter
