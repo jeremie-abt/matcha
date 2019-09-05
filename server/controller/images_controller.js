@@ -46,7 +46,7 @@ const update = (req, res) => {
       if (result.rowCount)
         res.status(200).send('Image updated')
       else {
-        throw 'eError during update'
+        throw 'Error during update'
       }
     })
     .catch(err => res.status(404).send(err))
