@@ -5,6 +5,7 @@ const show = (req, res) => {
   if (!user_id) {
     res.status(400).send('User not found')
     res.end()
+    return
   }
 
   image_model.get_images_from_user_id(user_id)
@@ -28,6 +29,7 @@ const update = (req, res) => {
   if (!req.body['image_id'] || !req.body['position']) {
     res.status(400).send('A param is missing')
     res.end()
+    return
   }
 
   const img_id = parseInt(req.body['image_id'])
@@ -35,6 +37,7 @@ const update = (req, res) => {
   if (position < 1 || position > 5) {
     res.status(400).send('Minimum 1 image, max 5')
     res.end()
+    return
   }
   if (!img_id || !position) {
     res.status(400).send('Value must be positive')
@@ -46,7 +49,7 @@ const update = (req, res) => {
       if (result.rowCount)
         res.status(200).send('Image updated')
       else {
-        throw 'eError during update'
+        throw 'Error during update'
       }
     })
     .catch(err => res.status(404).send(err))
@@ -69,6 +72,7 @@ const del = (req, res) => {
   ) {
     res.status(404).send('Need a valid int')
     res.end()
+    return
   }
   image_model.delete_user_image(image_id, user_id)
     .catch(err => { throw err })
