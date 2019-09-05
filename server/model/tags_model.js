@@ -3,6 +3,7 @@ const client = require('../database/connection')
 
 function display_tag(tag_id) {
   const query = new req_formatteur()
+  
   query.table = 'tags'
   query
     .add_fields([ 'name' ])
@@ -18,8 +19,8 @@ function display_tag(tag_id) {
 
 function show_all_tags() {
   const query = new req_formatteur()
-  query.table = 'tags'
 
+  query.table = 'tags'
   return client.query(...query.generate_query('select'))
 }
 
