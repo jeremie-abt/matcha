@@ -57,9 +57,16 @@ function delete_user(user_id) {
   return client.query(statement, [ user_id ])
 }
 
+function get_multiple_user(users_id) {
+  const statement = `SELECT * FROM users`
+                    + `WHERE id in ($1)`
+  return client.query(statement, [ users_id.toString() ])
+}
+
 module.exports = {
   get_user_from_id,
   is_user_already_created,
+  get_multiple_user,
   create_user,
   update_user,
   delete_user
