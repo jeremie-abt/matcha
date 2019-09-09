@@ -1,6 +1,7 @@
 const express = require("express")
 const users_controller = require("./controller/users_controller")
 const tags_controller = require("./controller/tags_controller")
+const seen_controller = require("./controller/seen_controller")
 const images_controller = require("./controller/images_controller")
 const api_router = express.Router()
 
@@ -25,9 +26,10 @@ api_router.delete('/images', images_controller.del)
 
 //tags routes
 api_router.get('/tags/all', tags_controller.index)
-api_router.get('/tags/:tag_id', tags_controller.show) // not working and don't know why
+api_router.get('/tags/:tag_id', tags_controller.show)
 
-//
+//seen routes
+api_router.get('/seen/:user_id', seen_controller.index)
 
 // pour l'instant c'est hardcoder
 module.exports = api_router

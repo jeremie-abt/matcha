@@ -4,8 +4,9 @@ function show(req, res) {
   const tag_id = parseInt(req.params['tag_id'])
 
   if(!tag_id || tag_id < 0) {
-    res.status(400)
-        .send('A param is missing or bad value or bad value')
+    res
+      .status(400)
+      .send('A param is missing or bad value or bad value')
     res.end()
     return
   }
