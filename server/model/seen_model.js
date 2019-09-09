@@ -1,18 +1,12 @@
-const req_formatteur = require('../database/matcha_request_formatter')
 const client = require('../database/connection')
 
 function display_user_seen(user_id) {
-  const query = new req_formatteur()
-  query.table = 'seen'
-
-  query
-    .add_fields([ 'watcher_id' ])
-    .where({
-      and: {
-        eq: { watched_id: user_id }
-      }
-    })
-  return client.query(...query.generate_query('select'))
+  const query =
+    `SELECT users.firstname, users.lastname, users.email, users.username` 
+    + ` FROM users INNER JOIN seen ON seen.watcher_id = users.id`
+    + ` WHERE seen.watched_id = $1;`
+    
+  return client.query(query, [ user_id ])
 }
 
 module.exports = {

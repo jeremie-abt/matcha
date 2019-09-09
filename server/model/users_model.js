@@ -19,6 +19,13 @@ function is_user_already_created(user_info) {
   return client.query(statement, values)
 }
 
+function is_user_existing(user_id) {
+  const statement = `SELECT id FROM users`
+                    + ` WHERE id = $1`
+
+  return client.query(statement, [ user_id ])
+}
+
 function create_user(user_info) {
 
   const statement = `INSERT INTO users`
@@ -57,16 +64,10 @@ function delete_user(user_id) {
   return client.query(statement, [ user_id ])
 }
 
-function get_multiple_user(users_id) {
-  const statement = `SELECT * FROM users`
-                    + `WHERE id in ($1)`
-  return client.query(statement, [ users_id.toString() ])
-}
-
 module.exports = {
   get_user_from_id,
   is_user_already_created,
-  get_multiple_user,
+  is_user_existing,
   create_user,
   update_user,
   delete_user
