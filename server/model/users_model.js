@@ -2,7 +2,7 @@ const client = require("../database/connection")
 
 function get_user_from_id(id) {
   const statement = `SELECT * FROM users `
-                  + `WHERE user_id = $1;`
+                  + `WHERE id = $1;`
   return client.query(statement, [ id ])
 }
 
@@ -43,7 +43,7 @@ function update_user(update_info, user_id) {
                     + `lastname = $2, `
                     + `username = $3, `
                     + 'email = $4'
-                    + `WHERE user_id = $5`
+                    + `WHERE id = $5`
   const values = [
     update_info.firstname, update_info.lastname,
     update_info.username, update_info.email, user_id
@@ -53,7 +53,7 @@ function update_user(update_info, user_id) {
 
 function delete_user(user_id) {
   const statement = `DELETE FROM users `
-                    + `WHERE user_id = $1`
+                    + `WHERE id = $1`
   return client.query(statement, [ user_id ])
 }
 
