@@ -37,8 +37,6 @@ function show(req, res) {
 // mapper sur /api/user/id en post
 function create(req, res) {
 
-  console.log("voici le token depuis le create")
-  console.log(req.token)
   const args_wanted = [
     'firstname', 'lastname', 'email', 'password', 'username'
   ]
@@ -57,7 +55,15 @@ function create(req, res) {
   const hash = Crypto.SHA256(user_account_infos['password']).toString()
   user_account_infos['password'] = hash
   user_model.is_user_already_created(user_account_infos)
-    .catch( err => { throw err })
+    .catch( err => {
+      throw err // a voir comment on gere
+      // je ne sais pas si c'est un bon pattern
+      // mais lidee c de recup lerreur de la fonction
+      // si yen a eu une car c une requette donc la requette peut foirer
+      // c un peu bizarre quand meme car une erreur de requette ou 
+      // de bdd t sense la gerer direct dans le controller non ?
+      // a discuter
+    })
     .then(response => {
       if (response.rowCount != 0) {
         throw "This user already exists"
