@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from '../components/image'
+import Image from '../components/Image'
 
 class test extends React.Component {
   render() {
