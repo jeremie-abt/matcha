@@ -51,6 +51,7 @@ class Req_formatter {
     this._field_values = []
     this._value_linker = []
     //this._value_linker = {} // pareil a suppr mais possibilit de beugs
+
   }
   
   constructor() {
@@ -269,6 +270,7 @@ class Req_formatter {
       // je sais c'est sale mais c'est la seule fasons pour que 
       // l'inheritance de variable soit faite
       var [field_names, field_values] = this._get_fields()
+
       const field_statement = type_handlers[type](this)
       let final_statement = field_statement + " "
                             + this._join_statement + " "
@@ -333,17 +335,26 @@ class Req_formatter {
           field_names.length <= 0) {
         return -1
       }
-      let i = that._value_index
-      const len_computed = i + field_names.length // eviter la boucle inf ...
-      while (i < len_computed) {
-        statement += `${field_names[i - 1]} = $${i}, `
-        this._value_linker.push(field_values[i - 1])
-        // updating value_linker to become tab,
-        // before it was an object
-        //that._value_linker[i] = field_values[i - 1]
+
+      // !~ clairement un beug ici dans la boucle !!! a regler 
+      //const len_computed = i + field_names.length // eviter la boucle inf ...
+      const len =  field_names.length
+      let i = 0
+      for (let index in field_names) {
+        statement += `${field_names[index]} = `
+                  + `$${that._value_index}, ` 
+        that._value_linker.push(field_values[index])
         that._value_index += 1
-        i++
       }
+      // while (i < len) {
+      //   statement += `${field_names[i - 1]} = $${}, `
+      //   that._value_linker.push(field_values[i - 1])
+      //   // updating value_linker to become tab,
+      //   // before it was an object
+      //   // that._value_linker[i] = field_values[i - 1]
+      //   that._value_index += 1
+      //   i++
+      // }
       statement = statement.substring(0, statement.length -2)
       return statement
     }
@@ -428,6 +439,91 @@ class Req_formatter {
  *      - set_order_by :
  *        obj.set_order_by([['lastname', 'asc'], ['username', 'desc']])
  *        // outpout : ... ORDER BY lastname ASC, username DESC;
-*/
-
+ *      ```
+ *    
+ *    
+ *    - add_aggregation and add_fields:
+ *      ```
+ *        obj = new Req_formatter()
+ *        obj.table = "users"
+ *        obj.add_fields({
+ *          lastname: "jean",
+ *          firstname: "jacque",
+ *          username: "jejems"
+ *        })
+ *          .where({
+ *          or: {
+ *            eq: {
+ *              lastname: "abt",
+ *              username: "jejems"
+ *            }
+ *          },
+ *          and: {
+ *            le: {
+ *              firstname: "jermeie",
+ *              test: 5
+ *            }
+ *          }
+ *          })
+ *          .join("seen", "seen_id", "id", "left")
+ *      console.log(obj.generate_query("select")[0])
+ *      console.log(obj.generate_query("select")[1])
+ *      OUTPOUT : 
+ *      SELECT lastname AS jean, firstname AS jacque, username 
+ *      AS jejems FROM users LEFT JOIN seen ON users.id = seen.seen_id
+ *      WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND
+ *      test <= $4  ;
+ *      [ 'abt', 'jejems', 'jeremie', 5 ]
+ *      
+ *      
+ *      obj.flush()
+ *      obj.table = "users"
+ *      obj.add_fields({
+ *        lastname: "jean",
+ *        firstname: "jacque",
+ *        username: "jejems"
+ *      })
+ *        .where({
+ *          or: {
+ *            eq: {
+ *              lastname: "abt",
+ *              username: "jejems"
+ *            }           
+ *          },
+ *        and: {
+ *          le: {
+ *            firstname: "jeremie",
+ *            test: 5
+ *          }
+ *        }
+ *      })
+ * 
+ *     console.log(obj.generate_query("update"))
+ *     OUTPOUT : 
+ *      [
+ *        'UPDATE users SET lastname = $5, firstname = $6, username = $7  WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
+ *          [
+ *            'abt', 'jejems', 'jeremie', 5, 'jean', 'jacque', 'jejems'
+ *          ]
+ *      ]
+ *    
+ * 
+ *      console.log(obj.generate_query("insert"))
+ *      OUTPOUT : 
+ *      [
+ *        'INSERT INTO users (lastname, firstname, username) VALUES ($5, $6, $7)  WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
+ *          [
+ *            'abt', 'jejems', 'jeremie', 5, 'jean', 'jacque', 'jejems'
+ *          ]
+ *      ]
+ * 
+ *      console.log(obj.generate_query("delete"))
+ *      [
+ *        'DELETE FROM users   WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
+ *        [ 'abt', 'jejems', 'jeremie', 5 ]
+ *      ]
+ *      ```
+ *  
+ *  
+ */
 module.exports = Req_formatter
