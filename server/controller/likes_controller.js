@@ -36,8 +36,6 @@ const add = async (req, res) => {
   const liked_id = parseInt(req.body['liked_id'])
   let is_valid = true
   let already_exist = null
-  console.log(user_id)
-  console.log(liked_id)
   if (user_id && liked_id) {
     user_helper.check_users_validity([user_id, liked_id])
     .then(resp => {
