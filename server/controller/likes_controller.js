@@ -34,17 +34,24 @@ const index = async (req, res) => {
 const add = async (req, res) => {
   const user_id = parseInt(req.body['user_id'])
   const liked_id = parseInt(req.body['liked_id'])
-  let is_valid = null
+  let is_valid = true
   let already_exist = null
-
+  console.log(user_id)
+  console.log(liked_id)
   if (user_id && liked_id) {
-    is_valid = await
-      [user_id, liked_id].reduce((acc, cur) => {
-        if (!acc) return acc
-        acc = user_helper.check_user_validity(cur)
-        return acc
-      }, true)
-    already_exist = await likes_model.like_already_existing(user_id, liked_id)
+    user_helper.check_users_validity([user_id, liked_id])
+    .then(resp => {
+      resp.forEach(query_resp => {
+        if (query_resp.rowCount <= 0)
+          is_valid = false
+      })
+    })
+    .catch(err => {
+      console.log('One of the promises failed', err)
+      return
+    })
+    already_exist = await likes_model
+      .like_already_existing(user_id, liked_id)
   }
   if (!is_valid || !already_exist || already_exist.rowCount) {
     res
@@ -71,15 +78,20 @@ const add = async (req, res) => {
 const del = async (req, res) => {
   const user_id = parseInt(req.body['user_id'])
   const liked_id = parseInt(req.body['liked_id'])
-  let is_valid = null
+  let is_valid = true
 
   if (user_id && liked_id) {
-    is_valid = await
-      [user_id, liked_id].reduce((acc, cur) => {
-        if (!acc) return acc
-        acc = user_helper.check_user_validity(cur)
-        return acc
-      }, true)
+    user_helper.check_users_validity([user_id, liked_id])
+    .then(resp => {
+      resp.forEach(query_resp => {
+        if (query_resp.rowCount <= 0)
+          is_valid = false
+      })
+    })
+    .catch(err => {
+      console.log('One of the promises failed', err)
+      return
+    })
   }
   if (!is_valid) {
     res

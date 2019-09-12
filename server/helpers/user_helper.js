@@ -1,11 +1,14 @@
 const user_model = require('../model/users_model')
 
-const check_user_validity = async (id) => {
-  if (!id) return false
-  const response = await user_model.is_user_existing(id)
-  return !!response.rowCount
+const check_users_validity = (ids) => {
+  let p_check_validity_ids = []
+
+  p_check_validity_ids =  ids.map(id => {
+    return user_model.is_user_existing(id)
+  })
+  return Promise.all(p_check_validity_ids)
 }
 
 module.exports = {
-  check_user_validity
+  check_users_validity
 }
