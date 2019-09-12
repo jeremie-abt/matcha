@@ -1,7 +1,14 @@
 import React from 'react'
 import { Form, Button } from 'react-bulma-components'
 
+/**
+ * Dalauren's old login form
+ */
+
+
+
 class LoginForm extends React.Component {
+  
   constructor(props) {
     super(props)
     this.state = {
@@ -12,7 +19,7 @@ class LoginForm extends React.Component {
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
-
+  
   handleChangeUsername(e) {
     this.setState({ username: e.target.value })
   }
@@ -30,7 +37,7 @@ class LoginForm extends React.Component {
       <div>
         <Form.Field>
           <Form.Label>
-            Name
+            ENORME ET SEC
           </Form.Label>
           <Form.Control>
             <Form.Input 
@@ -40,6 +47,7 @@ class LoginForm extends React.Component {
             />
           </Form.Control>
         </Form.Field> 
+
         <Form.Field>
           <Form.Label>
             password
