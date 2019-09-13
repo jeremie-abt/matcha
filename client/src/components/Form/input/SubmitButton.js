@@ -12,10 +12,11 @@ import { Form, Button } from 'react-bulma-components'
  *    UI component : submit button for Form
  */
 
-function SubmitButton( {onClick} ) {
+function SubmitButton( {...props} ) {
   
+  console.log("voici les props : ", props)
   return (
-    <Button value="submit" onClick={onClick} />
+    <Button {...props}> Valider </Button>
   )
 }
 

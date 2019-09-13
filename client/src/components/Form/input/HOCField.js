@@ -9,18 +9,29 @@ import PropTypes from 'prop-types';
  *  un design cool
  */
 
-function FormField({FieldComponent, ...props}) {
-
+function FormField({
+  FieldComponent, eventHandlingFunc, label,
+  event, ...props}) {
+  
+  let inputEvent = {}
+  if (event && Array.isArray(event)) {
+    // inputEvent["value"] = value
+    event.forEach(elem => {
+      if (elem in eventHandlingFunc) {
+        inputEvent[elem] = eventHandlingFunc[elem]
+      }
+    })
+  }
   return (
     <Form.Field>
       {
-        props.label &&
+        label &&
         <Form.Label>
-          {props.label}
+          {label}
         </Form.Label>
       }
       <Form.Control>
-        <FieldComponent {...props} />
+        <FieldComponent {...props} {...inputEvent} />
       </Form.Control>
     </Form.Field>
   )
@@ -28,7 +39,10 @@ function FormField({FieldComponent, ...props}) {
   FormField.propTypes = {
     FieldComponent: PropTypes.oneOfType([
       React.PropTypes.string, React.PropTypes.func
-    ]) 
+    ]),
+    eventHandlingFunc: PropTypes.oneOfType([
+      React.PropTypes.object
+    ]),
   }
 }
 

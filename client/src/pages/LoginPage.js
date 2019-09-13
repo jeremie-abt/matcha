@@ -1,31 +1,28 @@
 import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
-import Form, {Counter} from '../components/Form/Form'
+import Form from '../components/Form/Form'
 //import {Counter} from '..components/Form/Form'
 
 const fields = [
+  
   {
-    name: "firstname",
-    type: "text",
-    label: "Label firstname"
-  },
-  {
-    name:"jean",
-    type: "text",
-    label: "Label firstname",
+    name: "jean",
+    label: "test",
     event: ["onChange"]
   },
   {
-    name: "submit",
+    name: "bonjour",
+    label: "prout"
+  },
+  {
     type: "submit",
+    event: ["onClick"]
   }
 ]
 
 class LoginPage extends React.Component {
   render() {
     return (
-
-      //<Counter initialCount={5} />
       <Form fields={fields} />
     )
   }
