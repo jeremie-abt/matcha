@@ -24,10 +24,6 @@ class Form extends React.Component {
     super(props)
 
     this.fields = props.fields
-    this.eventHandlingFunc = {
-      onChange: this.handleChange,
-      onClick: this.handleSubmit
-    }
     let state_construction = {}
     this.fields.forEach(elem => {
       // bind la value au state uniquement si des events 
