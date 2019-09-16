@@ -1,7 +1,7 @@
 import React from 'react'
 
 // il faut trouver un moyen de rendre ca plus propre !!!
-import SubmitButton from './input/SubmitButton'
+import { Button } from 'react-bulma-components'
 import Input from './input/Input'
 import FieldWrapper from './input/FieldWrapper'
 
@@ -67,7 +67,7 @@ class Form extends React.Component {
             )
           })
         }
-        <SubmitButton onClick={this.handleSubmit} />
+        <Button onClick={this.handleSubmit}> Valider </Button>
       </div>
     )
   }
