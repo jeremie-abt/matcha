@@ -14,7 +14,6 @@ import { Form, Button } from 'react-bulma-components'
 
 function SubmitButton( {...props} ) {
   
-  console.log("voici les props : ", props)
   return (
     <Button {...props}> Valider </Button>
   )
