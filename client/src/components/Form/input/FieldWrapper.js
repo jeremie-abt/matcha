@@ -9,8 +9,9 @@ function FieldWrapper({
   label, ...props
   }) {
   
-  return (
-    <Form.Field>
+    
+    return (
+      <Form.Field>
       {
         label &&
         <Form.Label>
@@ -25,14 +26,15 @@ function FieldWrapper({
 
   )
 
-  FieldWrapper.propTypes = {
-    FieldComponent: PropTypes.oneOfType([
-      React.PropTypes.string, React.PropTypes.func
-    ]),
-    onChangeFunc: PropTypes.oneOfType([
-      React.PropTypes.object
-    ]),
-  }
+}
+
+FieldWrapper.propTypes = {
+  FieldComponent: PropTypes.oneOfType([
+   PropTypes.string, PropTypes.func
+  ]),
+  onChangeFunc: PropTypes.oneOfType([
+    PropTypes.func
+  ]),
 }
 
 export default FieldWrapper

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button } from 'react-bulma-components'
+import { Button } from 'react-bulma-components'
 
 // je sais pas si ca doit allez dans un dossier button
 // ou ici comme ca appartient au form

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 // il faut trouver un moyen de rendre ca plus propre !!!
 import SubmitButton from './input/SubmitButton'
