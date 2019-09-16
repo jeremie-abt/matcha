@@ -36,18 +36,9 @@ const add = async (req, res) => {
   const liked_id = parseInt(req.body['liked_id'])
   let is_valid = true
   let already_exist = null
+
   if (user_id && liked_id) {
-    user_helper.check_users_validity([user_id, liked_id])
-    .then(resp => {
-      resp.forEach(query_resp => {
-        if (query_resp.rowCount <= 0)
-          is_valid = false
-      })
-    })
-    .catch(err => {
-      console.log('One of the promises failed', err)
-      return
-    })
+    is_valid = await user_helper.check_users_validity([user_id, liked_id])
     already_exist = await likes_model
       .like_already_existing(user_id, liked_id)
   }
@@ -78,19 +69,8 @@ const del = async (req, res) => {
   const liked_id = parseInt(req.body['liked_id'])
   let is_valid = true
 
-  if (user_id && liked_id) {
-    user_helper.check_users_validity([user_id, liked_id])
-    .then(resp => {
-      resp.forEach(query_resp => {
-        if (query_resp.rowCount <= 0)
-          is_valid = false
-      })
-    })
-    .catch(err => {
-      console.log('One of the promises failed', err)
-      return
-    })
-  }
+  if (user_id && liked_id)
+    is_valid = await user_helper.check_users_validity([user_id, liked_id])
   if (!is_valid) {
     res
       .status(400)
