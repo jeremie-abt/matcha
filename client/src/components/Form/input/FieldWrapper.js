@@ -34,6 +34,7 @@ FieldWrapper.propTypes = {
   ]),
   onChangeFunc: PropTypes.oneOfType([
     PropTypes.func
+    
   ]),
 }
 
