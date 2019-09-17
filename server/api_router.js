@@ -40,7 +40,7 @@ api_router.delete('/likes/delete', likes_controller.del)
 //blocked routes
 api_router.get('/blocked/:user_id', blocked_controller.index)
 api_router.post('/blocked/add', blocked_controller.add)
-api_router.delete('/blocked/delete', likes_controller.del)
+api_router.delete('/blocked/delete', blocked_controller.del)
 
 // pour l'instant c'est hardcoder
 module.exports = api_router
