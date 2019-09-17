@@ -1,6 +1,6 @@
 const client = require('../database/connection')
 
-function display_user_liked(user_id) {
+function display_users_liked(user_id) {
   const query =
     `SELECT users.firstname, users.lastname, users.email, users.username` 
     + ` FROM users INNER JOIN likes ON likes.user_id = users.id`
@@ -35,7 +35,7 @@ function delete_like(user_id, liked_id) {
 }
 
 module.exports = {
-  display_user_liked,
+  display_users_liked,
   add_user_liked,
   delete_like,
   like_already_existing
