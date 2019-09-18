@@ -33,11 +33,11 @@ const index = async (req, res) => {
 
 const add = async (req, res) => {
   const user_id = parseInt(req.body['user_id'])
-  const liked_id = parseInt(req.body['liked_id'])
+  const likes_id = parseInt(req.body['likes_id'])
   let is_valid = false
 
-  if (user_id && liked_id)
-    is_valid = await user_helper.check_request_validity(user_id, liked_id, 'likes')
+  if (user_id && likes_id)
+    is_valid = await user_helper.check_request_validity(user_id, likes_id, 'likes')
   if (!is_valid) {
     res
       .status(400)
@@ -47,7 +47,7 @@ const add = async (req, res) => {
   }
 
   likes_model
-    .add_user_liked(user_id, liked_id)
+    .add_user_liked(user_id, likes_id)
     .catch( err => { throw [500, 'Request failed'] })
     .then(result => {
       if (result.rowCount) res.status(200)
@@ -62,11 +62,11 @@ const add = async (req, res) => {
 
 const del = async (req, res) => {
   const user_id = parseInt(req.body['user_id'])
-  const liked_id = parseInt(req.body['liked_id'])
+  const likes_id = parseInt(req.body['likes_id'])
   let is_valid = false
 
-  if (user_id && liked_id)
-    is_valid = await user_helper.check_users_validity([user_id, liked_id])
+  if (user_id && likes_id)
+    is_valid = await user_helper.check_users_validity([user_id, likes_id])
   if (!is_valid) {
     res
       .status(400)
@@ -74,7 +74,7 @@ const del = async (req, res) => {
     res.end()
     return
   }
-  likes_model.delete_like(user_id, liked_id)
+  likes_model.delete_like(user_id, likes_id)
     .catch(err => { 
       throw [ 500, "Request failed" ]
     })

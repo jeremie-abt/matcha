@@ -1,6 +1,5 @@
 const user_model = require('../model/users_model')
-const likes_model = require('../model/likes_model')
-const blocked_model = require('../model/blocked_model')
+const shared_model = require('../model/shared_model')
 
 const check_users_validity = async (ids) => {
   let p_check_validity_ids = []
@@ -22,20 +21,14 @@ const check_users_validity = async (ids) => {
     })
   return is_valid
 }
-
-const check_request_validity = async (user_id, other_id, table_name) => {
+const check_request_validity = async (user_id, target_id, table_name) => {
   let is_request_valid = false
   let already_exist = null
 
   is_request_valid =
-    await check_users_validity([user_id, other_id])
-  if (table_name === 'likes') {
-    already_exist =
-      await likes_model.like_already_existing(user_id, other_id)
-  } else {
-    already_exist =
-      await blocked_model.blocked_is_existing(user_id, other_id)
-  }
+    await check_users_validity([user_id, target_id])
+  already_exist =
+    await shared_model.check_relation(user_id, target_id, table_name)
   return is_request_valid && already_exist && !already_exist.rowCount  
 }
 

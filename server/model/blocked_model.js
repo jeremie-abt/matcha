@@ -17,7 +17,7 @@ function add_user_blocked(user_id, blocked_id) {
   return client.query(query, [ user_id, blocked_id ])
 }
 
-function blocked_is_existing(user_id, blocked_id) {
+function blocked_already_existing(user_id, blocked_id) {
   const query = 
     `SELECT * from blocked`
     + ` WHERE user_id = $1 AND blocked_id = $2`
@@ -36,6 +36,6 @@ function delete_blocked(user_id, blocked_id) {
 module.exports = {
   add_user_blocked,
   display_blocked_users,
-  blocked_is_existing,
+  blocked_already_existing,
   delete_blocked
 }
