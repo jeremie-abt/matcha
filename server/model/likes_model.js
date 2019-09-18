@@ -18,14 +18,6 @@ function add_user_liked(user_id, likes_id) {
   return client.query(query, [ user_id, likes_id ])
 }
 
-function likes_already_existing(user_id, likes_id) {
-  const query = 
-    `SELECT * from likes`
-    + ` WHERE user_id = $1 AND likes_id = $2`
-
-  return client.query(query, [ user_id, likes_id ])
-}
-
 function delete_like(user_id, likes_id) {
   const query =
     `DELETE FROM likes`
@@ -37,6 +29,5 @@ function delete_like(user_id, likes_id) {
 module.exports = {
   display_users_liked,
   add_user_liked,
-  delete_like,
-  likes_already_existing
+  delete_like
 }
