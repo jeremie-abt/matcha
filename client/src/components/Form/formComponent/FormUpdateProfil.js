@@ -71,6 +71,7 @@ class FormUpdateProfil extends React.Component {
     // Normalement je devrais avoir un context avec le user_id 
     // s'il est connecte
     let contextUserId = 33
+
     axios.get('/users/' + contextUserId)
       .then(resp => {
         this._updateData(resp.data)
@@ -79,7 +80,7 @@ class FormUpdateProfil extends React.Component {
     axios.get("/tags/all")
       .then(resp => {
         const newData = [...this.state.data]
-        let input = _getOneFieldFromName("tags", newData)
+        let input = newData.find(elem => elem.name === "tags")
         input.checkboxValues = resp.data
         this.setState({data: newData})
       })
@@ -143,22 +144,6 @@ class FormUpdateProfil extends React.Component {
     })
     this.setState({ data: updatedData })
   }
-}
-
-function _getOneFieldFromName(name, tab) {
-  let ret = null
-
-  // sorry je sais que tu n'aimes pas ca 
-  // mais ca me permet de mettre un break
-  // Et entre nous la syntax du for in / of est 
-  // quand meme bien plus cool !!
-  for (let elem of tab) {
-    if (elem.name === name) {
-      ret = elem
-      break
-    }
-  }
-  return ret
 }
 
 export default FormUpdateProfil

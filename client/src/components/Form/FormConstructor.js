@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { Button } from 'react-bulma-components'
-import Input from './InputStyle/InputStyle'
+import { Button, Form } from 'react-bulma-components'
+import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
 
 
@@ -29,10 +29,6 @@ class FormConstructor extends React.Component {
 
     this.state = {}
     this.state["checkbox"] = {}
-    this.props.fields.forEach(elem => {
-      let handlingInputBindingFunc = this._mapperMethod(elem.type, "parse")
-      handlingInputBindingFunc(elem)
-    })
   }
   
   handleChange = e => {
@@ -70,7 +66,7 @@ class FormConstructor extends React.Component {
   
   _renderInput = elem => {
     return (
-      <Input {...elem} onChange={this.handleChange}
+      <InputComponent {...elem} onChange={this.handleChange}
           value={this.state[elem.name]}
           key={elem.name + elem.type} />
     )
@@ -80,60 +76,37 @@ class FormConstructor extends React.Component {
     let checkboxComponent
     
     return (
-      <div>
-        <h1>{elem.title}</h1>
-        {
-          elem.checkboxValues.map((checkboxElem, index) => {
-            
-            if (typeof checkboxElem === "string") {
-              checkboxComponent =  <Checkbox
-                  name={checkboxElem} label={checkboxElem}
-                  onChange={this.handleChange}
-                  checked={this.state.checkbox[checkboxElem]}
-                  key={index}
-                  />
+      <Form.Field key={elem.name + elem.type}>
+        <Form.Control>
+          <Form.Label>{elem.title}</Form.Label>
+          {
+            elem.checkboxValues.map((checkboxElem, index) => {
+              if (typeof checkboxElem === "string") {
+                checkboxComponent =  <Checkbox
+                    name={checkboxElem} label={checkboxElem}
+                    onChange={this.handleChange}
+                    checked={this.state.checkbox[checkboxElem]}
+                    key={index}
+                    />
             }
-            else {
-              checkboxComponent = <Checkbox
-                  name={checkboxElem.name}
-                  label={checkboxElem.name}
-                  onChange={this.handleChange}
-                  checked={this.state.checkbox[checkboxElem]}
-                  key={ checkboxElem.id }
-                  />
-            }
-            return (
-              checkboxComponent
-            )
-          })
-        }
-      
-      </div>
+              else {
+                checkboxComponent = <Checkbox
+                    name={checkboxElem.name}
+                    label={checkboxElem.name}
+                    onChange={this.handleChange}
+                    checked={this.state.checkbox[checkboxElem.name]}
+                    key={ checkboxElem.id }
+                    />
+              }
+              return (
+                checkboxComponent
+              )
+            })
+          }
+        
+        </Form.Control>
+      </Form.Field>
     )
-  }
-  
-  // all the parsing input : those methods are only called
-  // in the constructor mmethods for managing and biding the state
-  _parseInput = elem => {
-    const valueName = elem.name
-    //this.setState({[valueName]: ""})
-    this.state[valueName] = ""
-  }
-
-  _parseCheckbox = elem => {
-    elem.checkboxValues.forEach(elem => {
-      //let newCheckboxobj = this.state.checkbox
-      //newCheckboxobj[elem] = false
-      //this.setState({checkbox: newCheckboxobj})
-
-      /**
-       * Alors je sais que ce truc la plus celui du dessus donne des warnings
-       * le probleme c'est que si je les corrige ca donne un autre warning
-       * donc si tu as une solution ???
-       * si jamais le decommente le code juste au deussus tu comrendra
-       */
-      this.state.checkbox[elem] = false
-    })
   }
 }
 

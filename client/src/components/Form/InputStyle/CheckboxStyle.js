@@ -1,14 +1,14 @@
 
 import React from 'react'
-import { Panel } from 'react-bulma-components'
+import { Form } from 'react-bulma-components'
 
-function CheckboxStyle( {onchange, label, ...props} ) {
+function CheckboxStyle({ onChange, label, ...props }) {
 
   return (
-    <Panel>
-      {label}     
-      <input type="checkbox" onChange={onchange} {...props} />
-    </Panel>
+      <Form.Checkbox onChange={onChange} {...props}>
+        {label}
+      </Form.Checkbox>
+    
   )
 }
 
