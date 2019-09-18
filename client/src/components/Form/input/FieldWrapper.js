@@ -2,7 +2,7 @@ import React from 'react'
 import { Form } from 'react-bulma-components'
 import PropTypes from 'prop-types';
 
-
+/*
 function FieldWrapper({
   FieldComponent,
   onChangeFunc,
@@ -39,3 +39,4 @@ FieldWrapper.propTypes = {
 }
 
 export default FieldWrapper
+*/

@@ -5,6 +5,12 @@ let user_model = require("../model/users_model")
 
 // mapper sur /api/user/id en get
 function show(req, res) {
+
+  const fields_wanted = [
+      "firstname", "lastname", "username",
+      "email", "sexual_orientation", "localisation",
+      "tags", "bio"
+  ]
   if (!("user_id" in req.params)){
     res.status(404).send("user_id not given ! Report this beug")
     res.end()
@@ -23,11 +29,9 @@ function show(req, res) {
         }
         return 
       }
-      const bind = response.rows[0]
-      res.json({
-          firstname: bind.firstname,
-          lastname: bind.lastname
-      })
+      let objectInnerMerge = 
+          require('../helpers/object_manipulation').objectInnerMerge
+      res.json(objectInnerMerge(response.rows[0], fields_wanted))
     })
     .finally(() => {
       res.end()

@@ -1,19 +1,8 @@
 import React from 'react'
 
-// il faut trouver un moyen de rendre ca plus propre !!!
 import { Button } from 'react-bulma-components'
 import Input from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
-
-
-/*import Input from './input/Input'
-import InputCheckbox from './input/CheckboxField'
-import FieldWrapper from './input/FieldWrapper'*/
-
-/**
- * jabt's old login form
- */
-
 
 
 /**
@@ -38,18 +27,12 @@ class FormConstructor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.fields = props.fields
     this.state = {}
-
     this.state["checkbox"] = {}
-    props.fields.forEach(elem => {
+    this.props.fields.forEach(elem => {
       let handlingInputBindingFunc = this._mapperMethod(elem.type, "parse")
       handlingInputBindingFunc(elem)
     })
-  }
-  
-  handleSubmit = e => {
-    e.preventDefault()
   }
   
   handleChange = e => {
@@ -63,20 +46,23 @@ class FormConstructor extends React.Component {
     else 
       this.setState({ [e.target.name]: e.target.value })
   }
+
+  handleSubmit = e => {
+    this.props.handleForm(this.state)
+  }
   
-  render(props) {
+  render() {
 
     return (
       <div>
         {
-          this.fields.map((field, index) => {
+          this.props.fields.map((field, index) => {
             return (
               this._mapperMethod(field.type, "render")(field)
             )
-            
           })
         }
-        <Button onClick={this.handleSubmit}> Valider </Button>
+        <Button onClick={ this.handleSubmit }> Valider </Button>
       </div>
       
     )
@@ -91,17 +77,38 @@ class FormConstructor extends React.Component {
   }
 
   _renderCheckbox = elem => {
+    let checkboxComponent
+    
     return (
-      elem.checkboxValues.map(checkboxElem => {
-        return (
-          <Checkbox
-              label={checkboxElem} name={checkboxElem}
-              onChange={this.handleChange}
-              checked={this.state.checkbox[checkboxElem]}
-              key={"checkbox" + checkboxElem}
-              />
-        )
-      })
+      <div>
+        <h1>{elem.title}</h1>
+        {
+          elem.checkboxValues.map((checkboxElem, index) => {
+            
+            if (typeof checkboxElem === "string") {
+              checkboxComponent =  <Checkbox
+                  name={checkboxElem} label={checkboxElem}
+                  onChange={this.handleChange}
+                  checked={this.state.checkbox[checkboxElem]}
+                  key={index}
+                  />
+            }
+            else {
+              checkboxComponent = <Checkbox
+                  name={checkboxElem.name}
+                  label={checkboxElem.name}
+                  onChange={this.handleChange}
+                  checked={this.state.checkbox[checkboxElem]}
+                  key={ checkboxElem.id }
+                  />
+            }
+            return (
+              checkboxComponent
+            )
+          })
+        }
+      
+      </div>
     )
   }
   
