@@ -1,4 +1,5 @@
 const user_model = require('../model/users_model')
+const shared_model = require('../model/shared_model')
 
 const check_users_validity = async (ids) => {
   let p_check_validity_ids = []
@@ -20,7 +21,18 @@ const check_users_validity = async (ids) => {
     })
   return is_valid
 }
+const check_request_validity = async (user_id, target_id, table_name) => {
+  let is_request_valid = false
+  let already_exist = null
+
+  is_request_valid =
+    await check_users_validity([user_id, target_id])
+  already_exist =
+    await shared_model.check_relation(user_id, target_id, table_name)
+  return is_request_valid && already_exist && !already_exist.rowCount  
+}
 
 module.exports = {
-  check_users_validity
+  check_users_validity,
+  check_request_validity
 }
