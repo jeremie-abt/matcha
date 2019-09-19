@@ -1,14 +1,13 @@
-// rename this file connection.js	
-// and fill the XXX	
+// rename this file connection.js
+// and fill the XXX
 
-const { Client } = require('pg')	
+const { Client } = require('pg')
 
-const client = new Client({	
-   user: 'jabt',	
-   host: 'localhost',	
-   database: 'matcha',	
-})	
+const client = new Client({
+  user: 'jabt',
+  host: 'localhost',
+  database: 'matcha'
+})
+client.connect()
 
-client.connect()	
-
-module.exports = client 
+module.exports = client

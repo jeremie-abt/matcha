@@ -1,14 +1,35 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-useless-concat */
+/* eslint-disable no-plusplus */
+/* eslint-disable block-scoped-var */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
+/* eslint-disable no-use-before-define */
+/* eslint-disable dot-notation */
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable consistent-return */
+/* eslint-disable no-restricted-globals */
+/* eslint-disable radix */
+/* eslint-disable no-param-reassign */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable prefer-const */
+/* eslint-disable prefer-template */
+/* eslint-disable no-eval */
+/* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable lines-between-class-members */
 /*
-*   jabt : module in order to produce modular statement
-*   for SQL
-*   Note : 
-*   J'essaye de le faire en obj juste pour me mettre a niveux la dessus
-*   on pourra tout repasser en fonctionel
-*/
-
+ *   jabt : module in order to produce modular statement
+ *   for SQL
+ *   Note :
+ *   J'essaye de le faire en obj juste pour me mettre a niveux la dessus
+ *   on pourra tout repasser en fonctionel
+ */
 
 class Req_formatter {
-
   /**
    * METHODS :
    *    - flush : This clean the all object and allow you to remake
@@ -21,48 +42,46 @@ class Req_formatter {
    *    - add_fields : add some fields, see example below
    *    - where : add where statement
    *    - join : add join
-   *    - generate_query : return tab with the string query and the values tab 
+   *    - generate_query : return tab with the string query and the values tab
    *        of the query
    */
 
-  _eq = "="   // equal
-  _gt = ">"   // greater than
-  _ge = ">="  // greater equal
-  _lt = "<"   // less than
-  _le = "<="  // less equal
-  _ne = "!="  // not equal
-  
+  _eq = '=' // equal
+  _gt = '>' // greater than
+  _ge = '>=' // greater equal
+  _lt = '<' // less than
+  _le = '<=' // less equal
+  _ne = '!=' // not equal
+
   /**
    *  method to call when you want to make a new request
-   *  and flush all the existing params 
+   *  and flush all the existing params
    */
   flush() {
-    this.table = "matcha"
-    this._join_statement = ""
-    this._where_statement = ""
-    this._group_by = ""
-    this._order_by = ""
-    this._having = ""
-    this._limit = ""
+    this.table = 'matcha'
+    this._join_statement = ''
+    this._where_statement = ''
+    this._group_by = ''
+    this._order_by = ''
+    this._having = ''
+    this._limit = ''
     this._value_index = 1
     // this._where_arg_values = [] // faut suppr mais je laisse
     // car ca peut generer des bueugs
     this._field_names = []
     this._field_values = []
     this._value_linker = []
-    //this._value_linker = {} // pareil a suppr mais possibilit de beugs
-
+    // 1this._value_linker = {} // pareil a suppr mais possibilit de beugs
   }
-  
+
   constructor() {
     this.flush()
   }
-  
+
   /**
-   * @param {Object} args 
+   * @param {Object} args
    */
   add_aggregation(args) {
-    
     //  deprecated => y'a pas de fonction d'aggregation sur du where
     //  const where_builder = (field_name, aggregated_field_name) => {
     //  this._where_statement = this._where_statement.replace(
@@ -77,27 +96,27 @@ class Req_formatter {
         return x
       })
     }
-    
+
     for (let top_key in args) {
       for (let [field, aggregations] of Object.entries(args[top_key])) {
         if (!Array.isArray(aggregations)) {
           aggregations = [aggregations]
         }
-        let aggregated_full_name = ""
+        let aggregated_full_name = ''
         for (let aggregation of Object.values(aggregations)) {
-          if (aggregated_full_name === "") {
+          if (aggregated_full_name === '') {
             aggregated_full_name = aggregation.toUpperCase() + '()'
-          }
-          else {
-            aggregated_full_name = aggregation.toUpperCase() + '('
-                                + aggregated_full_name + ')'
+          } else {
+            aggregated_full_name =
+              aggregation.toUpperCase() + '(' + aggregated_full_name + ')'
           }
         }
         let len = aggregations.length
-        aggregated_full_name = 
-            aggregated_full_name.substring(0, aggregated_full_name.length - len)
-            + field + ')'.repeat(len)
-        
+        aggregated_full_name =
+          aggregated_full_name.substring(0, aggregated_full_name.length - len) +
+          field +
+          ')'.repeat(len)
+
         const building_function = eval(`${top_key}_builder`)
         building_function(field, aggregated_full_name)
       }
@@ -106,49 +125,45 @@ class Req_formatter {
   }
 
   /**
-   * 
-   * @param {string || Array} fields_name 
+   *
+   * @param {string || Array} fields_name
    */
-  set_group_by(fields_name) {    
-
+  set_group_by(fields_name) {
     let group_by_statement = ''
     if (this._group_by === '') {
-      group_by_statement = "GROUP BY "
+      group_by_statement = 'GROUP BY '
     } else {
       group_by_statement = this._group_by + ' '
     }
     if (!Array.isArray(fields_name)) {
       fields_name = [fields_name]
     }
-    group_by_statement += fields_name.join(', ') 
+    group_by_statement += fields_name.join(', ')
     this._group_by = group_by_statement
     return this
   }
 
   /**
-   * @param {string} begin 
-   * @param {string} end 
+   * @param {string} begin
+   * @param {string} end
    */
-  set_limit(begin, end=null) {
-   
+  set_limit(begin, end = null) {
     begin = parseInt(begin)
-    
-    if (isNaN(begin))
-      return
-    let limit_statement = ""
+
+    if (isNaN(begin)) return
+    let limit_statement = ''
     limit_statement = ` LIMIT ${begin}`
     if (end !== null && !isNaN(parseInt(end))) {
-      limit_statement += ` OFFSET ${end}` 
+      limit_statement += ` OFFSET ${end}`
     }
     this._limit = limit_statement
     return this
   }
 
   /**
-   * @param {string || Array} fields 
+   * @param {string || Array} fields
    */
   set_order_by(order_by_conditions) {
-
     /**
      * cette partie est totalement discutable,
      * enfaite en demandant un input de ce type :
@@ -157,36 +172,38 @@ class Req_formatter {
      * que si l'user me file un obj il sera en ordre
      * et pour order by l'ordre de tri compte !
      */
-    
+
     let order_by_statement = ''
 
-    if (this._order_by === ''){
-      order_by_statement = "ORDER BY "
+    if (this._order_by === '') {
+      order_by_statement = 'ORDER BY '
     } else {
       order_by_statement = this._order_by + ', '
     }
-    order_by_conditions.forEach( elem => {
+    order_by_conditions.forEach(elem => {
       order_by_statement += `${elem[0]} ${elem[1].toUpperCase()}, `
     })
-    order_by_statement = order_by_statement
-        .substring(0, order_by_statement.length - 2) 
+    order_by_statement = order_by_statement.substring(
+      0,
+      order_by_statement.length - 2
+    )
     this._order_by = order_by_statement
     return this
   }
 
   set_having() {
-    console.log("not implemented, if needed contact JABT")
+    console.log('not implemented, if needed contact JABT')
   }
 
   /**
-   * 
-   * @param {Array || Object} fields  
+   *
+   * @param {Array || Object} fields
    *    Array => push only the Array in this._field_names
    *    Object => keys push in this ._field_names
-   *    and values pushed into this._field_values 
-   */  
-  add_fields(fields) {
+   *    and values pushed into this._field_values
+   */
 
+  add_fields(fields) {
     if (Array.isArray(fields)) {
       this._field_names = this._field_names.concat(fields)
     } else {
@@ -197,125 +214,127 @@ class Req_formatter {
     }
     return this
   }
- 
+
   // c'est paas ouff ouff mais bon j'ai pas trouver mieux
   // j'ai essayer de regarder un peu les big ORM
   // mais ils font des trucs de ouff donc c'est un truc simple qui marche quoi
   /**
-   * @param {string} foreign_table 
-   * @param {string} foreign_key 
-   * @param {string} inner_key 
-   * @param {string} type 
+   * @param {string} foreign_table
+   * @param {string} foreign_key
+   * @param {string} inner_key
+   * @param {string} type
    */
-  join(foreign_table, foreign_key, inner_key, type="inner") {
+  join(foreign_table, foreign_key, inner_key, type = 'inner') {
     type = type.toUpperCase()
-    this._join_statement += (type + ` JOIN ${foreign_table} `
-                    + `ON ${this.table}.${inner_key} = `
-                    + `${foreign_table}.${foreign_key}`
-    )
+    this._join_statement +=
+      type +
+      ` JOIN ${foreign_table} ` +
+      `ON ${this.table}.${inner_key} = ` +
+      `${foreign_table}.${foreign_key}`
     return this
   }
 
   /**
-   * @param {Object} args 
+   * @param {Object} args
    */
   where(args) {
-    
     /**
-     * @param {Object} args   sub object of args 
+     * @param {Object} args   sub object of args
      * @param {string} type   either ("or" and "and")
      */
     const sub_procedure = (args, type) => {
       for (let [operator, val] of Object.entries(args)) {
         for (let sub_key in val) {
           this._add_where_condition(
-              sub_key, val[sub_key], operator, type.toUpperCase()
+            sub_key,
+            val[sub_key],
+            operator,
+            type.toUpperCase()
           )
         }
       }
     }
 
-    if ("or" in args) {
-      sub_procedure(args["or"], "or")
+    if ('or' in args) {
+      sub_procedure(args['or'], 'or')
     }
-    if ("and" in args) {
-      sub_procedure(args["and"], "and")
+    if ('and' in args) {
+      sub_procedure(args['and'], 'and')
     }
     return this
   }
 
   /**
-   * 
+   *
    * @param {string} type
    *    either select, update, insert, delete,
    *    je sais j'aurais du faire une enum c'est plus clean
    *    sauf que tu te retrouves avec SELECT = "select",
    *    UPDATE = "update" etc ..., donc je laisse comme ca
-   *    je trouve ca ok a voir 
+   *    je trouve ca ok a voir
    */
-  generate_query(type){
-
+  generate_query(type) {
     const type_handlers = {
-      "select" : _get_select,
-      "insert" : _get_insert,
-      "update" : _get_update,
-      "delete" : _get_delete
+      select: _get_select,
+      insert: _get_insert,
+      update: _get_update,
+      delete: _get_delete
     }
-    
-    type = type.toLowerCase();
+
+    type = type.toLowerCase()
     if (!(type in type_handlers)) {
       throw `${type} not a valid type of request\n`
-    }
-    else {
-      // je sais c'est sale mais c'est la seule fasons pour que 
+    } else {
+      // je sais c'est sale mais c'est la seule fasons pour que
       // l'inheritance de variable soit faite
       var [field_names, field_values] = this._get_fields()
 
       const field_statement = type_handlers[type](this)
-      let final_statement = field_statement + " "
-                            + this._join_statement + " "
-                            + this._where_statement +  " "
-                            + this._group_by
-                            + this._order_by
-                            + this._limit + ";"
+      let final_statement =
+        field_statement +
+        ' ' +
+        this._join_statement +
+        ' ' +
+        this._where_statement +
+        ' ' +
+        this._group_by +
+        this._order_by +
+        this._limit +
+        ';'
       return [final_statement, this._value_linker]
     }
 
     function _get_select(that) {
+      let statement = 'SELECT '
+      let field_statement = ''
 
-      let statement = "SELECT "
-      let field_statement = ""
-  
       if (field_values.length === 0) {
         if (field_names.length > 0) {
-          field_statement += field_names.join(", ")
+          field_statement += field_names.join(', ')
+        } else {
+          field_statement += '*'
         }
-        else {
-          field_statement += "*"
-        }
-      }
-      else if (field_values.length >= 1) {
+      } else if (field_values.length >= 1) {
         for (let i = 0; i < field_names.length; i++) {
           field_statement += `${field_names[i]} AS ${field_values[i]}, `
         }
-        field_statement = field_statement
-                          .substring(0, field_statement.length - 2)
+        field_statement = field_statement.substring(
+          0,
+          field_statement.length - 2
+        )
       }
-      if (field_statement === '')
-        return -1
-      return (statement + field_statement + ` FROM ${that.table}`)
+      if (field_statement === '') return -1
+      return statement + field_statement + ` FROM ${that.table}`
     }
-  
-    function _get_insert(that) {
 
+    function _get_insert(that) {
       let statement = `INSERT INTO ${that.table} (`
-      
-      if (field_values.length <= 0)
-        return -1
+
+      if (field_values.length <= 0) return -1
       statement += field_names.join(', ') + ') '
-      statement += "VALUES ("
+      statement += 'VALUES ('
       let index = that._value_index
-      for (let i = index; i < field_values.length + index ; i++) {
+      for (let i = index; i < field_values.length + index; i++) {
         statement += `$${i}, `
         that._value_linker.push(field_values[i - index])
         // updating value_linker to become tab,
@@ -328,21 +347,22 @@ class Req_formatter {
     }
 
     function _get_update(that) {
-
       let statement = `UPDATE ${that.table} SET `
-      
-      if (field_names.length !== field_values.length ||
-          field_names.length <= 0) {
+
+      if (
+        field_names.length !== field_values.length ||
+        field_names.length <= 0
+      ) {
         return -1
       }
 
-      // !~ clairement un beug ici dans la boucle !!! a regler 
-      //const len_computed = i + field_names.length // eviter la boucle inf ...
-      const len =  field_names.length
+      // !~ clairement un beug ici dans la boucle !!! a regler
+      // const len_computed = i + field_names.length // eviter la boucle inf ...
+
+      const len = field_names.length
       let i = 0
       for (let index in field_names) {
-        statement += `${field_names[index]} = `
-                  + `$${that._value_index}, ` 
+        statement += `${field_names[index]} = ` + `$${that._value_index}, `
         that._value_linker.push(field_values[index])
         that._value_index += 1
       }
@@ -355,54 +375,53 @@ class Req_formatter {
       //   that._value_index += 1
       //   i++
       // }
-      statement = statement.substring(0, statement.length -2)
+      statement = statement.substring(0, statement.length - 2)
       return statement
     }
 
-    function _get_delete (that) {
+    function _get_delete(that) {
       return `DELETE FROM ${that.table} `
     }
   }
-  
+
   _add_where_condition(field, value, operator, type) {
-    
-    if (this._where_statement === "") {
-      this._where_statement += "WHERE "
+    if (this._where_statement === '') {
+      this._where_statement += 'WHERE '
     } else {
       this._where_statement += `${type} `
     }
-    const op = eval("this._" + operator)
+    const op = eval('this._' + operator)
     if (typeof op === 'function') {
       op(field, value)
     } else {
       this._where_statement += `${field} ${op} $${this._value_index} `
       this._value_index += 1
       this._value_linker.push(value)
-      //this._where_arg_values.push(value)
+      // this._where_arg_values.push(value)
     }
   }
 
   _get_fields() {
-
     if (
-        this._field_values.length === 0 ||
-        this._field_names.length === this._field_values.length) {
+      this._field_values.length === 0 ||
+      this._field_names.length === this._field_values.length
+    ) {
       return [this._field_names, this._field_values]
     }
     return -1
   }
-  
-  _range = (field, value) => {
 
-    // un peu sale mais bon    
+  _range = (field, value) => {
+    // un peu sale mais bon
     if (value.length !== 2) {
-      throw `_range awaiting an array with two elements`
+      throw '_range awaiting an array with two elements'
     }
-    const statement = `${field} `
-    + `BETWEEN $${this._value_index} `
-    + `AND $${this._value_index + 1} `
+    const statement =
+      `${field} ` +
+      `BETWEEN $${this._value_index} ` +
+      `AND $${this._value_index + 1} `
     this._where_arg_values.push(value[0], value[1])
-    //this._where_arg_values.push(value[0], value[1])
+    // this._where_arg_values.push(value[0], value[1])
     this._value_index += 2
     this._where_statement += statement
   }
@@ -432,16 +451,16 @@ class Req_formatter {
  *            firstname: "count"
  *          }
  *        })
- *        // outpout : 
+ *        // outpout :
  *              SELECT AVG(COUNT(lastname)) AS jean, COUNT(firstname) AS jacque,
  *              username AS jejems FROM matcha  WHERE user_id <= $1  ;
- * 
+ *
  *      - set_order_by :
  *        obj.set_order_by([['lastname', 'asc'], ['username', 'desc']])
  *        // outpout : ... ORDER BY lastname ASC, username DESC;
  *      ```
- *    
- *    
+ *
+ *
  *    - add_aggregation and add_fields:
  *      ```
  *        obj = new Req_formatter()
@@ -468,14 +487,14 @@ class Req_formatter {
  *          .join("seen", "seen_id", "id", "left")
  *      console.log(obj.generate_query("select")[0])
  *      console.log(obj.generate_query("select")[1])
- *      OUTPOUT : 
- *      SELECT lastname AS jean, firstname AS jacque, username 
+ *      OUTPOUT :
+ *      SELECT lastname AS jean, firstname AS jacque, username
  *      AS jejems FROM users LEFT JOIN seen ON users.id = seen.seen_id
  *      WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND
  *      test <= $4  ;
  *      [ 'abt', 'jejems', 'jeremie', 5 ]
- *      
- *      
+ *
+ *
  *      obj.flush()
  *      obj.table = "users"
  *      obj.add_fields({
@@ -488,7 +507,7 @@ class Req_formatter {
  *            eq: {
  *              lastname: "abt",
  *              username: "jejems"
- *            }           
+ *            }
  *          },
  *        and: {
  *          le: {
@@ -497,33 +516,39 @@ class Req_formatter {
  *          }
  *        }
  *      })
- * 
+ *
  *     console.log(obj.generate_query("update"))
- *     OUTPOUT : 
+ *     OUTPOUT :
  *      [
- *        'UPDATE users SET lastname = $5, firstname = $6, username = $7  WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
+ *        'UPDATE users SET lastname = $5,
+ *         firstname = $6,
+ *         username = $7
+ *  WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
  *          [
  *            'abt', 'jejems', 'jeremie', 5, 'jean', 'jacque', 'jejems'
  *          ]
  *      ]
- *    
- * 
+ *
+ *
  *      console.log(obj.generate_query("insert"))
- *      OUTPOUT : 
+ *      OUTPOUT :
  *      [
- *        'INSERT INTO users (lastname, firstname, username) VALUES ($5, $6, $7)  WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
+ *        'INSERT INTO users (lastname, firstname, username)
+ *        VALUES ($5, $6, $7)
+ *            WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
  *          [
  *            'abt', 'jejems', 'jeremie', 5, 'jean', 'jacque', 'jejems'
  *          ]
  *      ]
- * 
+ *
  *      console.log(obj.generate_query("delete"))
  *      [
- *        'DELETE FROM users   WHERE lastname = $1 OR username = $2 AND firstname <= $3 AND test <= $4  ;',
+ *        'DELETE FROM users   WHERE lastname = $1 OR
+ *          username = $2 AND firstname <= $3 AND test <= $4  ;',
  *        [ 'abt', 'jejems', 'jeremie', 5 ]
  *      ]
  *      ```
- *  
- *  
+ *
+ *
  */
 module.exports = Req_formatter
