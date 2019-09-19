@@ -4,6 +4,8 @@ const Crypto = require('crypto-js')
 
 function show(req, res) {
 
+  console.log("cookie : ", req.cookies.permission)  
+  res.clearCookie("permission")
   const fields_wanted = [
       "firstname", "lastname", "username",
       "email", "sexual_orientation", "localisation",
@@ -164,11 +166,13 @@ function del(req, res) {
 
 // c'est OK de mettre ca ici ?
 const confirmation = (req, res) => {
-
+  if (typeof req.cookies["permission"] === "undefined"){
+    res.status(404).send("Bad token or Cookie")
+    return
+  }
   const sessionToken = req.cookies["permission"]["token"]
   const token = req.params.token
   
-  console.log("cookiies : ", req.cookies["permission"])
   if (sessionToken === token) {
     res.clearCookie("permission")
     user_model.verify_mail(req.cookies["permission"]["id"])
