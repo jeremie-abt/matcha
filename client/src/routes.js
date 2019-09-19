@@ -1,6 +1,7 @@
 import React from 'react'
 import { Router, Route, Switch } from "react-router-dom"
-import LoginPage from './pages/LoginPage'
+import FormUpdateProfil from './components/Form/formComponent/FormUpdateProfil'
+import Test from './pages/test'
 
 import { createBrowserHistory } from 'history'
 
@@ -10,8 +11,8 @@ const AppRouter = () => (
   <Router history={ history }>
     <div>
       <Switch>
-        <Route path="/login" component={ LoginPage } exact /> 
-        <Route path="/formtest" component={ LoginPage } exact /> 
+        <Route path="/FormUpdateProfil" component={ FormUpdateProfil } exact /> 
+        <Route path="/test" component={ Test } exact /> 
       </Switch>
     </div>
   </Router>
