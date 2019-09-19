@@ -27,16 +27,17 @@ class FormConstructor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
-    this.state["checkbox"] = {}
+    this.state = {
+      checkbox: {}
+    }
   }
   
   handleChange = e => {
     if (e.target.type === "checkbox") {
-      let newCheckboxobj = this.state.checkbox
-      newCheckboxobj[e.target.name] = !this.state.checkbox[e.target.name]
+      let newCheckboxObj = this.state.checkbox
+      newCheckboxObj[e.target.name] = !this.state.checkbox[e.target.name]
       this.setState({
-        checkbox: newCheckboxobj
+        checkbox: newCheckboxObj
       })
     }
     else 
