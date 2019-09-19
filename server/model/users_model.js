@@ -1,4 +1,6 @@
 const client = require("../database/connection")
+let reqFormatter = require("../database/matcha_request_formatter")
+reqFormatter = new reqFormatter()
 
 function get_user_from_id(id) {
   const statement = `SELECT * FROM users `
@@ -30,7 +32,7 @@ function create_user(user_info) {
 
   const statement = `INSERT INTO users`
                   + `(firstname, lastname, password, username, email) `
-                  + `VALUES ($1, $2, $3, $4, $5)`
+                  + `VALUES ($1, $2, $3, $4, $5) RETURNING id`
   const values = [
       user_info.firstname, user_info.lastname,
       user_info.password, user_info.username, user_info.email
@@ -38,9 +40,26 @@ function create_user(user_info) {
   return client.query(statement, values)
 }
 
+function verify_mail(id) {
+  reqFormatter.table = "users"
+  reqFormatter.add_fields({
+      verified_mail: true
+    })
+    .where({
+      and: {
+        eq: {
+          "id": id
+        }
+      }
+    })
+  const [statement, args] = reqFormatter.generate_query("update")
+  reqFormatter.flush()
+  return client.query(statement, args)
+}
+
 function update_user(update_info, user_id) {
 
-  // update info contient ces info :
+  // update info Gtient ces info :
   // lastname / firstname / email / username
   // obliger sinon ca va plenter
   // bon c'est un peu shlag je vais faire la lib juste apres
@@ -70,5 +89,6 @@ module.exports = {
   is_user_existing,
   create_user,
   update_user,
-  delete_user
+  delete_user,
+  verify_mail
 }

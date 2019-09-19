@@ -2,14 +2,16 @@ const express = require("express")
 const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
+const cookie_parser = require('cookie-parser')
 // temporaire a voir comment faire des imports propres.
 app.use(cors())
 const api_router = require("./api_router")
 
 //// template engine
-app.set('view engine', 'ejs')
+// app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookie_parser())
 
 app.use('/api', api_router)
 

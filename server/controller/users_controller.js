@@ -1,9 +1,7 @@
-// connection aux modele
-let user_model = require("../model/users_model")
+const user_model = require("../model/users_model")
+const Crypto = require('crypto-js')
 
-// ~! prob de tab
 
-// mapper sur /api/user/id en get
 function show(req, res) {
 
   const fields_wanted = [
@@ -40,11 +38,18 @@ function show(req, res) {
 
 // mapper sur /api/user/id en post
 function create(req, res) {
+  // donne required pour creer un compte :
+  //  - Mail
+  //  - username
+  //  - name
+  //  - firstname
+  //  - password secure
 
   const args_wanted = [
     'firstname', 'lastname', 'email', 'password', 'username'
   ]
   const user_account_infos = {}
+
   args_wanted.forEach((element) => {
     if (!(element in req.body)) {
       throw `${element} not present !`
@@ -55,44 +60,38 @@ function create(req, res) {
     }
     user_account_infos[element] = value
   })
-  const Crypto = require('crypto-js')
   const hash = Crypto.SHA256(user_account_infos['password']).toString()
   user_account_infos['password'] = hash
   user_model.is_user_already_created(user_account_infos)
     .catch( err => {
-      throw err // a voir comment on gere
-      // je ne sais pas si c'est un bon pattern
-      // mais lidee c de recup lerreur de la fonction
-      // si yen a eu une car c une requette donc la requette peut foirer
-      // c un peu bizarre quand meme car une erreur de requette ou 
-      // de bdd t sense la gerer direct dans le controller non ?
-      // a discuter
+      res.status(404).send("something got wrong")
     })
     .then(response => {
-      if (response.rowCount != 0) {
+      if (response.rowCount === 1) {
         throw "This user already exists"
       }
       return user_model.create_user(user_account_infos)
     })
     .then (response => {
       if (response.rowCount === 1) {
-        res.write(`user : ${user_account_infos.username} successfully created`)
-        res.status(200)
+        const token = generateToken(res, response.rows[0].id)
+        if (token !== -1) {
+          res.status(200)
+          res.write(
+              `user : ${user_account_infos.username} successfully `
+              + `created, you must validate this account by email`)
+        } else {
+          res.status(404)
+          res.write("something got wrong")
+        }
+        res.end()
       }
     })
-    .catch(err => { 
-      res.status(404).send("")
-      throw err // encore une fois voir comment gerer ca
+    .catch(err => {
+      res.status(404).send(err)
     })
-    .finally(() => {
-      res.end()
-      return
-    })
-    // a discuter mais ce pattern est plutot propre non ?  
 }
 
-// je fais un simple update pour linstant a voir si 
-// on veut plus pousser apres
 function update(req, res) {
   
   const fields_wanted = [
@@ -163,9 +162,85 @@ function del(req, res) {
     })
 }
 
+// c'est OK de mettre ca ici ?
+const confirmation = (req, res) => {
+
+  const sessionToken = req.cookies["permission"]["token"]
+  const token = req.params.token
+  
+  console.log("cookiies : ", req.cookies["permission"])
+  if (sessionToken === token) {
+    res.clearCookie("permission")
+    user_model.verify_mail(req.cookies["permission"]["id"])
+      .catch(err => {
+        res.status(500).send("something got wrong")
+      })
+      .then(resp => {
+        if (resp.rowCount !== 1){
+          res.write("something got wrong")
+          res.status(500)
+        }
+        else{
+          res.write("email Confirmed")
+          res.status(204)
+        }
+        res.end()
+      })
+      .catch(err => console.log("freeere !", err))
+  }
+  else 
+    res.status(404).send("bad token")
+}
+
+function sendMail(token, mail) {
+  // je veux lui envoyer un lien :
+  // https://localhost:8081/api/auth/confirm
+  
+  const domainName = require('../config/domainName')
+  const link = 
+    domainName + "api/auth/confirm/"
+    + token
+  const BodyMsg = 'Your about to find the love of your '
+      + 'life, Clink on the following link if you want : ' 
+      + `<a href='${link}'>Bite</a>`
+  const nodemailer = require('nodemailer')
+  const mailIdentifier = require("../config/mailIdentifiant")
+  const transporter = nodemailer.createTransport({
+    sendmail: true,
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: {
+        user: mailIdentifier.username,
+        pass: mailIdentifier.password
+    }
+  })
+  transporter.sendMail({
+    from: 'no-reply@matcha.om', // sender address
+    to: mail, // list of receivers
+    subject: 'Inscription matcha', // Subject line
+    html: BodyMsg
+  })
+}
+
+function generateToken(res, id) {
+  const token = Crypto.lib.WordArray.random(28).toString()
+  console.log("token generated : ", token)
+  res.cookie("permission", {
+    token: token,
+    id: id
+  })
+  sendMail(
+    token,
+    user_account_infos["email"]
+  )
+  return token
+}
+
 module.exports = {
   show,
   create,
   update,
-  del
+  del,
+  confirmation
 }

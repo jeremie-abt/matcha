@@ -1,10 +1,15 @@
 const express = require("express")
+// controller
 const users_controller = require("./controller/users_controller")
 const tags_controller = require("./controller/tags_controller")
 const seen_controller = require("./controller/seen_controller")
 const images_controller = require("./controller/images_controller")
 const likes_controller = require("./controller/likes_controller")
 const blocked_controller = require("./controller/blocked_controller")
+//middleware
+const dataVerifMid = require("./middleware/verify_data")
+
+
 const api_router = express.Router()
 
 // require of controller
@@ -19,7 +24,7 @@ api_router.post("/users", users_controller.create)
 api_router.put("/users/:user_id", users_controller.update)
 api_router.delete("/users/:user_id/delete", users_controller.del)
 
-//images routes
+//images route0s
 api_router.get('/:user_id/images', images_controller.show)
 api_router.put('/images/update', images_controller.update)
 api_router.post('/images/add', images_controller.add)
@@ -41,6 +46,9 @@ api_router.delete('/likes/delete', likes_controller.del)
 api_router.get('/blocked/:user_id', blocked_controller.index)
 api_router.post('/blocked/add', blocked_controller.add)
 api_router.delete('/blocked/delete', blocked_controller.del)
+
+// Auth
+api_router.get('/auth/confirm/:token', users_controller.confirmation)
 
 // pour l'instant c'est hardcoder
 module.exports = api_router

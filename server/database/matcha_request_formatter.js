@@ -37,7 +37,7 @@ class Req_formatter {
    *  and flush all the existing params 
    */
   flush() {
-    this.table = "matcha"
+    this.table = ""
     this._join_statement = ""
     this._where_statement = ""
     this._group_by = ""
@@ -301,8 +301,10 @@ class Req_formatter {
         field_statement = field_statement
                           .substring(0, field_statement.length - 2)
       }
-      if (field_statement === '')
+      if (field_statement === '') {
+        console.log("l.305")
         return -1
+      }
       return (statement + field_statement + ` FROM ${that.table}`)
     }
   
@@ -310,8 +312,9 @@ class Req_formatter {
 
       let statement = `INSERT INTO ${that.table} (`
       
-      if (field_values.length <= 0)
+      if (field_values.length <= 0){
         return -1
+      }
       statement += field_names.join(', ') + ') '
       statement += "VALUES ("
       let index = that._value_index
@@ -330,9 +333,10 @@ class Req_formatter {
     function _get_update(that) {
 
       let statement = `UPDATE ${that.table} SET `
-      
+    
       if (field_names.length !== field_values.length ||
           field_names.length <= 0) {
+        console.log("l.340")
         return -1
       }
 
