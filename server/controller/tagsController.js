@@ -9,7 +9,7 @@ function show(req, res) {
     return
   }
   tagsModel
-    .display_tag(tagId)
+    .displayTag(tagId)
     .catch(() => {
       throw [500, 'Request failed']
     })
@@ -26,7 +26,7 @@ function show(req, res) {
 
 const index = (req, res) => {
   tagsModel
-    .show_all_tags()
+    .showAllTags()
     .catch(() => {
       throw [500, 'Request failed']
     })

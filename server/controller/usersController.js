@@ -17,12 +17,12 @@ function show(req, res) {
     'tags',
     'bio'
   ]
-  if (!('user_id' in req.params)) {
-    res.status(404).send('user_id not given ! Report this beug')
+  if (!('userId' in req.params)) {
+    res.status(404).send('userId not given ! Report this beug')
     res.end()
   }
   userModel
-    .get_user_from_id(req.params.user_id)
+    .getUserFromId(req.params.userId)
     .catch(e => {
       throw e
     })
@@ -59,7 +59,7 @@ function create(req, res) {
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel
-    .is_user_already_created(userAccountInfos)
+    .isUserAlreadyCreated(userAccountInfos)
     .catch(err => {
       throw err // a voir comment on gere
       // je ne sais pas si c'est un bon pattern
@@ -73,7 +73,7 @@ function create(req, res) {
       if (response.rowCount !== 0) {
         throw 'This user already exists'
       }
-      return userModel.create_user(userAccountInfos)
+      return userModel.createUser(userAccountInfos)
     })
     .then(response => {
       if (response.rowCount === 1) {
@@ -107,7 +107,7 @@ function update(req, res) {
     // c'est ok ca ?
   } else {
     userModel
-      .update_user(toUpdateFields, req.params.user_id)
+      .updateUser(toUpdateFields, req.params.userId)
       .catch(err => {
         throw err
       })
@@ -142,7 +142,7 @@ function del(req, res) {
   // finally pour finir la req
   // David ton avis ?
   userModel
-    .delete_user(req.params.user_id)
+    .deleteUser(req.params.userId)
     .catch(err => {
       res.status(404).send(err)
     })

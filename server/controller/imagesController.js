@@ -9,7 +9,7 @@ const show = (req, res) => {
   }
 
   imageModel
-    .get_images_from_userId(userId)
+    .getImagesFromUserId(userId)
     .then(response => {
       if (!response.rows.length) {
         res.status(404).send('No images found')
@@ -45,7 +45,7 @@ const update = (req, res) => {
     res.end()
   }
   imageModel
-    .update_image_position(position, imgId)
+    .updateImagePosition(position, imgId)
     .catch(err => res.status(404).send(err))
     .then(result => {
       if (result.rowCount) res.status(200).send('Image updated')
@@ -71,7 +71,7 @@ const del = (req, res) => {
     return
   }
   imageModel
-    .delete_user_image(imageId, userId)
+    .deleteUserImage(imageId, userId)
     .catch(err => {
       throw err
     })
@@ -96,13 +96,13 @@ const add = async (req, res) => {
     res.status(400).send('Bad params value')
     return
   }
-  const userImages = await imageModel.check_user_nb_images(userId)
+  const userImages = await imageModel.checkUserNbImages(userId)
   if (userImages.rows.length >= 5) {
     res.status(403).send('Maximum number of images reached, pls delete one')
     return
   }
   imageModel
-    .add_image(userId, position, url)
+    .addImage(userId, position, url)
     .catch(err => {
       throw err
     })

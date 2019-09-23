@@ -4,7 +4,7 @@ const userHelper = require('../helpers/userHelper')
 
 const index = async (req, res) => {
   const userId = parseInt(req.params.userId, 10)
-  const isExisting = userId ? await usersModel.is_user_existing(userId) : false
+  const isExisting = userId ? await usersModel.isUserExisting(userId) : false
 
   if (!userId || userId < 0 || !isExisting.rowCount) {
     res.status(400).send('A param is missing or bad value')
@@ -12,7 +12,7 @@ const index = async (req, res) => {
     return
   }
   likesModel
-    .display_users_liked(userId)
+    .displayUsersLiked(userId)
     .catch(() => {
       throw [500, 'Request failed']
     })
@@ -33,7 +33,7 @@ const add = async (req, res) => {
   let isValid = false
 
   if (userId && likesId)
-    isValid = await userHelper.check_request_validity(userId, likesId, 'likes')
+    isValid = await userHelper.checkRequestValidity(userId, likesId, 'likes')
   if (!isValid) {
     res.status(400).send('A param is missing or bad value or already exist')
     res.end()
@@ -41,7 +41,7 @@ const add = async (req, res) => {
   }
 
   likesModel
-    .add_user_liked(userId, likesId)
+    .addUserLiked(userId, likesId)
     .catch(() => {
       throw [500, 'Request failed']
     })
@@ -62,14 +62,14 @@ const del = async (req, res) => {
   let isValid = false
 
   if (userId && likesId)
-    isValid = await userHelper.check_users_validity([userId, likesId])
+    isValid = await userHelper.checkUsersValidity([userId, likesId])
   if (!isValid) {
     res.status(400).send('A param is missing or bad value')
     res.end()
     return
   }
   likesModel
-    .delete_like(userId, likesId)
+    .deleteLike(userId, likesId)
     .catch(() => {
       throw [500, 'Request failed']
     })

@@ -4,7 +4,7 @@ const usersModel = require('../model/usersModel')
 
 const index = async (req, res) => {
   const userId = parseInt(req.params.userId, 10)
-  const isExisting = userId ? await usersModel.is_user_existing(userId) : false
+  const isExisting = userId ? await usersModel.isUserExisting(userId) : false
 
   if (!userId || userId < 0 || !isExisting.rowCount) {
     res.status(400).send('A param is missing or bad value')
@@ -12,7 +12,7 @@ const index = async (req, res) => {
     return
   }
   seenModel
-    .display_user_seen(userId)
+    .displayUserSeen(userId)
     .catch(() => {
       throw [500, 'Request failed']
     })

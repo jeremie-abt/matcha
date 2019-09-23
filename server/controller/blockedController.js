@@ -4,14 +4,14 @@ const userHelper = require('../helpers/userHelper')
 
 const index = async (req, res) => {
   const userId = parseInt(req.params.userId, 10)
-  const isExisting = userId ? await usersModel.is_user_existing(userId) : false
+  const isExisting = userId ? await usersModel.isUserExisting(userId) : false
   if (!isExisting.rowCount) {
     res.status(400).send('A param is missing or bad value')
     res.end()
     return
   }
   blockedModel
-    .display_blocked_users(userId)
+    .displayBlockedUsers(userId)
     .catch(() => {
       throw [500, 'Request failed']
     })
@@ -32,7 +32,7 @@ const add = async (req, res) => {
   let isValid = false
 
   if (userId && blockedId) {
-    isValid = await userHelper.check_request_validity(
+    isValid = await userHelper.checkRequestValidity(
       userId,
       blockedId,
       'blocked'
@@ -44,7 +44,7 @@ const add = async (req, res) => {
     return
   }
   blockedModel
-    .add_user_blocked(userId, blockedId)
+    .addUserBlocked(userId, blockedId)
     .catch(() => {
       throw [500, 'Request failed']
     })
@@ -65,7 +65,7 @@ const del = async (req, res) => {
   let isValid = false
 
   if (userId && blockedId) {
-    isValid = await userHelper.check_users_validity([userId, blockedId])
+    isValid = await userHelper.checkUsersValidity([userId, blockedId])
   }
   if (!isValid) {
     res.status(400).send('A param is missing or bad value')
@@ -73,7 +73,7 @@ const del = async (req, res) => {
     return
   }
   blockedModel
-    .delete_blocked(userId, blockedId)
+    .deleteBlocked(userId, blockedId)
     .catch(() => {
       throw [500, 'Request failed']
     })

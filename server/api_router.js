@@ -15,10 +15,10 @@ const apiRouter = express.Router()
 // code de creation de router
 
 // user routes
-apiRouter.get('/users/:user_id', usersController.show)
+apiRouter.get('/users/:userId', usersController.show)
 apiRouter.post('/users', usersController.create)
-apiRouter.put('/users/:user_id', usersController.update)
-apiRouter.delete('/users/:user_id/delete', usersController.del)
+apiRouter.put('/users/:userId', usersController.update)
+apiRouter.delete('/users/:userId/delete', usersController.del)
 
 // images routes
 apiRouter.get('/:user_id/images', imagesController.show)
@@ -28,18 +28,18 @@ apiRouter.delete('/images/delete', imagesController.del)
 
 // tags routes
 apiRouter.get('/tags/all', tagsController.index)
-apiRouter.get('/tags/:tag_id', tagsController.show)
+apiRouter.get('/tags/:tagId', tagsController.show)
 
 // seen routes
-apiRouter.get('/seen/:user_id', seenController.index)
+apiRouter.get('/seen/:userId', seenController.index)
 
 // likes routes
-apiRouter.get('/likes/:user_id', likesController.index)
+apiRouter.get('/likes/:userId', likesController.index)
 apiRouter.post('/likes/add', likesController.add)
 apiRouter.delete('/likes/delete', likesController.del)
 
 // blocked routes
-apiRouter.get('/blocked/:user_id', blockedController.index)
+apiRouter.get('/blocked/:userId', blockedController.index)
 apiRouter.post('/blocked/add', blockedController.add)
 apiRouter.delete('/blocked/delete', blockedController.del)
 
