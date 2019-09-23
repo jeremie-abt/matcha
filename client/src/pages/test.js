@@ -1,8 +1,6 @@
-
 import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import FormCreateProfil from '../components/Form/formComponent/FormCreateProfil'
-
 
 class LoginPage extends React.Component {
   render() {

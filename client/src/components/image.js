@@ -9,19 +9,18 @@ class Image extends React.Component {
     }
   }
   async componentDidMount() {
-    this.state.url = 
-      await axios
-        .get('/2/images')
-        .then(({ data: { url } }) => {
-          this.setState({ url: url })
-        })
-        .catch(err => { throw err })
+    this.state.url = await axios
+      .get('/2/images')
+      .then(({ data: { url } }) => {
+        this.setState({ url: url })
+      })
+      .catch(err => {
+        throw err
+      })
   }
 
   render() {
-    return (
-      <img src={this.state.url} alt=""/>
-    )
+    return <img src={this.state.url} alt='' />
   }
 }
 

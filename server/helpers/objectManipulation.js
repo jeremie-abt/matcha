@@ -1,18 +1,18 @@
 function isInArray(value, array) {
-  return array.indexOf(value) > -1;
+  return array.indexOf(value) > -1
 }
 
 /**
- * 
+ *
  * @param {Array} ArraySrc
  * @param {Object} ObjectSrc
- * 
+ *
  * Goal: Generate a new object from ObjectSrc with onlythe keys
  * That are in ArraySrc
  */
 
-function objectInnerMerge (ObjectSrc, ArraySrc) {
-  ObjectDst = {}
+function objectInnerMerge(ObjectSrc, ArraySrc) {
+  const ObjectDst = {}
 
   Object.entries(ObjectSrc).forEach(([key, val]) => {
     if (isInArray(key, ArraySrc)) {
@@ -22,8 +22,7 @@ function objectInnerMerge (ObjectSrc, ArraySrc) {
   return ObjectDst
 }
 
-//objectInnerMerge({"firstname": 5}, ["fir"])
-
+// objectInnerMerge({"firstname": 5}, ["fir"])
 
 module.exports = {
   objectInnerMerge,
