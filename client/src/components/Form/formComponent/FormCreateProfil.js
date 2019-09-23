@@ -33,58 +33,16 @@ let fields = [
     name: "confirmpassword",
     label: "confirmpassword",
     type: "password"
-  },
-  {
-    name: "sexe",
-    title: "sexual_oriantation",
-    type: "checkbox",
-    checkboxValues: ["male", "female"]
-  },
-  {
-    name: "goelocalisation",
-    label: "geolocalisation",
-    type: "text"
-  },
-  {
-    name: "tags",
-    title: "Tags",
-    type: "checkbox",
-    checkboxValues: []
-  },
-  {
-    name: "bio",
-    label: "Bio",
-    type: "text",
   }
 ]
 
-class FormUpdateProfil extends React.Component {
+class FormCreateProfil extends React.Component {
 
   
   constructor() {
     super()
     this.state = {}
     this.state["data"] = fields
-  }
-
-  componentDidMount() {
-    // Normalement je devrais avoir un context avec le user_id 
-    // s'il est connecte
-    let contextUserId = 33
-
-    axios.get('/users/' + contextUserId)
-      .then(resp => {
-        this._updateData(resp.data)
-      })
-      .catch(err => { throw err })
-    axios.get("/tags/all")
-      .then(resp => {
-        const newData = [...this.state.data]
-        let input = newData.find(elem => elem.name === "tags")
-        input.checkboxValues = resp.data
-        this.setState({data: newData})
-      })
-      .catch(err => { throw err })
   }
 
   render() {
@@ -148,4 +106,4 @@ class FormUpdateProfil extends React.Component {
   }
 }
 
-export default FormUpdateProfil
+export default FormCreateProfil

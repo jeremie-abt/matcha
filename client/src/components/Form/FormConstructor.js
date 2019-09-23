@@ -1,5 +1,5 @@
 import React from 'react'
-
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Form } from 'react-bulma-components'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
@@ -49,7 +49,6 @@ class FormConstructor extends React.Component {
   }
   
   render() {
-
     return (
       <div>
         {
@@ -59,7 +58,7 @@ class FormConstructor extends React.Component {
             )
           })
         }
-        <Button onClick={ this.handleSubmit }> Valider </Button>
+        <Button color="primary" onClick={ this.handleSubmit }> Valider </Button>
       </div>
       
     )
@@ -104,7 +103,6 @@ class FormConstructor extends React.Component {
               )
             })
           }
-        
         </Form.Control>
       </Form.Field>
     )
