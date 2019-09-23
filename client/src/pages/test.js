@@ -1,8 +1,6 @@
-
 import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import FormUpdateProfil from '../components/Form/formComponent/FormUpdateProfil'
-
 
 class LoginPage extends React.Component {
   render() {

@@ -1,9 +1,9 @@
-const user_model = require("../model/users_model")
+const userModel = require("../model/users_model")
 
-const user_exist = (req, res, next) => {
-  const user_id = parseInt(req.params["user_id"])
-  const is_existing = user_model.is_user_existing(user_id)
-    .catch(err => {
+const userExist = (req, res, next) => {
+  const userId = parseInt(req.params.userId, 10)
+  userModel.is_userExisting(userId)
+    .catch(() => {
       res.status(500).send("something Got wrong")
     })
     .then(resp => {
@@ -12,11 +12,11 @@ const user_exist = (req, res, next) => {
         res.end()
         return
       }
-      req.params.user_id = user_id
+      req.params.userId = userId
       next()
     })
 }
 
 module.exports = {
-  user_exist
+  userExist
 }

@@ -1,11 +1,17 @@
-const user_model = require("../model/users_model")
 const Crypto = require('crypto-js')
+const nodemailer = require('nodemailer')
+const userModel = require("../model/users_model")
+const mailIdentifier = require("../config/mailIdentifiant")
+
+// a voir comment faire du lazy load pour ces deux la !
+const {objectInnerMerge} = require('../helpers/objectManipulation')
+const domainName = require('../config/domainName')
 
 
 function show(req, res) {
 
   res.clearCookie("permission")
-  const fields_wanted = [
+  const fieldsWanted = [
       "firstname", "lastname", "username",
       "email", "sexual_orientation", "localisation",
       "tags", "bio"
@@ -14,7 +20,7 @@ function show(req, res) {
     res.status(404).send("user_id not given ! Report this beug")
     res.end()
   }
-  user_model.get_user_from_id(req.params.user_id)
+  userModel.get_user_from_id(req.params.user_id)
     .catch(e => { throw e })
     .then((response) => {
       if (response.rows.length !== 1) {
@@ -28,9 +34,7 @@ function show(req, res) {
         }
         return 
       }
-      let objectInnerMerge = 
-          require('../helpers/object_manipulation').objectInnerMerge
-      res.json(objectInnerMerge(response.rows[0], fields_wanted))
+      res.json(objectInnerMerge(response.rows[0], fieldsWanted))
     })
     .finally(() => {
       res.end()
@@ -46,41 +50,43 @@ function create(req, res) {
   //  - firstname
   //  - password secure
 
-  const args_wanted = [
+  const argsWanted = [
     'firstname', 'lastname', 'email', 'password', 'username'
   ]
-  const user_account_infos = {}
+  const userAccountInfos = {}
 
-  args_wanted.forEach((element) => {
+  argsWanted.forEach((element) => {
     if (!(element in req.body)) {
       throw `${element} not present !`
     }
-    value = req.body[element]
+    const value = req.body[element]
     if (typeof value !== 'string' || value === '') {
       throw `field ${element} is not a string !`
     }
-    user_account_infos[element] = value
+    userAccountInfos[element] = value
   })
-  const hash = Crypto.SHA256(user_account_infos['password']).toString()
-  user_account_infos['password'] = hash
-  user_model.is_user_already_created(user_account_infos)
-    .catch( err => {
+  const hash = Crypto.SHA256(userAccountInfos.password).toString()
+  userAccountInfos.password = hash
+  userModel.is_user_already_created(userAccountInfos)
+    .catch( () => {
       res.status(404).send("something got wrong")
     })
     .then(response => {
       if (response.rowCount === 1) {
         throw "This user already exists"
       }
-      return user_model.create_user(user_account_infos)
+      return userModel.create_user(userAccountInfos)
     })
     .then (response => {
       if (response.rowCount === 1) {
+        // eslint-disable-next-line no-use-before-define
         const token = generateToken(res, response.rows[0].id)
-        sendMail(token, user_account_infos["email"], "/confirmationMail/")
+        // eslint-disable-next-line no-use-before-define
+        sendMail(token, userAccountInfos.email, "/confirmationMail/")
         if (token !== -1) {
           res.status(200)
           res.write(
-              `user : ${user_account_infos.username} successfully `
+              `user : ${userAccountInfos.username} successfully `
               + `created, you must validate this account by email`)
         } else {
           res.status(404)
@@ -96,23 +102,23 @@ function create(req, res) {
 
 function update(req, res) {
   
-  const fields_wanted = [
+  const fieldsWanted = [
     'firstname', 'lastname', 'email',
     'username'
   ]
-  let to_update_fields = {}
-  fields_wanted.forEach(elem => {
+  const toUpdateFields = {}
+  fieldsWanted.forEach(elem => {
     if (elem in req.body) {
-      to_update_fields[elem] = req.body[elem]
+      toUpdateFields[elem] = req.body[elem]
     }
   })
-  if (Object.keys(to_update_fields).length === 0) {
+  if (Object.keys(toUpdateFields).length === 0) {
     res.status(404).send("no Data provided to update users")
     res.end()
     // c'est ok ca ?
   }
   else {
-    user_model.update_user(to_update_fields, req.params.user_id)
+    userModel.update_user(toUpdateFields, req.params.user_id)
       .catch(err => {
         throw err
       })
@@ -146,7 +152,7 @@ function del(req, res) {
   // un catch pour gerer les errors generer par les then
   // finally pour finir la req
   // David ton avis ?
-  user_model.delete_user(req.params.user_id)
+  userModel.delete_user(req.params.user_id)
     .catch(err => {
       res.status(404).send(err)
     })
@@ -166,17 +172,17 @@ function del(req, res) {
 
 // c'est OK de mettre ca ici ?
 const confirmationMail = (req, res) => {
-  if (typeof req.cookies["permission"] === "undefined"){
+  if (typeof req.cookies.permission === "undefined"){
     res.status(404).send("Bad token or Cookie")
     return
   }
-  const sessionToken = req.cookies["permission"]["token"]
-  const token = req.params.token
+  const sessionToken = req.cookies.permission.token
+  const {token} = req.params
   
   if (sessionToken === token) {
     res.clearCookie("permission")
-    user_model.verify_mail(req.cookies["permission"]["id"])
-      .catch(err => {
+    userModel.verify_mail(req.cookies.permission.id)
+      .catch(() => {
         res.status(500).send("something got wrong")
       })
       .then(resp => {
@@ -190,7 +196,7 @@ const confirmationMail = (req, res) => {
         }
         res.end()
       })
-      .catch( err => { throw "err" } )
+      .catch( () => { throw "err" } )
   }
   else 
     res.status(404).send("bad token")
@@ -207,15 +213,12 @@ function sendMail(token, mail, path) {
   // je veux lui envoyer un lien :
   // https://localhost:8081/api/auth/confirm
   
-  const domainName = require('../config/domainName')
   const link = 
-    domainName + `api/auth${path}`
-    + token
+    `${domainName  }api/auth${path}${
+     token}`
   const BodyMsg = 'Your about to find the love of your '
       + 'life, Clink on the following link if you want : ' 
       + `<a href='${link}'>Bite</a>`
-  const nodemailer = require('nodemailer')
-  const mailIdentifier = require("../config/mailIdentifiant")
   const transporter = nodemailer.createTransport({
     sendmail: true,
     host: 'smtp.ethereal.email',
@@ -239,8 +242,8 @@ function generateToken(res, id) {
 
   const token = Crypto.lib.WordArray.random(28).toString()
   res.cookie("permission", {
-    token: token,
-    id: id
+    token,
+    id
   })
   return token
 }

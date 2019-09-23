@@ -1,48 +1,49 @@
 const client = require("../database/connection")
-let reqFormatter = require("../database/matcha_request_formatter")
-reqFormatter = new reqFormatter()
+let ReqFormatter = require("../database/matchaRequestFormatter")
 
-function get_user_from_id(id) {
+ReqFormatter = new ReqFormatter()
+
+function getUserFromId(id) {
   const statement = `SELECT * FROM users `
                   + `WHERE id = $1;`
   return client.query(statement, [ id ])
 }
 
-function is_user_already_created(user_info) {
+function isUserAlreadyCreated(userInfo) {
 
   const statement = `SELECT * FROM users `
                   + `WHERE (firstname=$1 AND lastname=$2) `
                   + `OR username = $3 `
                   + `OR email=$4`
   const values = [
-      user_info.firstname, user_info.lastname,
-      user_info.username, user_info.email
+      userInfo.firstname, userInfo.lastname,
+      userInfo.username, userInfo.email
     ]
   return client.query(statement, values)
 }
 
-function is_user_existing(user_id) {
+function isUserExisting(userId) {
   const statement = `SELECT id FROM users`
                     + ` WHERE id = $1`
 
-  return client.query(statement, [ user_id ])
+  return client.query(statement, [ userId ])
 }
 
-function create_user(user_info) {
+function createUser(userInfo) {
 
   const statement = `INSERT INTO users`
                   + `(firstname, lastname, password, username, email) `
                   + `VALUES ($1, $2, $3, $4, $5) RETURNING id`
   const values = [
-      user_info.firstname, user_info.lastname,
-      user_info.password, user_info.username, user_info.email
+      userInfo.firstname, userInfo.lastname,
+      userInfo.password, userInfo.username, userInfo.email
   ]
   return client.query(statement, values)
 }
 
-function verify_mail(id) {
-  reqFormatter.table = "users"
-  reqFormatter.add_fields({
+function verifyMail(id) {
+  ReqFormatter.table = "users"
+  ReqFormatter.add_fields({
       verified_mail: true
     })
     .where({
@@ -52,12 +53,12 @@ function verify_mail(id) {
         }
       }
     })
-  const [statement, args] = reqFormatter.generate_query("update")
-  reqFormatter.flush()
+  const [statement, args] = ReqFormatter.generate_query("update")
+  ReqFormatter.flush()
   return client.query(statement, args)
 }
 
-function update_user(update_info, user_id) {
+function updateUser(updateInfo, userId) {
 
   // update info Gtient ces info :
   // lastname / firstname / email / username
@@ -71,24 +72,24 @@ function update_user(update_info, user_id) {
                     + 'email = $4'
                     + `WHERE id = $5`
   const values = [
-    update_info.firstname, update_info.lastname,
-    update_info.username, update_info.email, user_id
+    updateInfo.firstname, updateInfo.lastname,
+    updateInfo.username, updateInfo.email, userId
   ]
   return client.query(statement, values)
 }
 
-function delete_user(user_id) {
+function deleteUser(userId) {
   const statement = `DELETE FROM users `
                     + `WHERE id = $1`
-  return client.query(statement, [ user_id ])
+  return client.query(statement, [ userId ])
 }
 
 module.exports = {
-  get_user_from_id,
-  is_user_already_created,
-  is_user_existing,
-  create_user,
-  update_user,
-  delete_user,
-  verify_mail
+  getUserFromId,
+  isUserAlreadyCreated,
+  isUserExisting,
+  createUser,
+  updateUser,
+  deleteUser,
+  verifyMail
 }
