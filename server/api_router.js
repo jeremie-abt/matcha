@@ -48,7 +48,8 @@ api_router.post('/blocked/add', blocked_controller.add)
 api_router.delete('/blocked/delete', blocked_controller.del)
 
 // Auth
-api_router.get('/auth/confirm/:token', users_controller.confirmation)
+api_router.get('/auth/confirmationMail/:token',
+    users_controller.confirmationMail)
 
 // pour l'instant c'est hardcoder
 module.exports = api_router

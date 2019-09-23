@@ -302,7 +302,6 @@ class Req_formatter {
                           .substring(0, field_statement.length - 2)
       }
       if (field_statement === '') {
-        console.log("l.305")
         return -1
       }
       return (statement + field_statement + ` FROM ${that.table}`)
@@ -336,7 +335,6 @@ class Req_formatter {
     
       if (field_names.length !== field_values.length ||
           field_names.length <= 0) {
-        console.log("l.340")
         return -1
       }
 

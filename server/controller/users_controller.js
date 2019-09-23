@@ -4,7 +4,6 @@ const Crypto = require('crypto-js')
 
 function show(req, res) {
 
-  console.log("cookie : ", req.cookies.permission)  
   res.clearCookie("permission")
   const fields_wanted = [
       "firstname", "lastname", "username",
@@ -77,6 +76,7 @@ function create(req, res) {
     .then (response => {
       if (response.rowCount === 1) {
         const token = generateToken(res, response.rows[0].id)
+        sendMail(token, user_account_infos["email"], "/confirmationMail/")
         if (token !== -1) {
           res.status(200)
           res.write(
@@ -165,7 +165,7 @@ function del(req, res) {
 }
 
 // c'est OK de mettre ca ici ?
-const confirmation = (req, res) => {
+const confirmationMail = (req, res) => {
   if (typeof req.cookies["permission"] === "undefined"){
     res.status(404).send("Bad token or Cookie")
     return
@@ -190,19 +190,26 @@ const confirmation = (req, res) => {
         }
         res.end()
       })
-      .catch(err => console.log("freeere !", err))
+      .catch( err => { throw "err" } )
   }
   else 
     res.status(404).send("bad token")
 }
 
-function sendMail(token, mail) {
+/**
+ * 
+ * @param {string} token 
+ * @param {string} mail 
+ * @param {string} path path in the mail URL ( correspond to the endpoint
+ *                      which will handle the actual request )
+ */
+function sendMail(token, mail, path) {
   // je veux lui envoyer un lien :
   // https://localhost:8081/api/auth/confirm
   
   const domainName = require('../config/domainName')
   const link = 
-    domainName + "api/auth/confirm/"
+    domainName + `api/auth${path}`
     + token
   const BodyMsg = 'Your about to find the love of your '
       + 'life, Clink on the following link if you want : ' 
@@ -219,6 +226,7 @@ function sendMail(token, mail) {
         pass: mailIdentifier.password
     }
   })
+
   transporter.sendMail({
     from: 'no-reply@matcha.om', // sender address
     to: mail, // list of receivers
@@ -228,16 +236,12 @@ function sendMail(token, mail) {
 }
 
 function generateToken(res, id) {
+
   const token = Crypto.lib.WordArray.random(28).toString()
-  console.log("token generated : ", token)
   res.cookie("permission", {
     token: token,
     id: id
   })
-  sendMail(
-    token,
-    user_account_infos["email"]
-  )
   return token
 }
 
@@ -246,5 +250,5 @@ module.exports = {
   create,
   update,
   del,
-  confirmation
+  confirmationMail
 }

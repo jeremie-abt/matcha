@@ -1,7 +1,7 @@
 const mailIdentifier = {
-  name: "Camron Deckow",
-  username: "camron39@ethereal.email",
-  password: "R7wKYhUNHbqm3z7N9B"
+  name: "Noble Little",
+  username: "noble.little94@ethereal.email",
+  password: "fyMS6yqJnPWUMRSa5C"
 }
 
 module.exports = mailIdentifier
