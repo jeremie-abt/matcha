@@ -529,25 +529,4 @@ class reqFormatter {
  *
  */
 
-const Obj = new reqFormatter()
-Obj.addFields({
-  firstnameplusweirdname: "firstname",
-  anotherfieldname: "fieldname"
-})
-  .where({
-    or: {
-      eq: {
-        firstname: "prout",
-        jean: "jacque"
-      }
-    },
-    and: {
-      eq: {
-        oui: "non",
-        non: "oui"
-      }
-    }
-  })
-  .table = "users"
-
 module.exports = reqFormatter
