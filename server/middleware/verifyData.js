@@ -1,4 +1,4 @@
-const userModel = require("../model/users_model")
+const userModel = require("../model/usersModel")
 
 const userExist = (req, res, next) => {
   const userId = parseInt(req.params.userId, 10)
