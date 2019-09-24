@@ -24,7 +24,7 @@ function LoginPage() {
           <Container>
             <Columns className='is-centered'>
               <Columns.Column size='two-fifths'>
-                <Card position='center box'>
+                <Card>
                   <Card.Content>
                     <LoginForm fields={fields} />
                   </Card.Content>
