@@ -226,29 +226,22 @@ class reqFormatter {
    * @param {Object} args
    */
   where(args) {
+
     /**
      * @param {Object} args   sub object of args
      * @param {string} type   either ("or" and "and")
      */
-    const subProcedure = (condition, type) => {
 
+     const subProcedure = (condition, type) => {
       Object.entries(condition).forEach(([operator, val]) => {
-
-        val.forEach(subKey => {
+        Object.entries(val).forEach(([field, value]) => {
           this._addWhereCondition(
-            subKey,
-            val[subKey],
-            operator,
+            field,
+            value,
+            `_${operator}`,
             type.toUpperCase()
           )
         })
-
-        // je garde les anciennes lignes de codes pour le debeug
-        /*
-        for (const sub_key in val) {
-        }
-        */
-
       })
     }
 
@@ -305,13 +298,10 @@ class reqFormatter {
       for (let i = index; i < fieldValues.length + index; i += 1) {
         statement += `$${i}, `
         this._value_linker.push(fieldValues[i - index])
-        // updating value_linker to become tab,
-        // before it was an object
-        // this._value_linker[i] = fieldValues[i]
       }
       this._value_index += fieldValues.length
       statement = `${statement.substring(0, statement.length - 2)  })`
-      return [statement, fieldNames, fieldValues]
+      return statement
     }
     
     function _getUpdate(fieldNames, fieldValues) {
@@ -327,11 +317,12 @@ class reqFormatter {
         // !~ clairement un beug ici dans la boucle !!! a regler
         // const len_computed = i + fieldNames.length // eviter la boucle inf ...
         
-        fieldNames.forEach(index => {
-          statement += `${fieldNames[index]} = $${this._value_index}, `
-          this._value_linker.push(fieldValues[index])
+        for (let i = 0; i < fieldValues.length; i += 1) { 
+        // fieldNames.forEach(index => {
+          statement += `${fieldNames[i]} = $${this._value_index}, `
+          this._value_linker.push(fieldValues[i])
           this._value_index += 1
-        })
+        }
         statement = statement.substring(0, statement.length - 2)
         return statement
     }
@@ -355,7 +346,7 @@ class reqFormatter {
       // l'inheritance de variable soit faite
       const [fieldNames, fieldValues] = this._getFields()
   
-      const fieldStatement = typeHandlers[requestType](this, fieldNames, fieldValues)
+      const fieldStatement = typeHandlers[requestType](fieldNames, fieldValues)
       const finalStatement =
         `${fieldStatement 
         } ${ 
@@ -372,12 +363,12 @@ class reqFormatter {
   }
   
   _addWhereCondition(field, value, operator, type) {
+
     if (this._whereStatement === '') {
       this._whereStatement += 'WHERE '
     } else {
       this._whereStatement += `${type} `
     }
-    // const op = eval(`this._${  operator}`)
     const op = this[operator]
     if (typeof op === 'function') {
       op(field, value)
@@ -385,7 +376,6 @@ class reqFormatter {
       this._whereStatement += `${field} ${op} $${this._value_index} `
       this._value_index += 1
       this._value_linker.push(value)
-      // this._where_arg_values.push(value)
     }
   }
 
@@ -415,7 +405,6 @@ class reqFormatter {
   }
 }
 
-// a voir si c'est clair ou pas !
 /**
  *  EXEMPLE :
  *    - addAggregation and addFields:
@@ -539,4 +528,26 @@ class reqFormatter {
  *
  *
  */
+
+const Obj = new reqFormatter()
+Obj.addFields({
+  firstnameplusweirdname: "firstname",
+  anotherfieldname: "fieldname"
+})
+  .where({
+    or: {
+      eq: {
+        firstname: "prout",
+        jean: "jacque"
+      }
+    },
+    and: {
+      eq: {
+        oui: "non",
+        non: "oui"
+      }
+    }
+  })
+  .table = "users"
+
 module.exports = reqFormatter
