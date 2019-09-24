@@ -1,6 +1,6 @@
 const client = require('../database/connection')
 
-function updgetUserFromId(id) {
+function getUserFromId(id) {
   const statement = 'SELECT * FROM users WHERE id = $1;'
   return client.query(statement, [id])
 }
@@ -74,7 +74,7 @@ function deleteUser(userId) {
 }
 
 module.exports = {
-  updgetUserFromId,
+  getUserFromId,
   isUserAlreadyCreated,
   isUserExisting,
   createUser,
