@@ -1,29 +1,32 @@
-import React from 'react'
-// import axios from 'axios'
+import React, { useState } from 'react'
 import FormConstructor from '../FormConstructor'
+import axios from 'axios'
 
-class FormLogin extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      data: {}
-    }
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
+const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
+  const [isValid, setIsValid] = useState(true)
 
-  handleSubmit(submittedData) {
-    this.setState({ data: submittedData })
-    alert('check log')
+  const handleSubmit = submittedData => {
+    if (!submittedData.username || !submittedData.password)
+      return setIsValid(false)
+    axios
+      .post('/users/getUser', { ...submittedData })
+      .then(result => {
+        if (result.status === 200) {
+          updateUser(result.data)
+          updateIsAuth()
+        } else if (result.status === 204) alert('Invalid user')
+      })
+      .catch(e => {
+        console.log(e)
+      })
   }
-
-  render() {
-    return (
-      <FormConstructor
-        fields={this.props.fields}
-        handleForm={this.handleSubmit}
-      />
-    )
-  }
+  return (
+    <FormConstructor
+      fields={fields}
+      handleForm={handleSubmit}
+      isValid={isValid}
+    />
+  )
 }
 
 export default FormLogin

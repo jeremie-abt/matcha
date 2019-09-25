@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AppRouter from './routes'
-//import AppProvider from ''
 import axios from 'axios'
 
 import '../src/style/app.sass'
