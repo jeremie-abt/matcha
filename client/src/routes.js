@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router, Route, Switch } from 'react-router-dom'
 import FormUpdateProfil from './components/Form/formComponent/FormUpdateProfil'
-import Test from './pages/test'
+import LoginPage from './pages/LoginPage'
 
 import { createBrowserHistory } from 'history'
 
@@ -12,7 +12,7 @@ const AppRouter = () => (
     <div>
       <Switch>
         <Route path='/FormUpdateProfil' component={FormUpdateProfil} exact />
-        <Route path='/test' component={Test} exact />
+        <Route path='/' component={LoginPage} exact />
       </Switch>
     </div>
   </Router>
