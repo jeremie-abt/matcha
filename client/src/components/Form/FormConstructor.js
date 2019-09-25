@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Button, Form, Content } from 'react-bulma-components'
+import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
 
