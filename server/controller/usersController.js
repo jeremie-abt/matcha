@@ -15,9 +15,10 @@ function show(req, res) {
       throw e
     })
     .then(response => {
+      const cryptPassword = Crypto.SHA256(password).toString()
       if (
         response.rows.length !== 1 ||
-        response.rows[0].password !== password
+        response.rows[0].password !== cryptPassword
       ) {
         res.status(204)
         return
