@@ -2,7 +2,7 @@ const userModel = require("../model/usersModel")
 
 const userExist = (req, res, next) => {
   const userId = parseInt(req.params.userId, 10)
-  userModel.is_userExisting(userId)
+  userModel.isUserExisting(userId)
     .catch(() => {
       res.status(500).send("something Got wrong")
     })

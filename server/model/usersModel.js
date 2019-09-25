@@ -44,7 +44,7 @@ function createUser(userInfo) {
 function verifyMail(id) {
   ReqFormatter.table = "users"
   ReqFormatter.addFields({
-      verified_mail: true
+      verifiedMail: true
     })
     .where({
       and: {
