@@ -96,14 +96,9 @@ class FormConstructor extends React.Component {
                   key={checkboxElem.id}
                 />
               )
-<<<<<<< HEAD
             }
             return checkboxComponent
           })}
-=======
-            })
-          }
->>>>>>> fron/createProfil
         </Form.Control>
       </Form.Field>
     )
