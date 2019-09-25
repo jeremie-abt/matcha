@@ -3,7 +3,8 @@ const Crypto = require('crypto-js')
 const userModel = require('../model/usersModel')
 
 function show(req, res) {
-  if (!req.body.username || !req.body.password) {
+  const { username, password } = req.body
+  if (!username || !password) {
     res.status(404).send('no params')
     res.end()
     return
@@ -14,7 +15,10 @@ function show(req, res) {
       throw e
     })
     .then(response => {
-      if (response.rows.length !== 1) {
+      if (
+        response.rows.length !== 1 ||
+        response.rows[0].password !== password
+      ) {
         res.status(204)
         return
       }

@@ -12,9 +12,10 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
       .post('/users/getUser', { ...submittedData })
       .then(result => {
         if (result.status === 200) {
+          alert('On est bon les gars')
           updateUser(result.data)
           updateIsAuth()
-        } else if (result.status === 204) alert('Invalid user')
+        } else if (result.status === 204) alert('Invalid data')
       })
       .catch(e => {
         console.log(e)
