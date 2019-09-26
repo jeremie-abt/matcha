@@ -93,11 +93,10 @@ class FormUpdateProfil extends React.Component {
 
   render() {
     return (
-      <div>
-        <FormConstructor
-            fields={ this.state.data }
-            handleForm={ this.handleSubmit } />
-      </div>
+      <FormConstructor
+        fields={this.state.data}
+        handleForm={this.handleSubmit}
+      />
     )
   }
 
