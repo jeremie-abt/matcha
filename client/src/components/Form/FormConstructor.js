@@ -1,6 +1,7 @@
 import React from 'react'
-import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Button, Form } from 'react-bulma-components'
+
+import { Button, Form, Content } from 'react-bulma-components'
+import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
 
@@ -39,20 +40,20 @@ class FormConstructor extends React.Component {
   }
 
   handleSubmit = e => {
+    e.preventDefault()
     this.props.handleForm(this.state)
   }
-  
+
   render() {
     return (
       <div>
-        {
-          this.props.fields.map((field, index) => {
-            return (
-              this._mapperMethod(field.type, "render")(field)
-            )
-          })
-        }
-        <Button color="primary" onClick={ this.handleSubmit }> Valider </Button>
+        {this.props.fields.map((field, index) => {
+          return this._mapperMethod(field.type, 'render')(field)
+        })}
+        <Button onClick={this.handleSubmit}> Valider </Button>
+        <Content size={'small'} style={{ color: 'red' }}>
+          {!this.props.isValid ? 'pls fill all input' : ''}
+        </Content>
       </div>
     )
   }

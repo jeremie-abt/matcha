@@ -2,17 +2,18 @@ import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import { Container, Card, Columns, Hero } from 'react-bulma-components'
 import LoginForm from '../components/Form/formComponent/FormLogin'
+import MyContext from '../context/UserContext'
 
 let fields = [
   {
-    name: 'Username',
+    name: 'username',
     label: 'Username',
     type: 'text'
   },
   {
-    name: 'Password',
+    name: 'password',
     label: 'Password',
-    type: 'text'
+    type: 'password'
   }
 ]
 
@@ -26,7 +27,15 @@ function LoginPage() {
               <Columns.Column size='two-fifths'>
                 <Card>
                   <Card.Content>
-                    <LoginForm fields={fields} />
+                    <MyContext.Consumer>
+                      {context => (
+                        <LoginForm
+                          fields={fields}
+                          updateUser={context.updateState}
+                          updateIsAuth={context.updateIsAuth}
+                        />
+                      )}
+                    </MyContext.Consumer>
                   </Card.Content>
                 </Card>
               </Columns.Column>

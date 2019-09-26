@@ -5,7 +5,7 @@ const sharedModel = require('../model/sharedModel')
 const checkUsersValidity = async ids => {
   let pCheckValidityIds = []
   let isValid = true
-  pCheckValidityIds = ids.map(id => usersModel.isUserExisting(id))
+  pCheckValidityIds = ids.map(id => usersModel.isUserExisting(['id', id]))
   await Promise.all(pCheckValidityIds)
     .then(resp => {
       resp.forEach(queryResp => {
