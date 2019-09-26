@@ -4,7 +4,9 @@ const userHelper = require('../helpers/userHelper')
 
 const index = async (req, res) => {
   const userId = parseInt(req.params.userId, 10)
-  const isExisting = userId ? await usersModel.isUserExisting(userId) : false
+  const isExisting = userId
+    ? await usersModel.isUserExisting(['id', userId])
+    : false
   if (!isExisting.rowCount) {
     res.status(400).send('A param is missing or bad value')
     res.end()

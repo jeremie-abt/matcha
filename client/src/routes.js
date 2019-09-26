@@ -4,8 +4,7 @@ import FormUpdateProfil from './components/Form/formComponent/FormUpdateProfil'
 import LoginPage from './pages/LoginPage'
 import homePage from './pages/homePage'
 
-// a suppr
-
+import MyProvider from './context/MyProvider'
 import { createBrowserHistory } from 'history'
 
 const history = createBrowserHistory()
@@ -14,9 +13,11 @@ const AppRouter = () => (
   <Router history={history}>
     <div>
       <Switch>
-        <Route path='/FormUpdateProfil' component={FormUpdateProfil} exact />
-        <Route path='/' component={LoginPage} exact />
-        <Route path='/homePage' component={ homePage } exact />
+        <MyProvider>
+          <Route path='/homePage' component={ homePage } exact />
+          <Route path='/' component={LoginPage} exact />
+          <Route path='/FormUpdateProfil' component={FormUpdateProfil} exact />
+        </MyProvider>
       </Switch>
     </div>
   </Router>
