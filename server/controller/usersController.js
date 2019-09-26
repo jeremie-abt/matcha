@@ -1,38 +1,35 @@
+/* eslint-disable no-console */
 const Crypto = require('crypto-js')
-const userModel = require("../model/usersModel")
+const userModel = require('../model/usersModel')
 
 const { sendMail } = require('../helpers/MailSender')
 
-// a voir comment faire du lazy load pour ces deux la !
-const {objectInnerMerge} = require('../helpers/objectManipulation')
-
 function show(req, res) {
-
-  res.clearCookie("permission")
-  const fieldsWanted = [
-      "firstname", "lastname", "username",
-      "email", "sexual_orientation", "localisation",
-      "tags", "bio"
-  ]
-  if (!("userId" in req.params)){
-    res.status(404).send("userId not given ! Report this beug")
+  const { username, password } = req.body
+  if (!username || !password) {
+    res.status(404).send('no params')
     res.end()
+    return
   }
-  userModel.getUserFromId(req.params.userId)
-    .catch(e => { throw e })
-    .then((response) => {
-      if (response.rows.length !== 1) {
-        if (response.rows.length === 0) {
-          res.status(404).send("no user found")
-        } else {
-          res.status(404).send(
-              `beug API go check il ne doit pas `
-              + `rentrer ici`
-          )
-        }
-        return 
+  userModel
+    .isUserExisting(['username', req.body.username])
+    .catch(e => {
+      throw e
+    })
+    .then(response => {
+      const cryptPassword = Crypto.SHA256(password).toString()
+      if (
+        response.rows.length !== 1 ||
+        response.rows[0].password !== cryptPassword
+      ) {
+        res.status(204)
+        return
       }
-      res.json(objectInnerMerge(response.rows[0], fieldsWanted))
+      const user = response.rows[0]
+      if (user.password === req.body.password) {
+        res.status(200)
+        res.json(response.rows[0])
+      }
     })
     .finally(() => {
       res.end()
@@ -80,6 +77,7 @@ function create(req, res) {
         // eslint-disable-next-line no-use-before-define
         const token = generateToken(res, response.rows[0].id)
         // eslint-disable-next-line no-use-before-define
+        
         sendMail(token, userAccountInfos.email, "/confirmationMail/")
         if (token !== -1) {
           res.status(200)

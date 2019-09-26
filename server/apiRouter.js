@@ -19,7 +19,7 @@ const apiRouter = express.Router()
 // code de creation de router
 
 // user routes
-apiRouter.get('/users/:userId', usersController.show)
+apiRouter.post('/users/getUser', usersController.show)
 apiRouter.post('/users', usersController.create)
 apiRouter.put('/users/:userId', usersController.update)
 apiRouter.delete('/users/:userId/delete', usersController.del)

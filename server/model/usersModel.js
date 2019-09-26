@@ -1,12 +1,9 @@
 const client = require("../database/connection")
-let ReqFormatter = require("../database/matchaRequestFormatter")
-
-ReqFormatter = new ReqFormatter()
+const ReqFormatter = require("../database/matchaRequestFormatter")
 
 function getUserFromId(id) {
-  const statement = `SELECT * FROM users `
-                  + `WHERE id = $1;`
-  return client.query(statement, [ id ])
+  const statement = 'SELECT * FROM users WHERE id = $1;'
+  return client.query(statement, [id])
 }
 
 function isUserAlreadyCreated(userInfo) {
@@ -22,11 +19,10 @@ function isUserAlreadyCreated(userInfo) {
   return client.query(statement, values)
 }
 
-function isUserExisting(userId) {
-  const statement = `SELECT id FROM users`
-                    + ` WHERE id = $1`
+function isUserExisting(requiredData) {
+  const statement = `SELECT * FROM users WHERE ${requiredData[0]} = $1`
 
-  return client.query(statement, [ userId ])
+  return client.query(statement, [requiredData[1]])
 }
 
 function createUser(userInfo) {
