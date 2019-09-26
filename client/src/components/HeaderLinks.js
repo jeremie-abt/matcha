@@ -10,8 +10,8 @@ function HeaderLinks() {
     return (
       // isoler les deux trucs du dessous !
       <div className="buttons">
-        <Navbar.Item href="#" className="button" style={{backgroundColor:"grey"}}>Sign in</Navbar.Item>
-        <Navbar.Item href="#" className="button is-primary" style={{backgroundColor:"grey"}}>Sign Up</Navbar.Item>
+        <Navbar.Item href="#" className="button">Sign in</Navbar.Item>
+        <Navbar.Item href="#" className="button is-primary">Sign Up</Navbar.Item>
       </div>
      
     )

@@ -9,7 +9,7 @@ import OurFooter from '../components/OurFooter'
 function homePage() {
   return (
   <Hero size="fullheight">
-    <Section className="small-height" style={{backgroundColor:"#ED4C67"}}>
+    <Section className="small-height backgroundColor">
       <Container>
         <OurHeader />
       </Container>
@@ -23,7 +23,7 @@ function homePage() {
       </Hero.Body>
     </Container>  
 
-    <Hero.Footer style={{backgroundColor:"#ED4C67"}} className="small-height">
+    <Hero.Footer className="small-height backgroundColor">
       <Container>
         <OurFooter />
       </Container>
