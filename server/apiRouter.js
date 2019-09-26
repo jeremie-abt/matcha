@@ -1,10 +1,14 @@
-const express = require('express')
+const express = require("express")
+
 const usersController = require('./controller/usersController')
 const tagsController = require('./controller/tagsController')
 const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
 const blockedController = require('./controller/blockedController')
+
+// middleware
+// const dataVerifMid = require("./middleware/verify_data")
 
 const apiRouter = express.Router()
 
@@ -42,6 +46,10 @@ apiRouter.delete('/likes/delete', likesController.del)
 apiRouter.get('/blocked/:userId', blockedController.index)
 apiRouter.post('/blocked/add', blockedController.add)
 apiRouter.delete('/blocked/delete', blockedController.del)
+
+// Auth
+apiRouter.get('/auth/confirmationMail/:token',
+    usersController.confirmationMail)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter

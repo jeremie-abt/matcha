@@ -1,26 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-useless-concat */
-/* eslint-disable no-plusplus */
-/* eslint-disable block-scoped-var */
-/* eslint-disable vars-on-top */
-/* eslint-disable no-var */
-/* eslint-disable no-use-before-define */
-/* eslint-disable dot-notation */
-/* eslint-disable no-console */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable consistent-return */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable radix */
-/* eslint-disable no-param-reassign */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable prefer-const */
-/* eslint-disable prefer-template */
-/* eslint-disable no-eval */
-/* eslint-disable no-unused-vars */
-/* eslint-disable camelcase */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable lines-between-class-members */
 /*
  *   jabt : module in order to produce modular statement
  *   for SQL
@@ -29,28 +6,33 @@
  *   on pourra tout repasser en fonctionel
  */
 
-class Req_formatter {
+class reqFormatter {
   /**
    * METHODS :
    *    - flush : This clean the all object and allow you to remake
    *      a new request from the begining
-   *    - add_aggregation : add aggragation function to some fields, see example below
+   *    - addAggregation : add aggragation function to some fields, see example below
    *    For now the setters doesn't
-   *    - set_group_by : add a group_by statement to the function
-   *    - set_limit : add limit statement (either two number for a range or just one numb)
-   *    - set_order_by : add a order_by statement to the function
-   *    - add_fields : add some fields, see example below
+   *    - setGroupBy : add a group_by statement to the function
+   *    - setLimit : add limit statement (either two number for a range or just one numb)
+   *    - setOrderBy : add a order_by statement to the function
+   *    - addFields : add some fields, see example below
    *    - where : add where statement
    *    - join : add join
-   *    - generate_query : return tab with the string query and the values tab
+   *    - generateQuery : return tab with the string query and the values tab
    *        of the query
    */
 
-  _eq = '=' // equal
+  _eq = '=' // equl
+
   _gt = '>' // greater than
-  _ge = '>=' // greater equal
+  
+  _ge = '>=' // greate equal
+
   _lt = '<' // less than
+ 
   _le = '<=' // less equal
+
   _ne = '!=' // not equal
 
   /**
@@ -59,17 +41,18 @@ class Req_formatter {
    */
   flush() {
     this.table = 'matcha'
-    this._join_statement = ''
-    this._where_statement = ''
-    this._group_by = ''
+
+    this._joinStatement = ''
+    this._whereStatement = ''
+    this._groupBy = ''
     this._order_by = ''
     this._having = ''
     this._limit = ''
     this._value_index = 1
     // this._where_arg_values = [] // faut suppr mais je laisse
     // car ca peut generer des bueugs
-    this._field_names = []
-    this._field_values = []
+    this._fieldNames = []
+    this._fieldValues = []
     this._value_linker = []
     // 1this._value_linker = {} // pareil a suppr mais possibilit de beugs
   }
@@ -81,65 +64,73 @@ class Req_formatter {
   /**
    * @param {Object} args
    */
-  add_aggregation(args) {
-    //  deprecated => y'a pas de fonction d'aggregation sur du where
-    //  const where_builder = (field_name, aggregated_field_name) => {
-    //  this._where_statement = this._where_statement.replace(
-    //    field_name, aggregated_field_name)
-    //  }
+  // ~! A test 
+  addAggregation(args) {
 
-    const field_builder = (field_name, aggregated_field_name) => {
-      this._field_names = this._field_names.map(x => {
-        if (x === field_name) {
-          return aggregated_field_name
+    const fieldBuilder = (fieldName, aggregatedFieldName) => {
+      this._fieldNames = this._fieldNames.map(x => {
+        if (x === fieldName) {
+          return aggregatedFieldName
         }
         return x
       })
     }
 
-    for (let top_key in args) {
-      for (let [field, aggregations] of Object.entries(args[top_key])) {
-        if (!Array.isArray(aggregations)) {
-          aggregations = [aggregations]
+    // !~ a test sans forEach
+    Object.keys(args).forEach(topKey => {
+      
+      // !~ si ca beug essaye d'inverser aggregation et field
+      // !~ foreach c'est que pour les array
+      args[topKey].forEach(([field, aggregations]) => {
+        let aggregationsArray = aggregations
+        
+        if (!Array.isArray(aggregationsArray)) {
+          aggregationsArray = [aggregations]
+        } else {
+          aggregationsArray = aggregations
         }
-        let aggregated_full_name = ''
-        for (let aggregation of Object.values(aggregations)) {
-          if (aggregated_full_name === '') {
-            aggregated_full_name = aggregation.toUpperCase() + '()'
+        let aggregatedFullName = ''
+
+        Object.values(aggregationsArray).forEach(aggregation => {
+          if (aggregatedFullName === '') {
+            aggregatedFullName = `${aggregation.toUpperCase()  }()`
           } else {
-            aggregated_full_name =
-              aggregation.toUpperCase() + '(' + aggregated_full_name + ')'
+            aggregatedFullName =
+              `${aggregation.toUpperCase()  }(${  aggregatedFullName  })`
           }
-        }
-        let len = aggregations.length
-        aggregated_full_name =
-          aggregated_full_name.substring(0, aggregated_full_name.length - len) +
+        })
+        const len = aggregations.length
+        aggregatedFullName =
+          aggregatedFullName.substring(0, aggregatedFullName.length - len) +
           field +
           ')'.repeat(len)
 
-        const building_function = eval(`${top_key}_builder`)
-        building_function(field, aggregated_full_name)
-      }
-    }
+        fieldBuilder(field, aggregatedFullName)
+        })
+    })
     return this
   }
 
   /**
    *
-   * @param {string || Array} fields_name
+   * @param {string || Array} fieldsName
    */
-  set_group_by(fields_name) {
-    let group_by_statement = ''
-    if (this._group_by === '') {
-      group_by_statement = 'GROUP BY '
+  setGroupBy(fieldsName) {
+    let groupByStatement = ''
+    let arrayFieldsName = []
+
+    if (this._groupBy === '') {
+      groupByStatement = 'GROUP BY '
     } else {
-      group_by_statement = this._group_by + ' '
+      groupByStatement = `${this._groupBy  } `
     }
-    if (!Array.isArray(fields_name)) {
-      fields_name = [fields_name]
+    if (!Array.isArray(fieldsName)) {
+      arrayFieldsName = [fieldsName]
+    } else {
+      arrayFieldsName = fieldsName
     }
-    group_by_statement += fields_name.join(', ')
-    this._group_by = group_by_statement
+    groupByStatement += arrayFieldsName.join(', ')
+    this._groupBy = groupByStatement
     return this
   }
 
@@ -147,23 +138,22 @@ class Req_formatter {
    * @param {string} begin
    * @param {string} end
    */
-  set_limit(begin, end = null) {
-    begin = parseInt(begin)
+  setLimit(begin, end = null) {
+    let limitStatement = ''
 
-    if (isNaN(begin)) return
-    let limit_statement = ''
-    limit_statement = ` LIMIT ${begin}`
-    if (end !== null && !isNaN(parseInt(end))) {
-      limit_statement += ` OFFSET ${end}`
+    if (Number.isNaN(parseInt(begin, 10))) return -1
+    limitStatement = ` LIMIT ${begin}`
+    if (end !== null && !Number.isNaN(parseInt(end, 10))) {
+      limitStatement += ` OFFSET ${end}`
     }
-    this._limit = limit_statement
+    this._limit = limitStatement
     return this
   }
 
   /**
    * @param {string || Array} fields
    */
-  set_order_by(order_by_conditions) {
+  setOrderBy(orderByConditions) {
     /**
      * cette partie est totalement discutable,
      * enfaite en demandant un input de ce type :
@@ -173,64 +163,62 @@ class Req_formatter {
      * et pour order by l'ordre de tri compte !
      */
 
-    let order_by_statement = ''
+    let orderByStatement = ''
 
     if (this._order_by === '') {
-      order_by_statement = 'ORDER BY '
+      orderByStatement = 'ORDER BY '
     } else {
-      order_by_statement = this._order_by + ', '
+      orderByStatement = `${this._order_by  }, `
     }
-    order_by_conditions.forEach(elem => {
-      order_by_statement += `${elem[0]} ${elem[1].toUpperCase()}, `
+    orderByConditions.forEach(elem => {
+      orderByStatement += `${elem[0]} ${elem[1].toUpperCase()}, `
     })
-    order_by_statement = order_by_statement.substring(
+    orderByStatement = orderByStatement.substring(
       0,
-      order_by_statement.length - 2
+      orderByStatement.length - 2
     )
-    this._order_by = order_by_statement
+    this._order_by = orderByStatement
     return this
   }
 
-  set_having() {
+  /*
+  setHaving() {
     console.log('not implemented, if needed contact JABT')
   }
+  */
 
   /**
    *
    * @param {Array || Object} fields
-   *    Array => push only the Array in this._field_names
-   *    Object => keys push in this ._field_names
-   *    and values pushed into this._field_values
+   *    Array => push only the Array in this._fieldNames
+   *    Object => keys push in this ._fieldNames
+   *    and values pushed into this._fieldValues
    */
 
-  add_fields(fields) {
+  addFields(fields) {
     if (Array.isArray(fields)) {
-      this._field_names = this._field_names.concat(fields)
+      this._fieldNames = this._fieldNames.concat(fields)
     } else {
-      for (let [key, val] of Object.entries(fields)) {
-        this._field_names.push(key)
-        this._field_values.push(val)
-      }
+
+      Object.entries(fields).forEach( ([key, val]) => {
+        this._fieldNames.push(key)
+        this._fieldValues.push(val)
+      })
     }
     return this
   }
 
-  // c'est paas ouff ouff mais bon j'ai pas trouver mieux
-  // j'ai essayer de regarder un peu les big ORM
-  // mais ils font des trucs de ouff donc c'est un truc simple qui marche quoi
   /**
-   * @param {string} foreign_table
-   * @param {string} foreign_key
-   * @param {string} inner_key
+   * @param {string} foreignTable
+   * @param {string} foreignKey
+   * @param {string} innerKey
    * @param {string} type
    */
-  join(foreign_table, foreign_key, inner_key, type = 'inner') {
-    type = type.toUpperCase()
-    this._join_statement +=
-      type +
-      ` JOIN ${foreign_table} ` +
-      `ON ${this.table}.${inner_key} = ` +
-      `${foreign_table}.${foreign_key}`
+  join(foreignTable, foreignKey, innerKey, type = 'inner') {
+    this._joinStatement +=
+      `${type.toLocaleUpperCase()} JOIN ${foreignTable} ` +
+      `ON ${this.table}.${innerKey} = ` +
+      `${foreignTable}.${foreignKey}`
     return this
   }
 
@@ -238,28 +226,30 @@ class Req_formatter {
    * @param {Object} args
    */
   where(args) {
+
     /**
      * @param {Object} args   sub object of args
      * @param {string} type   either ("or" and "and")
      */
-    const sub_procedure = (args, type) => {
-      for (let [operator, val] of Object.entries(args)) {
-        for (let sub_key in val) {
-          this._add_where_condition(
-            sub_key,
-            val[sub_key],
-            operator,
+
+     const subProcedure = (condition, type) => {
+      Object.entries(condition).forEach(([operator, val]) => {
+        Object.entries(val).forEach(([field, value]) => {
+          this._addWhereCondition(
+            field,
+            value,
+            `_${operator}`,
             type.toUpperCase()
           )
-        }
-      }
+        })
+      })
     }
 
     if ('or' in args) {
-      sub_procedure(args['or'], 'or')
+      subProcedure(args.or, 'or')
     }
     if ('and' in args) {
-      sub_procedure(args['and'], 'and')
+      subProcedure(args.and, 'and')
     }
     return this
   }
@@ -273,140 +263,128 @@ class Req_formatter {
    *    UPDATE = "update" etc ..., donc je laisse comme ca
    *    je trouve ca ok a voir
    */
-  generate_query(type) {
-    const type_handlers = {
-      select: _get_select,
-      insert: _get_insert,
-      update: _get_update,
-      delete: _get_delete
+  generateQuery(type) {
+    
+    function _getSelect(fieldNames, fieldValues) {
+      const statement = 'SELECT '
+      let fieldStatement = ''
+      
+      if (fieldValues.length === 0) {
+        if (fieldNames.length > 0) {
+          fieldStatement += fieldNames.join(', ')
+        } else {
+          fieldStatement += '*'
+        }
+      } else if (fieldValues.length >= 1) {
+        for (let i = 0; i < fieldNames.length; i += 1) {
+          fieldStatement += `${fieldNames[i]} AS ${fieldValues[i]}, `
+        }
+        fieldStatement = fieldStatement.substring(
+          0,
+          fieldStatement.length - 2
+        )
+      }
+      if (fieldStatement === '') return -1
+      return `${statement + fieldStatement  } FROM ${this.table}`
+    }
+    
+    function _getInsert(fieldNames, fieldValues) {
+      let statement = `INSERT INTO ${this.table} (`
+
+      if (fieldValues.length <= 0) return -1
+      statement += `${fieldNames.join(', ')  }) `
+      statement += 'VALUES ('
+      const index = this._value_index
+      for (let i = index; i < fieldValues.length + index; i += 1) {
+        statement += `$${i}, `
+        this._value_linker.push(fieldValues[i - index])
+      }
+      this._value_index += fieldValues.length
+      statement = `${statement.substring(0, statement.length - 2)  })`
+      return statement
+    }
+    
+    function _getUpdate(fieldNames, fieldValues) {
+      let statement = `UPDATE ${this.table} SET `
+      
+      if (
+        fieldNames.length !== fieldValues.length ||
+        fieldNames.length <= 0
+        ) {
+          return -1
+        }
+
+        // !~ clairement un beug ici dans la boucle !!! a regler
+        // const len_computed = i + fieldNames.length // eviter la boucle inf ...
+        
+        for (let i = 0; i < fieldValues.length; i += 1) { 
+        // fieldNames.forEach(index => {
+          statement += `${fieldNames[i]} = $${this._value_index}, `
+          this._value_linker.push(fieldValues[i])
+          this._value_index += 1
+        }
+        statement = statement.substring(0, statement.length - 2)
+        return statement
+    }
+    
+    function _getDelete() {
+      return `DELETE FROM ${this.table} `
     }
 
-    type = type.toLowerCase()
-    if (!(type in type_handlers)) {
-      throw `${type} not a valid type of request\n`
+    const typeHandlers = {
+      select: _getSelect.bind(this),
+      insert: _getInsert.bind(this),
+      update: _getUpdate.bind(this),
+      delete: _getDelete.bind(this)
+    }
+
+    const requestType = type.toLowerCase()
+    if (!(requestType in typeHandlers)) {
+      throw `${requestType} not a valid type of request\n`
     } else {
       // je sais c'est sale mais c'est la seule fasons pour que
       // l'inheritance de variable soit faite
-      var [field_names, field_values] = this._get_fields()
-
-      const field_statement = type_handlers[type](this)
-      let final_statement =
-        field_statement +
-        ' ' +
-        this._join_statement +
-        ' ' +
-        this._where_statement +
-        ' ' +
-        this._group_by +
-        this._order_by +
-        this._limit +
-        ';'
-      return [final_statement, this._value_linker]
-    }
-
-    function _get_select(that) {
-      let statement = 'SELECT '
-      let field_statement = ''
-
-      if (field_values.length === 0) {
-        if (field_names.length > 0) {
-          field_statement += field_names.join(', ')
-        } else {
-          field_statement += '*'
-        }
-      } else if (field_values.length >= 1) {
-        for (let i = 0; i < field_names.length; i++) {
-          field_statement += `${field_names[i]} AS ${field_values[i]}, `
-        }
-        field_statement = field_statement.substring(
-          0,
-          field_statement.length - 2
-        )
-      }
-      if (field_statement === '') return -1
-      return statement + field_statement + ` FROM ${that.table}`
-    }
-
-    function _get_insert(that) {
-      let statement = `INSERT INTO ${that.table} (`
-
-      if (field_values.length <= 0) return -1
-      statement += field_names.join(', ') + ') '
-      statement += 'VALUES ('
-      let index = that._value_index
-      for (let i = index; i < field_values.length + index; i++) {
-        statement += `$${i}, `
-        that._value_linker.push(field_values[i - index])
-        // updating value_linker to become tab,
-        // before it was an object
-        // that._value_linker[i] = field_values[i]
-      }
-      that._value_index += field_values.length
-      statement = statement.substring(0, statement.length - 2) + ')'
-      return statement
-    }
-
-    function _get_update(that) {
-      let statement = `UPDATE ${that.table} SET `
-
-      if (
-        field_names.length !== field_values.length ||
-        field_names.length <= 0
-      ) {
-        return -1
-      }
-
-      // !~ clairement un beug ici dans la boucle !!! a regler
-      // const len_computed = i + field_names.length // eviter la boucle inf ...
-
-      const len = field_names.length
-      let i = 0
-      for (let index in field_names) {
-        statement += `${field_names[index]} = ` + `$${that._value_index}, `
-        that._value_linker.push(field_values[index])
-        that._value_index += 1
-      }
-      // while (i < len) {
-      //   statement += `${field_names[i - 1]} = $${}, `
-      //   that._value_linker.push(field_values[i - 1])
-      //   // updating value_linker to become tab,
-      //   // before it was an object
-      //   // that._value_linker[i] = field_values[i - 1]
-      //   that._value_index += 1
-      //   i++
-      // }
-      statement = statement.substring(0, statement.length - 2)
-      return statement
-    }
-
-    function _get_delete(that) {
-      return `DELETE FROM ${that.table} `
+      const [fieldNames, fieldValues] = this._getFields()
+  
+      const fieldStatement = typeHandlers[requestType](fieldNames, fieldValues)
+      const finalStatement =
+        `${fieldStatement 
+        } ${ 
+        this._joinStatement 
+        } ${ 
+        this._whereStatement 
+        } ${ 
+        this._groupBy 
+        }${this._order_by 
+        }${this._limit 
+        };`
+      return [finalStatement, this._value_linker]
     }
   }
+  
+  _addWhereCondition(field, value, operator, type) {
 
-  _add_where_condition(field, value, operator, type) {
-    if (this._where_statement === '') {
-      this._where_statement += 'WHERE '
+    if (this._whereStatement === '') {
+      this._whereStatement += 'WHERE '
     } else {
-      this._where_statement += `${type} `
+      this._whereStatement += `${type} `
     }
-    const op = eval('this._' + operator)
+    const op = this[operator]
     if (typeof op === 'function') {
       op(field, value)
     } else {
-      this._where_statement += `${field} ${op} $${this._value_index} `
+      this._whereStatement += `${field} ${op} $${this._value_index} `
       this._value_index += 1
       this._value_linker.push(value)
-      // this._where_arg_values.push(value)
     }
   }
 
-  _get_fields() {
+  _getFields() {
     if (
-      this._field_values.length === 0 ||
-      this._field_names.length === this._field_values.length
+      this._fieldValues.length === 0 ||
+      this._fieldNames.length === this._fieldValues.length
     ) {
-      return [this._field_names, this._field_values]
+      return [this._fieldNames, this._fieldValues]
     }
     return -1
   }
@@ -423,17 +401,16 @@ class Req_formatter {
     this._where_arg_values.push(value[0], value[1])
     // this._where_arg_values.push(value[0], value[1])
     this._value_index += 2
-    this._where_statement += statement
+    this._whereStatement += statement
   }
 }
 
-// a voir si c'est clair ou pas !
 /**
  *  EXEMPLE :
- *    - add_aggregation and add_fields:
+ *    - addAggregation and addFields:
  *      ```
- *        obj = new Req_formatter()
- *        obj.add_fields({
+ *        obj = new reqFormatter()
+ *        obj.addFields({
  *          lastname: "jean",
  *          firstname: "jacque",
  *          username: "jejems"
@@ -445,7 +422,7 @@ class Req_formatter {
  *            }
  *          }
  *        })
- *          .add_aggregation({
+ *          .addAggregation({
  *          field: {
  *            lastname: ["count", "avg"],
  *            firstname: "count"
@@ -455,17 +432,17 @@ class Req_formatter {
  *              SELECT AVG(COUNT(lastname)) AS jean, COUNT(firstname) AS jacque,
  *              username AS jejems FROM matcha  WHERE user_id <= $1  ;
  *
- *      - set_order_by :
- *        obj.set_order_by([['lastname', 'asc'], ['username', 'desc']])
+ *      - setOrderBy :
+ *        obj.setOrderBy([['lastname', 'asc'], ['username', 'desc']])
  *        // outpout : ... ORDER BY lastname ASC, username DESC;
  *      ```
  *
  *
- *    - add_aggregation and add_fields:
+ *    - addAggregation and addFields:
  *      ```
- *        obj = new Req_formatter()
+ *        obj = new reqFormatter()
  *        obj.table = "users"
- *        obj.add_fields({
+ *        obj.addFields({
  *          lastname: "jean",
  *          firstname: "jacque",
  *          username: "jejems"
@@ -485,8 +462,8 @@ class Req_formatter {
  *          }
  *          })
  *          .join("seen", "seen_id", "id", "left")
- *      console.log(obj.generate_query("select")[0])
- *      console.log(obj.generate_query("select")[1])
+ *      console.log(obj.generateQuery("select")[0])
+ *      console.log(obj.generateQuery("select")[1])
  *      OUTPOUT :
  *      SELECT lastname AS jean, firstname AS jacque, username
  *      AS jejems FROM users LEFT JOIN seen ON users.id = seen.seen_id
@@ -497,7 +474,7 @@ class Req_formatter {
  *
  *      obj.flush()
  *      obj.table = "users"
- *      obj.add_fields({
+ *      obj.addFields({
  *        lastname: "jean",
  *        firstname: "jacque",
  *        username: "jejems"
@@ -517,7 +494,7 @@ class Req_formatter {
  *        }
  *      })
  *
- *     console.log(obj.generate_query("update"))
+ *     console.log(obj.generateQuery("update"))
  *     OUTPOUT :
  *      [
  *        'UPDATE users SET lastname = $5,
@@ -530,7 +507,7 @@ class Req_formatter {
  *      ]
  *
  *
- *      console.log(obj.generate_query("insert"))
+ *      console.log(obj.generateQuery("insert"))
  *      OUTPOUT :
  *      [
  *        'INSERT INTO users (lastname, firstname, username)
@@ -541,7 +518,7 @@ class Req_formatter {
  *          ]
  *      ]
  *
- *      console.log(obj.generate_query("delete"))
+ *      console.log(obj.generateQuery("delete"))
  *      [
  *        'DELETE FROM users   WHERE lastname = $1 OR
  *          username = $2 AND firstname <= $3 AND test <= $4  ;',
@@ -551,4 +528,5 @@ class Req_formatter {
  *
  *
  */
-module.exports = Req_formatter
+
+module.exports = reqFormatter

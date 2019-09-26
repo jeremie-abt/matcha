@@ -100,9 +100,8 @@ class FormUpdateProfil extends React.Component {
     )
   }
 
-  handleSubmit = formData => {
-    console.log('ici form Data : ', formData)
-    alert('Not implemented')
+  handleSubmit = (formData) => {
+    alert("Not implemented")
   }
 
   _updateData(newData) {
