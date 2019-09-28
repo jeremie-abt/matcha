@@ -1,8 +1,9 @@
 import React from 'react'
 import { Router, Route, Switch } from 'react-router-dom'
-import FormUpdateProfil from './components/Form/formComponent/FormUpdateProfil'
+
 import LoginPage from './pages/LoginPage'
 import homePage from './pages/homePage'
+import RegisterPage from './pages/RegisterPage'
 
 import MyProvider from './context/MyProvider'
 import { createBrowserHistory } from 'history'
@@ -14,9 +15,11 @@ const AppRouter = () => (
     <div>
       <Switch>
         <MyProvider>
-          <Route path='/homePage' component={ homePage } exact />
-          <Route path='/' component={LoginPage} exact />
-          <Route path='/FormUpdateProfil' component={FormUpdateProfil} exact />
+          <Route path='/login' component={ LoginPage } exact />
+         
+          <Route path='/' component={ homePage  } exact />
+
+          <Route path='/register' component={ RegisterPage } exact />
         </MyProvider>
       </Switch>
     </div>

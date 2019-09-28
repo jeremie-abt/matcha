@@ -12,9 +12,10 @@ function OurNavbar() {
     <Content>
       <Level>
         <Level.Side align="left">
-          <Navbar.Item>
+          <Navbar.Item href="/">
             <figure>
-              <img src={require('../assets/img/matchaIcon.jpg')} alt="logo" />
+              <img src={require('../assets/img/matchaIcon.jpg')}
+                  alt="logo" />
             </figure>
           </Navbar.Item>
         </Level.Side>

@@ -1,7 +1,6 @@
 import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import FormConstructor from '../FormConstructor'
-import axios from 'axios'
 
 let fields = [
   {
@@ -38,7 +37,6 @@ let fields = [
 
 class FormCreateProfil extends React.Component {
 
-  
   constructor() {
     super()
     this.state = {}
