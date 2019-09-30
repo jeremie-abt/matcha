@@ -9,11 +9,7 @@ function PageSkeleton({ children }) {
   return (
     <Hero size="fullheight">
       <OurHeader />
-      <Container>
-        <Hero.Body>
           { children }
-        </Hero.Body>
-      </Container>
       <OurFooter />
     </Hero>
   )

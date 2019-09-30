@@ -1,29 +1,27 @@
 import React from 'react'
-import { Router, Route, Switch } from 'react-router-dom'
-
-import LoginPage from './pages/LoginPage'
-import homePage from './pages/homePage'
-import RegisterPage from './pages/RegisterPage'
 
 import MyProvider from './context/MyProvider'
-import { createBrowserHistory } from 'history'
+import UserContext from './context/UserContext'
 
-const history = createBrowserHistory()
+import NotLoggedRoutes from './routes/NotLoggedRoutes'
+import LoggedRoutes from './routes/LoggedRoutes'
+
 
 const AppRouter = () => (
-  <Router history={history}>
-    <div>
-      <Switch>
+  
         <MyProvider>
-          <Route path='/login' component={ LoginPage } exact />
-         
-          <Route path='/' component={ homePage  } exact />
+          <UserContext.Consumer>
+            {
+              context => {
+                if (context.store.isAuth === false)
+                  return <NotLoggedRoutes />
+                else
+                  return <LoggedRoutes />
+              }
+            }
+          </UserContext.Consumer>
 
-          <Route path='/register' component={ RegisterPage } exact />
         </MyProvider>
-      </Switch>
-    </div>
-  </Router>
 )
 
 export default AppRouter

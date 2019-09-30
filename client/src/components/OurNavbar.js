@@ -2,6 +2,7 @@ import React from 'react'
 import { Navbar, Level, Content } from 'react-bulma-components'
 
 import HeaderLinks from './HeaderLinks'
+import UserContext from '../context/UserContext'
 
 // un peu degueux pour l'image je suis d'accord
 // mais je pense qu'on verra plus tard pour passer
@@ -20,7 +21,18 @@ function OurNavbar() {
           </Navbar.Item>
         </Level.Side>
         <Level.Side align="right">
-          <HeaderLinks />
+          <UserContext.Consumer>
+            {
+              context => {
+                if (context.store.isAuth === false)
+                  return <HeaderLinks />
+                else
+                  return (
+                    <p>Deconnexion button not Implemented yet</p>
+                  ) 
+              }
+            }
+          </UserContext.Consumer>
         </Level.Side>
       </Level>
     </Content>
