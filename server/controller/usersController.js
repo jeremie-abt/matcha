@@ -26,7 +26,7 @@ function show(req, res) {
         return
       }
       const user = response.rows[0]
-      if (user.password === req.body.password) {
+      if (user.password === cryptPassword) {
         res.status(200)
         res.json(response.rows[0])
       }

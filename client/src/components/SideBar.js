@@ -1,19 +1,41 @@
 import React from 'react'
 
-import { Menu } from 'react-bulma-components'
+import { Menu, Button } from 'react-bulma-components'
 
-function SideBar() {
+function SideBar({ handleClick }) {
 
   return (
     <Menu className="sidebar">
       <Menu.List>
-        <Menu.List.Item>Modifier les infos (+ localisation)</Menu.List.Item>
+        <Menu.List.Item>
+          <Button onClick={() => handleClick("profil")}>
+            Profil
+          </Button>
+        </Menu.List.Item>
         <hr />
-        <Menu.List.Item>Modifier Image (david)</Menu.List.Item>
+        <Menu.List.Item>
+          <Button onClick={() => handleClick("update")}>
+            Modifier les infos (+ localisation)
+          </Button>
+        </Menu.List.Item>
         <hr />
-        <Menu.List.Item>Voir les likes / match / views !</Menu.List.Item>
+        <Menu.List.Item>
+          <Button onClick={() => handleClick("like")}>
+            Voir les likes !
+          </Button>
+        </Menu.List.Item>
         <hr />
-        <Menu.List.Item>Calcul des points de popularite</Menu.List.Item>
+        <Menu.List.Item>
+          <Button onClick={() => alert("not implemented")}>
+            Voir les Match
+          </Button>
+        </Menu.List.Item>
+        <hr />
+        <Menu.List.Item>
+          <Button onClick={() => alert("not implemented")}>
+            Calcul des points de popularite
+          </Button>
+        </Menu.List.Item>
       </Menu.List>
     </Menu>
   )

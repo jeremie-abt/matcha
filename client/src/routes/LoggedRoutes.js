@@ -1,22 +1,16 @@
 import React from 'react'
-import { Router, Route, Switch } from 'react-router-dom'
-import { createBrowserHistory } from 'history'
+import { Route, Switch } from 'react-router-dom'
 
 import UserPage from '../pages/UserPage'
 
-const history = createBrowserHistory()
 
 function LoggedRoutes() {
   return (
-    <Router history={history}>
-      <div>
-        <Switch>
+    <Switch>
 
-            <Route path='/' component={ UserPage } exact />
+        <Route path='/' component={ UserPage } exact />
 
-        </Switch>
-      </div>
-    </Router>
+    </Switch>
   )
 }
 

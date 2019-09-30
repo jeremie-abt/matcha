@@ -1,5 +1,5 @@
 import React from 'react'
-import { Hero, Container } from 'react-bulma-components'
+import { Hero } from 'react-bulma-components'
 
 import OurHeader from '../components/OurHeader'
 import OurFooter from '../components/OurFooter'

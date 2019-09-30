@@ -6,7 +6,7 @@ class MyProvider extends React.Component {
     super(props)
     this.state = {
       user: {},
-      isAuth: true
+      isAuth: false
     }
 
     this.updateState = this.updateState.bind(this)
