@@ -15,6 +15,7 @@ class MyProvider extends React.Component {
 
   updateState(user) {
     this.setState({ user })
+    
   }
 
   updateIsAuth() {

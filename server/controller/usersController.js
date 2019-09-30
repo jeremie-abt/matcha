@@ -97,21 +97,25 @@ function create(req, res) {
 }
 
 function update(req, res) {
-  
+ 
+  // a voir comment je recup le gender
   const fieldsWanted = [
     'firstname', 'lastname', 'email',
-    'username'
+    'username', 'bio'
   ]
+  if ("password" in req.body)
+    console.log("password update not implemented Yet")
   const toUpdateFields = {}
   fieldsWanted.forEach(elem => {
     if (elem in req.body) {
       toUpdateFields[elem] = req.body[elem]
     }
   })
+  console.log("toupdate field : ", toUpdateFields)
   if (Object.keys(toUpdateFields).length === 0) {
+    // !~ quel status renvoyer ??
     res.status(404).send("no Data provided to update users")
     res.end()
-    // c'est ok ca ?
   }
   else {
     userModel.updateUser(toUpdateFields, req.params.userId)

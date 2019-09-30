@@ -6,7 +6,7 @@ import SideBar from '../components/SideBar'
 import PageSkeleton from '../components/PageSkeleton'
 
 // dynamic components
-import Profil from '../components/Profil'
+import Profil from '../components/Profil/Profil'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Like from '../components/LikeHisto'
 
@@ -23,7 +23,6 @@ function UserPage() {
   // mecanisme de component qui change
   // un max de linkage
   // 
-  console.log("Bojnour voici la value : ", curComponent)
   return (
     <PageSkeleton>
       <Columns>

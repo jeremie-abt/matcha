@@ -12,14 +12,14 @@ function displayTag(tagId) {
       }
     }
   })
-  return client.query(...query.generate_query('select'))
+  return client.query(...query.generateQuery('select'))
 }
 
 function showAllTags() {
   const query = new ReqFormatteur()
 
   query.table = 'tags'
-  return client.query(...query.generate_query('select'))
+  return client.query(...query.generateQuery('select'))
 }
 
 module.exports = {

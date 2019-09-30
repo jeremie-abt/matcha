@@ -16,7 +16,6 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
       .post('/users/getUser', { ...submittedData })
       .then(result => {
         if (result.status === 200) {
-          alert('On est bon les gars')
           setRedirect(true)
           updateUser(result.data)
           updateIsAuth()

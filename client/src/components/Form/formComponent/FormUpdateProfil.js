@@ -2,6 +2,7 @@ import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
+import UserContext from '../../../context/UserContext';
 
 let fields = [
   {
@@ -59,6 +60,8 @@ let fields = [
 ]
 
 class FormUpdateProfil extends React.Component {
+  static contextType = UserContext
+  
   constructor() {
     super()
     this.state = {}
@@ -101,7 +104,9 @@ class FormUpdateProfil extends React.Component {
   }
 
   handleSubmit = (formData) => {
-    alert("Not implemented")
+    alert("Attention aucune verif n'est faite")
+    axios.put("/users/" + this.context.store.user.id, {...formData})
+      .catch(e => {throw e})
   }
 
   _updateData(newData) {

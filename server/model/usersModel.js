@@ -61,17 +61,18 @@ function updateUser(updateInfo, userId) {
   // obliger sinon ca va plenter
   // bon c'est un peu shlag je vais faire la lib juste apres
   // pour generer des requettes et ce sera full modulaire
-  const statement = `UPDATE users `
-                    + `SET firstname = $1, `
-                    + `lastname = $2, `
-                    + `username = $3, `
-                    + 'email = $4'
-                    + `WHERE id = $5`
-  const values = [
-    updateInfo.firstname, updateInfo.lastname,
-    updateInfo.username, updateInfo.email, userId
-  ]
-  return client.query(statement, values)
+
+  const ReqGenerator = new ReqFormatter()
+  ReqGenerator.table = "users"
+  ReqGenerator.addFields(updateInfo)
+    .where({
+      and: {
+        eq: {
+          id: userId
+        }
+      }
+    })
+  return client.query(...ReqGenerator.generateQuery("update"))
 }
 
 function deleteUser(userId) {
