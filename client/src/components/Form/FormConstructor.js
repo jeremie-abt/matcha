@@ -76,8 +76,7 @@ class FormConstructor extends React.Component {
       <Form.Field key={elem.name + elem.type}>
         <Form.Control>
           <Form.Label>{elem.title}</Form.Label>
-          {
-            elem.checkboxValues.map((checkboxElem, index) => {
+          {elem.checkboxValues.map((checkboxElem, index) => {
             if (typeof checkboxElem === 'string') {
               checkboxComponent = (
                 <Checkbox

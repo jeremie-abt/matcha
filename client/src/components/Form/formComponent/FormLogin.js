@@ -4,7 +4,6 @@ import axios from 'axios'
 
 import { Redirect } from 'react-router-dom'
 
-
 const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
   const [isValid, setIsValid] = useState(true)
   const [redirect, setRedirect] = useState(false)
@@ -28,9 +27,7 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
   }
   return (
     <div>
-      {
-        redirect && <Redirect to="/"/>
-      }
+      {redirect && <Redirect to='/' />}
       <FormConstructor
         fields={fields}
         handleForm={handleSubmit}

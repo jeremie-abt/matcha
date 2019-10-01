@@ -1,15 +1,14 @@
 import React from 'react'
-import { Section, Container } from 'react-bulma-components'
+import { Section } from 'react-bulma-components'
 
 import OurNavbar from './OurNavbar'
 
 function OurHeader() {
-  
   return (
-    <Section className="small-height backgroundColor">
-      <Container>
+    <Section className='small-height'>
+      <div className=''>
         <OurNavbar />
-      </Container>
+      </div>
     </Section>
   )
 }

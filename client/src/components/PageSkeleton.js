@@ -1,17 +1,17 @@
 import React from 'react'
-import { Hero } from 'react-bulma-components'
-
+import { Section, Container } from 'react-bulma-components'
 import OurHeader from '../components/OurHeader'
 import OurFooter from '../components/OurFooter'
 
 function PageSkeleton({ children }) {
-  
   return (
-    <Hero size="fullheight">
+    <div className='layout-color'>
       <OurHeader />
-          { children }
+      <Section className='homepage'>
+        <Container>{children}</Container>
+      </Section>
       <OurFooter />
-    </Hero>
+    </div>
   )
 }
 
