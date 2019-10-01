@@ -9,6 +9,7 @@ import Checkbox from './InputStyle/CheckboxStyle'
  *  Parent of form generation.
  */
 class FormConstructor extends React.Component {
+
   _mapperMethod(type, instruction) {
     const pascalCaseType =
       type.charAt(0).toUpperCase() + type.substring(1).toLowerCase()
@@ -23,18 +24,17 @@ class FormConstructor extends React.Component {
   }
   constructor(props) {
     super(props)
-
-    this.state = {
-      checkbox: {}
-    }
+    this.state = {}
   }
 
   handleChange = e => {
     if (e.target.type === 'checkbox') {
-      let newCheckboxObj = this.state.checkbox
-      newCheckboxObj[e.target.name] = !this.state.checkbox[e.target.name]
+      
+      const categorie = e.target.getAttribute("categorie")
+      let newCheckboxObj = this.state[categorie]
+      newCheckboxObj[e.target.name] = !this.state[categorie][e.target.name]
       this.setState({
-        checkbox: newCheckboxObj
+        categorie: newCheckboxObj
       })
     } else this.setState({ [e.target.name]: e.target.value })
   }
@@ -72,33 +72,41 @@ class FormConstructor extends React.Component {
   _renderCheckbox = elem => {
     let checkboxComponent
 
+    if (this.state[elem.name] === undefined) {
+      // je sais pas comment resoudre ce probleme !
+      // si je fais un setState il n'est pas declarer quand 
+      // j'arrive juste en dessous !!
+      this.state[elem.name] = {}
+    }
     return (
       <Form.Field key={elem.name + elem.type}>
         <Form.Control>
           <Form.Label>{elem.title}</Form.Label>
           {
             elem.checkboxValues.map((checkboxElem, index) => {
-            if (typeof checkboxElem === 'string') {
-              checkboxComponent = (
-                <Checkbox
-                  name={checkboxElem}
-                  label={checkboxElem}
-                  onChange={this.handleChange}
-                  checked={this.state.checkbox[checkboxElem]}
-                  key={index}
-                />
-              )
-            } else {
-              checkboxComponent = (
-                <Checkbox
-                  name={checkboxElem.name}
-                  label={checkboxElem.name}
-                  onChange={this.handleChange}
-                  checked={this.state.checkbox[checkboxElem.name]}
-                  key={checkboxElem.id}
-                />
-              )
-            }
+              if (typeof checkboxElem === 'string') {
+                checkboxComponent = (
+                  <Checkbox
+                    categorie={elem.name}
+                    name={checkboxElem}
+                    label={checkboxElem}
+                    onChange={this.handleChange}
+                    checked={this.state[elem.name][checkboxElem]}
+                    key={index}
+                  />
+                )
+              } else {
+                checkboxComponent = (
+                  <Checkbox
+                    categorie={elem.name}
+                    name={checkboxElem.name}
+                    label={checkboxElem.name}
+                    onChange={this.handleChange}
+                    checked={this.state[elem.name][checkboxElem.name]}
+                    key={checkboxElem.id}
+                  />
+                )
+              }
             return checkboxComponent
           })}
         </Form.Control>

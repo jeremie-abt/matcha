@@ -54,6 +54,7 @@ function verifyMail(id) {
   return client.query(statement, args)
 }
 
+
 function updateUser(updateInfo, userId) {
 
   // update info Gtient ces info :

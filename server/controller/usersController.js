@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 const Crypto = require('crypto-js')
+
 const userModel = require('../model/usersModel')
+const tagsModel = require('../model/tagsModel')
 
 const { sendMail } = require('../helpers/MailSender')
 
@@ -96,22 +98,78 @@ function create(req, res) {
     })
 }
 
-function update(req, res) {
- 
+async function update(req, res) {
+
+  function _handleSexualOrientation() {
+    // evidemment ca part du principe que c'est un radio
+    // et que les deux ne sont pas coche
+    const sexe = Object.entries(req.body.sexe).filter(x => x[1] === true)
+    return (
+      sexe.length === 1 ?
+          {gender: sexe[0][0]} :
+          {}
+    )
+  }
+
+  async function _handleTags() {
+    let idTagsUpdate
+    let namesTagsToUpdate = 
+        Object.entries(req.body.tags).filter(elem => elem[1] === true)
+    namesTagsToUpdate = namesTagsToUpdate.map(elem => elem[0])
+    try {
+      idTagsUpdate = await tagsModel.idFromName(namesTagsToUpdate)
+    } catch (e) {
+      console.log("\n\nERROR : ", e, "\n\n")
+      throw "Comment on gere cette erreur !"
+    }
+    return idTagsUpdate.rows
+    /* return tagsModel.idFromName(namesTagsToUpdate)
+      .then(resp => {
+        if (resp.rowCount >= 0) {
+          const tagsId = resp.rows.map(elem => elem.id)
+          return (
+            userModel.updateUser({tags: tagsId}, req.params.userId)
+          )
+        }
+        throw "Something went wrong !"
+      })
+      .then(resp => {
+        if (resp.rowCount === 1)
+          res.status(200).send("Users get successfully updated")
+        else 
+          throw "User not updated"
+      })
+      .catch(() => {
+        // res.status(500).send("Internal Errors !")
+      }) */
+  }
+
   // a voir comment je recup le gender
   const fieldsWanted = [
     'firstname', 'lastname', 'email',
-    'username', 'bio'
+    'username', 'bio', 
   ]
   if ("password" in req.body)
     console.log("password update not implemented Yet")
-  const toUpdateFields = {}
+  let toUpdateFields = {}
   fieldsWanted.forEach(elem => {
     if (elem in req.body) {
       toUpdateFields[elem] = req.body[elem]
     }
   })
-  console.log("toupdate field : ", toUpdateFields)
+  // bad pattern je sais mais flem de tout refaire
+  if ("sexe" in req.body){
+    const testObj = _handleSexualOrientation()
+    toUpdateFields = { ...toUpdateFields, ...testObj }
+  }
+    // alors attentino si tu coches les deux ca fait apparaitre un beug
+    // faut mettre un radio
+  if ("tags" in req.body && Object.keys(req.body.tags).length !== 0){
+    let tagsId = await _handleTags()
+    tagsId = tagsId.map(elem => elem.id)
+    toUpdateFields = { ...toUpdateFields, tags: tagsId}
+  }
+  
   if (Object.keys(toUpdateFields).length === 0) {
     // !~ quel status renvoyer ??
     res.status(404).send("no Data provided to update users")
