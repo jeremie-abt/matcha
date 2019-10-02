@@ -1,22 +1,15 @@
 // ADD HERE variables you want to override
 $primary: #5b96ed
 $header-height: 84px
-$footer-height: 80px
+$footer-height: 50px
+
 @import '~bulma/bulma.sass'
 @import './pages/homePage.sass'
 @import './pages/userPage.sass'
+@import './bulma/card'
 
+// header config
 
-// header config 
- 
-.homepage
-  min-height: calc(100vh - #{$header-height} - #{$footer-height})
-  background: url('../assets/img/loginImage.jpg') no-repeat center/contain 
-  background-attachment: fixed;
-  background-size:  cover;
-  display: flex
-  align-items: center 
-  
 html
   background-color: #f9fcff
 
@@ -29,15 +22,3 @@ html
 
 .layout-color
   background-color: #f9fcff
-
-.card
-  width: fit-content
-  border-radius: 4px
-  padding: 30px 5px
-  &-content
-    max-width: 600px
-    min-width: 400px
-
-.login-form
-  display: flex
-  justify-content: flex-end

@@ -27,7 +27,7 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
   }
   return (
     <div>
-      {redirect && <Redirect to='/' />}
+      {redirect && <Redirect to='/profil' />}
       <FormConstructor
         fields={fields}
         handleForm={handleSubmit}

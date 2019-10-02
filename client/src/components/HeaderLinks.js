@@ -6,19 +6,21 @@ import { Navbar } from 'react-bulma-components'
 // il sache quel link afficher, si le mec est co
 // on afficher se deco / update profile etc ...
 // sinon on affiche sign in sign up etc....
+
 function HeaderLinks(props) {
+  const myItems = [
+    <Navbar.Item href='/' className='button is-primary' key='login'>
+      Sign in
+    </Navbar.Item>,
+    <Navbar.Item href='/register' className='button is-primary' key='register'>
+      Sign Up
+    </Navbar.Item>
+  ]
+
   return (
-    // isoler les deux trucs du dessous !
     <div className='buttons'>
-      <Navbar.Item
-        href='/register'
-        className='button is-primary'
-        key='register'
-      >
-        Sign Up
-      </Navbar.Item>
+      {props.location.pathname === '/register' ? myItems[0] : myItems[1]}
     </div>
   )
 }
-
 export default withRouter(HeaderLinks)
