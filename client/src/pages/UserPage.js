@@ -22,7 +22,7 @@ function UserPage() {
   return (
     <PageSkeleton>
       <Heading>Informations User</Heading>
-      <Container>
+      <Container className='user-container'>
         <Columns>
           <Columns.Column size='one-third'>
             <SideBar
