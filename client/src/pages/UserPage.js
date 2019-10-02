@@ -18,13 +18,13 @@ function UserPage() {
     update: <UpdateForm />
   }
 
-  console.log('Bojnour voici la value : ', curComponent)
+  console.log('Bonjour voici la value : ', curComponent)
   return (
     <PageSkeleton>
       <Heading>Informations User</Heading>
       <Container>
         <Columns>
-          <Columns.Column size='one-quarter'>
+          <Columns.Column size='one-third'>
             <SideBar
               curComponent={curComponent}
               setCurComponent={setCurComponent}
