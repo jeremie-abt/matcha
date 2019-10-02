@@ -1,40 +1,46 @@
 import React from 'react'
 
-import { Menu, Button } from 'react-bulma-components'
+import { Menu } from 'react-bulma-components'
 
-function SideBar({ handleClick }) {
+function SideBar({ curComponent, setCurComponent }) {
+  const components = ['profil', 'update', 'like']
+
+  const isActive = el => {
+    if (curComponent === el) return 'is-active'
+  }
 
   return (
-    <Menu className="sidebar">
-      <Menu.List>
-        <Menu.List.Item>
-          <Button onClick={() => handleClick("profil")}>
-            Profil
-          </Button>
+    <Menu className='sidebar'>
+      <Menu.List title='User options'>
+        <Menu.List.Item
+          className={isActive(components[0])}
+          onClick={() => setCurComponent(components[0])}
+        >
+          Profil
         </Menu.List.Item>
-        <hr />
-        <Menu.List.Item>
-          <Button onClick={() => handleClick("update")}>
-            Modifier les infos (+ localisation)
-          </Button>
+        <Menu.List.Item
+          className={isActive(components[1])}
+          onClick={() => setCurComponent(components[1])}
+        >
+          Modifier
         </Menu.List.Item>
-        <hr />
-        <Menu.List.Item>
-          <Button onClick={() => handleClick("like")}>
-            Voir les likes !
-          </Button>
+      </Menu.List>
+
+      <Menu.List title='Relations'>
+        <Menu.List.Item
+          className={isActive(components[2])}
+          onClick={() => setCurComponent(components[2])}
+        >
+          Likes
         </Menu.List.Item>
-        <hr />
-        <Menu.List.Item>
-          <Button onClick={() => alert("not implemented")}>
-            Voir les Match
-          </Button>
+        <Menu.List.Item onClick={() => alert('not implemented')}>
+          Matchs
         </Menu.List.Item>
-        <hr />
-        <Menu.List.Item>
-          <Button onClick={() => alert("not implemented")}>
-            Calcul des points de popularite
-          </Button>
+      </Menu.List>
+
+      <Menu.List title='Popularity'>
+        <Menu.List.Item onClick={() => alert('not implemented')}>
+          Popularite
         </Menu.List.Item>
       </Menu.List>
     </Menu>
