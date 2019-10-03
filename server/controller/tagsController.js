@@ -43,6 +43,7 @@ const index = (req, res) => {
     .finally(() => res.end())
 }
 
+
 module.exports = {
   show,
   index

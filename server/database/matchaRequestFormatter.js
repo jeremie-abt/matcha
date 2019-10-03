@@ -196,6 +196,7 @@ class reqFormatter {
    */
 
   addFields(fields) {
+
     if (Array.isArray(fields)) {
       this._fieldNames = this._fieldNames.concat(fields)
     } else {
@@ -362,6 +363,18 @@ class reqFormatter {
     }
   }
   
+  _in = (field, value) => { 
+    let whereStatement = `${field} IN (`
+    value.map(elem => {
+      whereStatement += `$${this._value_index}, `
+      this._value_index += 1
+      this._value_linker.push(elem)
+    })
+    whereStatement = whereStatement.substring(0, whereStatement.length - 2)
+    whereStatement += ")"
+    this._whereStatement += whereStatement
+  }
+
   _addWhereCondition(field, value, operator, type) {
 
     if (this._whereStatement === '') {
@@ -369,6 +382,7 @@ class reqFormatter {
     } else {
       this._whereStatement += `${type} `
     }
+    
     const op = this[operator]
     if (typeof op === 'function') {
       op(field, value)
@@ -528,5 +542,6 @@ class reqFormatter {
  *
  *
  */
+
 
 module.exports = reqFormatter

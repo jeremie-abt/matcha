@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Card, Columns, Content } from 'react-bulma-components'
 import FormCreateProfil from '../components/Form/formComponent/FormCreateProfil'
-import PageSkeleton from '../components/PageSkeleton'
+import PageSkeleton from '../components/genericPagesComponent/PageSkeleton'
 
 function LoginPage() {
   return (

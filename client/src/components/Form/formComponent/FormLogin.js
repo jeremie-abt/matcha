@@ -19,6 +19,7 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
     }
   }
 
+  let userData = {}
   const handleSubmit = submittedData => {
     if (!submittedData.username || !submittedData.password)
       return setIsValid(false)
@@ -26,11 +27,22 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
       .post('/users/getUser', { ...submittedData })
       .then(result => {
         if (result.status === 200) {
-          alert('On est bon les gars')
-          setRedirect(true)
-          updateUser(result.data)
-          updateIsAuth()
+          userData = result.data
+          return axios.get('tags/all')
         } else if (result.status === 204) alert('Invalid data')
+      })
+      .then(result => {
+        if (result.data.tags) {
+          const tagsWithName = result.data
+            .filter(elem => {
+              return userData.tags.includes(elem.id)
+            })
+            .map(elem => elem.name)
+          userData.tags = tagsWithName
+        }
+        setRedirect(true)
+        updateUser(userData)
+        updateIsAuth()
       })
       .catch(e => {
         console.log(e)

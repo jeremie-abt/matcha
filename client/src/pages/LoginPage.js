@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Card, Content } from 'react-bulma-components'
 import LoginForm from '../components/Form/formComponent/FormLogin'
 import MyContext from '../context/UserContext'
-import PageSkeleton from '../components/PageSkeleton'
+import PageSkeleton from '../components/genericPagesComponent/PageSkeleton'
 
 let fields = [
   {

@@ -2,8 +2,8 @@ import React from 'react'
 import { Section } from 'react-bulma-components'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import OurHeader from '../components/OurHeader'
-import OurFooter from '../components/OurFooter'
+import OurHeader from './OurHeader'
+import OurFooter from './OurFooter'
 
 function PageSkeleton({ location, children }) {
   const myClasses = classNames({

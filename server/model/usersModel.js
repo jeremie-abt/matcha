@@ -54,6 +54,7 @@ function verifyMail(id) {
   return client.query(statement, args)
 }
 
+
 function updateUser(updateInfo, userId) {
 
   // update info Gtient ces info :
@@ -61,17 +62,20 @@ function updateUser(updateInfo, userId) {
   // obliger sinon ca va plenter
   // bon c'est un peu shlag je vais faire la lib juste apres
   // pour generer des requettes et ce sera full modulaire
-  const statement = `UPDATE users `
-                    + `SET firstname = $1, `
-                    + `lastname = $2, `
-                    + `username = $3, `
-                    + 'email = $4'
-                    + `WHERE id = $5`
-  const values = [
-    updateInfo.firstname, updateInfo.lastname,
-    updateInfo.username, updateInfo.email, userId
-  ]
-  return client.query(statement, values)
+
+  const ReqGenerator = new ReqFormatter()
+  ReqGenerator.table = "users"
+  ReqGenerator.addFields(updateInfo)
+    .where({
+      and: {
+        eq: {
+          id: userId
+        }
+      }
+    })
+  const ret = ReqGenerator.generateQuery("update")
+  console.log("ret : ", ret)
+  return client.query(...ret)
 }
 
 function deleteUser(userId) {
