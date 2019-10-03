@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Card, Columns, Hero } from 'react-bulma-components'
 
 import FormCreateProfil from '../components/Form/formComponent/FormCreateProfil'
-import PageSkeleton from '../components/PageSkeleton'
+import PageSkeleton from '../components/genericPagesComponent/PageSkeleton'
 
 /*let fields = [
   {

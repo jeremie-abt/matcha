@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Columns } from 'react-bulma-components'
 
 import SideBar from '../components/SideBar'
-import PageSkeleton from '../components/PageSkeleton'
+import PageSkeleton from '../components/genericPagesComponent/PageSkeleton'
 
 // dynamic components
 import Profil from '../components/Profil/Profil'

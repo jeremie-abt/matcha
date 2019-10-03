@@ -54,7 +54,6 @@ class FormCreateProfil extends React.Component {
   }
 
   handleSubmit = (formData) => {
-    console.log("ici form Data : ", formData)
     alert("Not implemented")
   }
 

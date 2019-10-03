@@ -1,8 +1,8 @@
 import React from 'react'
 import { Hero } from 'react-bulma-components'
 
-import OurHeader from '../components/OurHeader'
-import OurFooter from '../components/OurFooter'
+import OurHeader from './OurHeader'
+import OurFooter from './OurFooter'
 
 function PageSkeleton({ children }) {
   

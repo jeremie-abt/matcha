@@ -73,7 +73,9 @@ function updateUser(updateInfo, userId) {
         }
       }
     })
-  return client.query(...ReqGenerator.generateQuery("update"))
+  const ret = ReqGenerator.generateQuery("update")
+  console.log("ret : ", ret)
+  return client.query(...ret)
 }
 
 function deleteUser(userId) {

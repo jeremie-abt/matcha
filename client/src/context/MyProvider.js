@@ -14,8 +14,11 @@ class MyProvider extends React.Component {
   }
 
   updateState(user) {
-    this.setState({ user })
-    
+    const newUserContext = this.state.user
+    Object.entries(user).forEach(([key, val]) => {
+      newUserContext[key] = val
+    })
+    this.setState({newUserContext})
   }
 
   updateIsAuth() {

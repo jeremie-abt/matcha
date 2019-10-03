@@ -36,10 +36,10 @@ let fields = [
     type: 'password'
   },
   {
-    name: 'sexe',
-    title: 'sexual_oriantation',
-    type: 'checkbox',
-    checkboxValues: ['male', 'female']
+    name: 'gender',
+    title: 'Gender',
+    type: 'radio',
+    radioValues: ['male', 'female']
   },
   {
     name: 'goelocalisation',
@@ -62,25 +62,12 @@ let fields = [
 class FormUpdateProfil extends React.Component {
   static contextType = UserContext
   
-  constructor() {
-    super()
-    this.state = {}
-    this.state['data'] = fields
-  }
-
   componentDidMount() {
     // Normalement je devrais avoir un context avec le user_id
     // s'il est connecte
-    let contextUserId = 33
 
-    axios
-      .get('/users/' + contextUserId)
-      .then(resp => {
-        this._updateData(resp.data)
-      })
-      .catch(err => {
-        throw err
-      })
+    console.log("componentDidmount called ...")
+    //this._updateData(this.context.store.user)
     axios
       .get('/tags/all')
       .then(resp => {
@@ -94,23 +81,71 @@ class FormUpdateProfil extends React.Component {
       })
   }
 
+  constructor(props, context) {
+    super(props)
+    this.state = {
+      data: this._constructInputs(context)
+    }
+  }
+
+  _constructInputs(context) {
+    // merge le context avec field
+
+    const userContext = context.store.user
+    
+    const transformationHandler = {
+      managetext: (elem) => {
+        return {...elem, placeholder: userContext[elem.name]}
+      },
+      managecheckbox: (elem) => {
+        return {
+          ...elem,
+          "data-checkbox-activated": userContext[elem.name]
+        }
+      },
+      manageradio: (elem) => {
+        return {
+          ...elem,
+          "data-radio-curval": userContext[elem.name]
+        }
+      }
+    }
+    let ret = fields.map(elem => {
+      if ("manage" + elem.type in transformationHandler) {
+        return transformationHandler["manage" + elem.type](elem, this)
+      }
+      return elem 
+    })
+    return ret
+  }
+
   render() {
+    const data = this._updateData(this.context.store.user)
     return (
       <FormConstructor
-        fields={this.state.data}
+        fields={data}
         handleForm={this.handleSubmit}
       />
     )
   }
 
   handleSubmit = (formData) => {
-    alert("Attention aucune verif n'est faite")
+
     axios.put("/users/" + this.context.store.user.id, {...formData})
+      .then(resp => {
+        if (resp.status === 200){
+          // transformation de formData.tags en tableau
+          if ("tags" in formData) {
+            formData.tags = Object.keys(formData.tags)
+          }
+          this.context.updateState(formData)
+        }
+      })
       .catch(e => {throw e})
   }
 
   _updateData(newData) {
-    // New Data Object avec certaines keys
+    // New Data Object avec certaines keys (mon context)
     // this.state.data : tab d'objet, chacun de ces object contient une var name
     // qui va faire la jonction avec le newData
 
@@ -135,7 +170,9 @@ class FormUpdateProfil extends React.Component {
       checkbox: __managecheckbox,
       default: __managedefault
     }
-
+    
+    // => changement je vais itere sur this.state.data
+    //let updatedData = fields.map(elem => {
     let updatedData = this.state.data.map(elem => {
       if (keysname.indexOf(elem.name > -1)) {
         // ...new elem syntax is made in order to copy object
@@ -147,7 +184,9 @@ class FormUpdateProfil extends React.Component {
       }
       return null
     })
-    this.setState({ data: updatedData })
+    return updatedData
+    //this.currentData
+    //this.setState({ data: updatedData })
   }
 }
 

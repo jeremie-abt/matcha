@@ -5,10 +5,13 @@ import axios from 'axios'
 import { Redirect } from 'react-router-dom'
 
 
+// ne serait il pas plus logique de mettre tout ca dans le provider ?
+// genre toute la logique de fetch des data ?
 const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
   const [isValid, setIsValid] = useState(true)
   const [redirect, setRedirect] = useState(false)
 
+  let userData
   const handleSubmit = submittedData => {
     if (!submittedData.username || !submittedData.password)
       return setIsValid(false)
@@ -16,10 +19,21 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
       .post('/users/getUser', { ...submittedData })
       .then(result => {
         if (result.status === 200) {
-          setRedirect(true)
-          updateUser(result.data)
-          updateIsAuth()
-        } else if (result.status === 204) alert('Invalid data')
+          userData = result.data
+          return (
+            axios.get("tags/all")
+            )
+          } else if (result.status === 204) alert('Invalid data')
+        })
+      .then(result => {
+        const tagsWithName = result.data.filter(elem => {
+          return (userData.tags.includes(elem.id))
+        })
+          .map(elem => elem.name)
+        userData.tags = tagsWithName
+        setRedirect(true)
+        updateUser(userData)
+        updateIsAuth()
       })
       .catch(e => {
         console.log(e)
