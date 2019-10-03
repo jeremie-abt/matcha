@@ -6,7 +6,7 @@ import OurNavbar from './OurNavbar'
 function OurHeader() {
   return (
     <Section className='small-height'>
-      <div className=''>
+      <div>
         <OurNavbar />
       </div>
     </Section>

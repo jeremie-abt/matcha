@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
 
@@ -7,6 +8,16 @@ import { Redirect } from 'react-router-dom'
 const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
   const [isValid, setIsValid] = useState(true)
   const [redirect, setRedirect] = useState(false)
+
+  const buttonStyle = {
+    classes: classNames({
+      'is-primary': true,
+      'is-medium': true
+    }),
+    style: {
+      fullwidth: true
+    }
+  }
 
   const handleSubmit = submittedData => {
     if (!submittedData.username || !submittedData.password)
@@ -29,6 +40,7 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
     <div>
       {redirect && <Redirect to='/profil' />}
       <FormConstructor
+        buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
         isValid={isValid}

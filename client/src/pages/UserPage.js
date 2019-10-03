@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
-import { Container, Columns, Heading } from 'react-bulma-components'
+import { Container, Columns } from 'react-bulma-components'
 
 import SideBar from '../components/SideBar'
 import PageSkeleton from '../components/PageSkeleton'
+import Title from '../components/PageTitle'
 
 // dynamic components
 import Profil from '../components/Profil'
@@ -21,7 +22,7 @@ function UserPage() {
   console.log('Bonjour voici la value : ', curComponent)
   return (
     <PageSkeleton>
-      <Heading>Informations User</Heading>
+      <Title name='User Information' />
       <Container className='user-container'>
         <Columns>
           <Columns.Column size='one-third'>

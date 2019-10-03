@@ -1,6 +1,7 @@
 import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import FormConstructor from '../FormConstructor'
+import classNames from 'classnames'
 import axios from 'axios'
 
 let fields = [
@@ -92,16 +93,23 @@ class FormUpdateProfil extends React.Component {
   }
 
   render() {
+    const buttonStyle = {
+      classes: classNames({
+        'is-primary': true,
+        'is-medium': true
+      })
+    }
     return (
       <FormConstructor
+        buttonStyle={buttonStyle}
         fields={this.state.data}
         handleForm={this.handleSubmit}
       />
     )
   }
 
-  handleSubmit = (formData) => {
-    alert("Not implemented")
+  handleSubmit = formData => {
+    alert('Not implemented')
   }
 
   _updateData(newData) {

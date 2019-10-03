@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { Button, Form, Content } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
@@ -45,12 +44,15 @@ class FormConstructor extends React.Component {
   }
 
   render() {
+    const { style, classes } = this.props.buttonStyle
     return (
       <div>
         {this.props.fields.map((field, index) => {
           return this._mapperMethod(field.type, 'render')(field)
         })}
-        <Button onClick={this.handleSubmit}> Valider </Button>
+        <Button className={classes} onClick={this.handleSubmit} {...style}>
+          Valider
+        </Button>
         <Content size={'small'} style={{ color: 'red' }}>
           {!this.props.isValid ? 'pls fill all input' : ''}
         </Content>
