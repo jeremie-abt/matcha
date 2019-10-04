@@ -1,34 +1,12 @@
 import React from 'react'
-import {
-  Hero, Container,
-  Section, Content } from 'react-bulma-components'
 
-import OurHeader from '../components/OurHeader'
-import OurFooter from '../components/OurFooter'
+import PageSkeleton from '../components/layout/PageSkeleton'
 
 function homePage() {
   return (
-  <Hero size="fullheight">
-    <Section className="small-height backgroundColor">
-      <Container>
-        <OurHeader />
-      </Container>
-    </Section>
-        
-    <Container>
-      <Hero.Body>
-        <Content>
-          <h1>Bonjour je suis le body</h1>
-        </Content>
-      </Hero.Body>
-    </Container>  
-
-    <Hero.Footer className="small-height backgroundColor">
-      <Container>
-        <OurFooter />
-      </Container>
-    </Hero.Footer>
-  </Hero>
+    <PageSkeleton>
+      <h1>Coucou bande de nouille</h1>
+    </PageSkeleton>
   )
 }
 

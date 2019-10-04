@@ -1,9 +1,9 @@
 import React from 'react'
-
 import { Button, Form, Content } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
+import MyRadio from './InputStyle/RadioStyle'
 
 /**
  *  Parent of form generation.
@@ -21,20 +21,55 @@ class FormConstructor extends React.Component {
     }
     return methodName
   }
+
   constructor(props) {
     super(props)
 
+    let radioObj = {}
+    console.log(props.fields)
+    let checkboxObj = {}
+    props.fields.forEach(elem => {
+      if (elem.type === 'checkbox') {
+        if ('data-checkbox-activated' in elem) {
+          checkboxObj[elem.name] = {}
+          if (elem['data-checkbox-activated']) {
+            elem['data-checkbox-activated'].forEach(subelem => {
+              checkboxObj[elem.name][subelem] = true
+            })
+          }
+        }
+      } else if (elem.type === 'radio') {
+        radioObj[elem.name] = elem['data-radio-curval']
+      }
+    })
+
     this.state = {
-      checkbox: {}
+      ...checkboxObj,
+      ...radioObj
     }
   }
 
   handleChange = e => {
+    /// je sais toute la partie pour gerer le radio est horrible
+    /// c degueux mais bon tempis on ca fonctionne et on aura
+    /// surement pas besoins d'ajouter d'autre composant DONC HEIN
+
     if (e.target.type === 'checkbox') {
-      let newCheckboxObj = this.state.checkbox
-      newCheckboxObj[e.target.name] = !this.state.checkbox[e.target.name]
+      const categorie = e.target.getAttribute('categorie')
+      let newCheckboxObj = this.state[categorie]
+      newCheckboxObj[e.target.name] = !this.state[categorie][e.target.name]
       this.setState({
-        checkbox: newCheckboxObj
+        [categorie]: newCheckboxObj
+      })
+    } else if (e.target.type === 'radio') {
+      const categorie = e.target.getAttribute('categorie')
+      /*      let newCheckboxObj = this.state[categorie]
+      newCheckboxObj[e.target.name] = (
+        this.state[categorie][e.target.name] === "yes" ?
+        "no" : "yes"
+      )*/
+      this.setState({
+        [categorie]: e.target.name
       })
     } else this.setState({ [e.target.name]: e.target.value })
   }
@@ -45,12 +80,15 @@ class FormConstructor extends React.Component {
   }
 
   render() {
+    const { style, classes } = this.props.buttonStyle
     return (
       <div>
-        {this.props.fields.map((field, index) => {
+        {this.props.fields.map(field => {
           return this._mapperMethod(field.type, 'render')(field)
         })}
-        <Button onClick={this.handleSubmit}> Valider </Button>
+        <Button className={classes} onClick={this.handleSubmit} {...style}>
+          Valider
+        </Button>
         <Content size={'small'} style={{ color: 'red' }}>
           {!this.props.isValid ? 'pls fill all input' : ''}
         </Content>
@@ -69,6 +107,21 @@ class FormConstructor extends React.Component {
     )
   }
 
+  _renderRadio = elem => {
+    return elem.radioValues.map(radioElem => {
+      return (
+        <MyRadio
+          categorie={elem.name}
+          label={radioElem}
+          name={radioElem}
+          handleChange={this.handleChange}
+          checked={this.state[elem.name] === radioElem}
+          key={radioElem + elem.type}
+        />
+      )
+    })
+  }
+
   _renderCheckbox = elem => {
     let checkboxComponent
 
@@ -76,31 +129,35 @@ class FormConstructor extends React.Component {
       <Form.Field key={elem.name + elem.type}>
         <Form.Control>
           <Form.Label>{elem.title}</Form.Label>
-          {
-            elem.checkboxValues.map((checkboxElem, index) => {
-            if (typeof checkboxElem === 'string') {
-              checkboxComponent = (
-                <Checkbox
-                  name={checkboxElem}
-                  label={checkboxElem}
-                  onChange={this.handleChange}
-                  checked={this.state.checkbox[checkboxElem]}
-                  key={index}
-                />
-              )
-            } else {
-              checkboxComponent = (
-                <Checkbox
-                  name={checkboxElem.name}
-                  label={checkboxElem.name}
-                  onChange={this.handleChange}
-                  checked={this.state.checkbox[checkboxElem.name]}
-                  key={checkboxElem.id}
-                />
-              )
-            }
+          {elem.checkboxValues.map(checkboxElem => {
+            // a terme faut vire ce truc
+            // je le laisse car ca peut faire spawn des bueg
+            /*if (typeof checkboxElem === 'string') {
+                console.log("ICIICICICICICI")
+                checkboxComponent = (
+                  <Checkbox
+                    categorie={elem.name}
+                    name={checkboxElem}
+                    label={checkboxElem}
+                    handleChange={this.handleChange}
+                    checked={this.state[elem.name].includes(checkboxElem)}
+                    key={index}
+                  />
+                )
+            } */
+            checkboxComponent = (
+              <Checkbox
+                categorie={elem.name}
+                name={checkboxElem.name}
+                label={checkboxElem.name}
+                handleChange={this.handleChange}
+                checked={this.state[elem.name][checkboxElem.name]}
+                key={checkboxElem.id}
+              />
+            )
             return checkboxComponent
           })}
+          )}
         </Form.Control>
       </Form.Field>
     )

@@ -1,67 +1,74 @@
 import React from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
+import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
-import axios from 'axios'
 
 let fields = [
   {
-    name: "firstname",
-    label: "firstname",
-    type: "text"
+    name: 'firstname',
+    label: 'firstname',
+    type: 'text'
   },
   {
-    name: "lastname",
-    label: "lastname",
-    type: "text"
+    name: 'lastname',
+    label: 'lastname',
+    type: 'text'
   },
   {
-    name: "username",
-    label: "username",
-    type: "text"
+    name: 'username',
+    label: 'username',
+    type: 'text'
   },
   {
-    name: "email",
-    label: "email",
-    type: "email"
+    name: 'email',
+    label: 'email',
+    type: 'email'
   },
   {
-    name: "password",
-    label: "password",
-    type: "password"
+    name: 'password',
+    label: 'password',
+    type: 'password'
   },
   {
-    name: "confirmpassword",
-    label: "confirmpassword",
-    type: "password"
+    name: 'confirmpassword',
+    label: 'confirmpassword',
+    type: 'password'
   }
 ]
 
 class FormCreateProfil extends React.Component {
-
-  
   constructor() {
     super()
     this.state = {}
-    this.state["data"] = fields
+    this.state['data'] = fields
   }
 
   render() {
+    const buttonStyle = {
+      classes: classNames({
+        'is-primary': true,
+        'is-medium': true
+      }),
+      style: {
+        fullwidth: true
+      }
+    }
     return (
       <div>
         <FormConstructor
-            fields={ this.state.data }
-            handleForm={ this.handleSubmit } />
+          buttonStyle={buttonStyle}
+          fields={this.state.data}
+          handleForm={this.handleSubmit}
+        />
       </div>
     )
   }
 
-  handleSubmit = (formData) => {
-    console.log("ici form Data : ", formData)
-    alert("Not implemented")
+  handleSubmit = formData => {
+    alert('Not implemented')
   }
 
   _updateData(newData) {
-    
     // New Data Object avec certaines keys
     // this.state.data : tab d'objet, chacun de ces object contient une var name
     // qui va faire la jonction avec le newData
@@ -73,15 +80,14 @@ class FormCreateProfil extends React.Component {
     }
 
     function __managetext(newElem) {
-
-      newElem["placeholder"] = newData[newElem.name]
+      newElem['placeholder'] = newData[newElem.name]
       return newElem
     }
 
     function __managecheckbox(newElem) {
       return newElem
     }
-    
+
     const funcTabPtr = {
       text: __managetext,
       email: __managetext,
@@ -91,13 +97,11 @@ class FormCreateProfil extends React.Component {
 
     let updatedData = this.state.data.map(elem => {
       if (keysname.indexOf(elem.name > -1)) {
-        
         // ...new elem syntax is made in order to copy object
-        const funcPtr = (
-          Object.keys(funcTabPtr).indexOf(elem.type) > -1 ?
-          funcTabPtr[elem.type] :
-          funcTabPtr["default"]
-        )
+        const funcPtr =
+          Object.keys(funcTabPtr).indexOf(elem.type) > -1
+            ? funcTabPtr[elem.type]
+            : funcTabPtr['default']
         return funcPtr({ ...elem })
       }
       return null

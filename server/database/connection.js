@@ -4,7 +4,7 @@
 const { Client } = require('pg')
 
 const client = new Client({
-  user: 'jabt',
+  user: 'dalauren',
   host: 'localhost',
   database: 'matcha'
 })

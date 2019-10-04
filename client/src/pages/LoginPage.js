@@ -1,8 +1,8 @@
 import React from 'react'
-import 'react-bulma-components/dist/react-bulma-components.min.css'
-import { Container, Card, Columns, Hero } from 'react-bulma-components'
+import { Container, Card, Content } from 'react-bulma-components'
 import LoginForm from '../components/Form/formComponent/FormLogin'
 import MyContext from '../context/UserContext'
+import PageSkeleton from '../components/layout/PageSkeleton'
 
 let fields = [
   {
@@ -19,31 +19,26 @@ let fields = [
 
 function LoginPage() {
   return (
-    <div>
-      <Hero className='is-fullheight'>
-        <Hero.Body>
-          <Container>
-            <Columns className='is-centered'>
-              <Columns.Column size='two-fifths'>
-                <Card>
-                  <Card.Content>
-                    <MyContext.Consumer>
-                      {context => (
-                        <LoginForm
-                          fields={fields}
-                          updateUser={context.updateState}
-                          updateIsAuth={context.updateIsAuth}
-                        />
-                      )}
-                    </MyContext.Consumer>
-                  </Card.Content>
-                </Card>
-              </Columns.Column>
-            </Columns>
-          </Container>
-        </Hero.Body>
-      </Hero>
-    </div>
+    <PageSkeleton>
+      <Container className='login-form'>
+        <Card>
+          <Card.Content>
+            <Content>
+              <h1> Sign-in</h1>
+            </Content>
+            <MyContext.Consumer>
+              {context => (
+                <LoginForm
+                  fields={fields}
+                  updateUser={context.updateState}
+                  updateIsAuth={context.updateIsAuth}
+                />
+              )}
+            </MyContext.Consumer>
+          </Card.Content>
+        </Card>
+      </Container>
+    </PageSkeleton>
   )
 }
 

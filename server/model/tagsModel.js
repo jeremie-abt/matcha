@@ -1,8 +1,9 @@
-const ReqFormatteur = require('../database/matchaRequestFormatter')
+const ReqFormatter = require('../database/matchaRequestFormatter')
+
 const client = require('../database/connection')
 
 function displayTag(tagId) {
-  const query = new ReqFormatteur()
+  const query = new ReqFormatter()
 
   query.table = 'tags'
   query.add_fields(['name']).where({
@@ -12,17 +13,37 @@ function displayTag(tagId) {
       }
     }
   })
-  return client.query(...query.generate_query('select'))
+  return client.query(...query.generateQuery('select'))
 }
 
 function showAllTags() {
-  const query = new ReqFormatteur()
+  const query = new ReqFormatter()
 
   query.table = 'tags'
-  return client.query(...query.generate_query('select'))
+  return client.query(...query.generateQuery('select'))
+}
+
+/**
+ * 
+ * @param {array} names, list of names
+ */
+const idFromName = (names) => {
+  const query = new ReqFormatter()
+
+  query.table = "tags"
+  query.addFields(["id"])
+    .where({
+      and: {
+        in: {
+          name: names
+        }
+      }
+    })
+  return client.query(...query.generateQuery("select"))
 }
 
 module.exports = {
   showAllTags,
-  displayTag
+  displayTag,
+  idFromName
 }

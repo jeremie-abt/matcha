@@ -1,3 +1,16 @@
-body 
-  background-image:url("https://picsum.photos/1500/1300")
+.homepage
+  min-height: calc(100vh - #{$header-height} - #{$footer-height})
+  display: flex
+  flex-direction: column
+  align-items: center
 
+.image-background
+  justify-content: center
+  background: url('../../assets/img/loginImage.jpg') no-repeat center/contain
+  background-attachment: fixed
+  background-size: cover
+
+.login-form
+  margin: 0
+  display: flex
+  justify-content: flex-end
