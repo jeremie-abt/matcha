@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { Menu } from 'react-bulma-components'
 
 function SideBar({ curComponent, setCurComponent }) {
@@ -22,8 +21,9 @@ function SideBar({ curComponent, setCurComponent }) {
           className={isActive(components[1])}
           onClick={() => setCurComponent(components[1])}
         >
-          Modifier
+          Account
         </Menu.List.Item>
+        <Menu.List.Item>Images</Menu.List.Item>
       </Menu.List>
 
       <Menu.List title='Relations'>

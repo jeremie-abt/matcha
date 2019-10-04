@@ -1,13 +1,10 @@
 import React from 'react'
 
-import PageSkeleton from 
-    '../components/genericPagesComponent/PageSkeleton'
+import PageSkeleton from '../components/layout/PageSkeleton'
 
 function homePage() {
-  
   return (
-    <PageSkeleton >
-
+    <PageSkeleton>
       <h1>Coucou bande de nouille</h1>
     </PageSkeleton>
   )

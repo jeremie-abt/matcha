@@ -67,8 +67,7 @@ class FormConstructor extends React.Component {
       newCheckboxObj[e.target.name] = (
         this.state[categorie][e.target.name] === "yes" ?
         "no" : "yes"
-      )
-      console.log("newCheeck : ", newCheckboxObj)*/
+      )*/
       this.setState({
         [categorie]: e.target.name
       })
@@ -126,8 +125,6 @@ class FormConstructor extends React.Component {
   _renderCheckbox = elem => {
     let checkboxComponent
 
-    console.log('this.state : ', this.state)
-    console.log('this.state.test : ', this.state.test)
     return (
       <Form.Field key={elem.name + elem.type}>
         <Form.Control>
@@ -148,7 +145,6 @@ class FormConstructor extends React.Component {
                   />
                 )
             } */
-            console.log('checkbox elem : ', checkboxElem)
             checkboxComponent = (
               <Checkbox
                 categorie={elem.name}

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-
 import { Container, Columns } from 'react-bulma-components'
 
 import SideBar from '../components/SideBar'
-import PageSkeleton from '../components/genericPagesComponent/PageSkeleton'
+import PageSkeleton from '../components/layout/PageSkeleton'
 import Title from '../components/PageTitle'
 
 // dynamic components
@@ -11,10 +10,10 @@ import Profil from '../components/Profil/Profil'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Like from '../components/LikeHisto'
 
-function UserPage() {
+function UserPage({ userInfos }) {
   const [curComponent, setCurComponent] = useState('profil')
   const componentsMapping = {
-    profil: <Profil />,
+    profil: <Profil userInfos={userInfos} />,
     like: <Like />,
     update: <UpdateForm />
   }
