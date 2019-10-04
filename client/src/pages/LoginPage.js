@@ -30,8 +30,9 @@ function LoginPage() {
               {context => (
                 <LoginForm
                   fields={fields}
-                  updateUser={context.updateState}
-                  updateIsAuth={context.updateIsAuth}
+                  /*updateUser={context.updateState}
+                  updateIsAuth={context.updateIsAuth}*/
+                  setUserLogged={context.setUserLogged}
                 />
               )}
             </MyContext.Consumer>

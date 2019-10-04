@@ -5,36 +5,56 @@ const userModel = require('../model/usersModel')
 const tagsModel = require('../model/tagsModel')
 
 const { sendMail } = require('../helpers/MailSender')
+const createToken = require('../helpers/ManageToken')
 
+// je met le user id dans le token donc 
+// je fais request avec le user id mais on pourra changer
 function show(req, res) {
-  const { username, password } = req.body
-  if (!username || !password) {
-    res.status(404).send('no params')
-    res.end()
-    return
-  }
-  userModel
-    .isUserExisting(['username', req.body.username])
-    .catch(e => {
-      throw e
+  
+  // const { username, password } = req.body
+
+  // console.log("req params : ", req.params)
+  userModel.getUserInfo({id : req.tokenInfo.id})
+    .then(resp => {
+      if (resp.rowCount !== 1)
+        res.status(500).send("something got Wrong")
+      res.json(resp.rows[0])
     })
+    .catch(e => {
+      res.status(500).send(e)
+    })
+  }
+
+// GOAL : 
+//   when user is not logged in take some info
+//   request BDD to see if Data are correct !
+//   If yes create and return a token
+//   which will be passed to each request who need
+//   auth !
+function ManageAuthentification(req, res) {
+
+  const {username, password} = req.body
+  
+  if (username === undefined || password === undefined){
+    res.status(500).send("somenthing went wrong")
+  }
+  userModel.isUserExisting(["username", username])
     .then(response => {
       const cryptPassword = Crypto.SHA256(password).toString()
       if (
         response.rows.length !== 1 ||
-        response.rows[0].password !== cryptPassword
+        response.rows[0].password !== cryptPassword // ||
+        // response.rows[0].verified_mail === false 
+        // ligne du dessus commmente pour le debeug mais faudra la remettre
       ) {
-        res.status(204)
+        res.status(400).send("wrong Data")
         return
       }
       const user = response.rows[0]
       if (user.password === cryptPassword) {
-        res.status(200)
-        res.json(response.rows[0])
+        const token = createToken(response.rows[0].id)
+        res.status(200).send(token)
       }
-    })
-    .finally(() => {
-      res.end()
     })
 }
 
@@ -275,5 +295,6 @@ module.exports = {
   create,
   update,
   del,
-  confirmationMail
+  confirmationMail,
+  ManageAuthentification
 }
