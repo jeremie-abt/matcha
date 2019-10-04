@@ -371,6 +371,7 @@
       "resolved": "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.1.1.tgz",
       "version": "1.1.1"
     },
+    "socket.io": "^2.3.0",
     "split": {
       "integrity": "sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg==",
       "requires": {
