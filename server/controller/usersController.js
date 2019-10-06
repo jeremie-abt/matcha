@@ -82,6 +82,7 @@ function create(req, res) {
     }
     userAccountInfos[element] = value
   })
+  console.log("userAccount : ", userAccountInfos)
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel.isUserAlreadyCreated(userAccountInfos)
@@ -167,29 +168,16 @@ async function update(req, res) {
   // a voir comment je recup le gender
   const fieldsWanted = [
     'firstname', 'lastname', 'email',
-    'username', 'bio', 
+    'username', 'bio', 'tags', 'gender'
   ]
   if ("password" in req.body)
     console.log("password update not implemented Yet")
-  let toUpdateFields = {}
+  const toUpdateFields = {}
   fieldsWanted.forEach(elem => {
     if (elem in req.body) {
       toUpdateFields[elem] = req.body[elem]
     }
   })
-  // bad pattern je sais mais flem de tout refaire
-  if ("sexe" in req.body){
-    const testObj = _handleSexualOrientation()
-    toUpdateFields = { ...toUpdateFields, ...testObj }
-  }
-    // alors attentino si tu coches les deux ca fait apparaitre un beug
-    // faut mettre un radio
-  if ("tags" in req.body && Object.keys(req.body.tags).length !== 0){
-    let tagsId = await _handleTags()
-    tagsId = tagsId.map(elem => elem.id)
-    toUpdateFields = { ...toUpdateFields, tags: tagsId}
-  }
-  
   if (Object.keys(toUpdateFields).length === 0) {
     // !~ quel status renvoyer ??
     res.status(404).send("no Data provided to update users")

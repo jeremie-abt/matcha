@@ -20,18 +20,26 @@ const FormLogin = ({ fields, setUserLogged }) => {
     }
   }
 
+  function printError () {
+    setIsValid(false)
+    setTimeout(() => setIsValid(true), 3000)
+  }
+
   const handleSubmit = (submittedData) => {
 
     if (!submittedData.username || !submittedData.password)
       return setIsValid(false)
     axios.post('/users/authenticate', submittedData)
-      .catch(e => console.log("attention il y a eu une error : ", e))
-      .then(async (resp) => {
-        const token = resp.data
-        const cookies = new Cookies()
-        cookies.set("token", token)
-        setUserLogged()
-      })
+    .then((resp) => {
+      const token = resp.data
+      const cookies = new Cookies()
+      cookies.set("token", token)
+      setUserLogged()
+    })
+    .catch(e => {
+      printError()
+      console.log("attention il y a eu une error : ", e)
+    })
 
 
     // alors tous ca c commenter mais faut savoir que ca ne l'etait pas avant
