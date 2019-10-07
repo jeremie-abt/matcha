@@ -2,7 +2,7 @@ import React from 'react'
 import { Menu } from 'react-bulma-components'
 
 function SideBar({ curComponent, setCurComponent }) {
-  const components = ['profil', 'update', 'like']
+  //const components = ['profil', 'update', 'seen', 'like']
 
   const isActive = el => {
     if (curComponent === el) return 'is-active'
@@ -12,14 +12,14 @@ function SideBar({ curComponent, setCurComponent }) {
     <Menu className='sidebar'>
       <Menu.List title='User options'>
         <Menu.List.Item
-          className={isActive(components[0])}
-          onClick={() => setCurComponent(components[0])}
+          className={isActive('profil')}
+          onClick={() => setCurComponent('profil')}
         >
           Profil
         </Menu.List.Item>
         <Menu.List.Item
-          className={isActive(components[1])}
-          onClick={() => setCurComponent(components[1])}
+          className={'update'}
+          onClick={() => setCurComponent('update')}
         >
           Account
         </Menu.List.Item>
@@ -28,10 +28,16 @@ function SideBar({ curComponent, setCurComponent }) {
 
       <Menu.List title='Relations'>
         <Menu.List.Item
-          className={isActive(components[2])}
-          onClick={() => setCurComponent(components[2])}
+          className={isActive('seen')}
+          onClick={() => setCurComponent('seen')}
         >
-          Likes
+          Seen
+        </Menu.List.Item>
+        <Menu.List.Item
+          className={isActive('like')}
+          onClick={() => setCurComponent('like')}
+        >
+          Like
         </Menu.List.Item>
         <Menu.List.Item onClick={() => alert('not implemented')}>
           Matchs

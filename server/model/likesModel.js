@@ -2,9 +2,9 @@ const client = require('../database/connection')
 
 function displayUsersLiked(userId) {
   const query =
-    'SELECT users.firstname, users.lastname, users.email, users.username' +
+    'SELECT users.id as id' +
     ' FROM users INNER JOIN likes ON likes.user_id = users.id' +
-    ' WHERE likes.likes_id = $1;'
+    ' WHERE likes.liked_id = $1;'
 
   return client.query(query, [userId])
 }

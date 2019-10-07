@@ -26,7 +26,6 @@ class FormConstructor extends React.Component {
     super(props)
 
     let radioObj = {}
-    //console.log(props.fields)
     let checkboxObj = {}
     props.fields.forEach(elem => {
       if (elem.type === 'checkbox') {

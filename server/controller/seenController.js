@@ -3,6 +3,7 @@ const seenModel = require('../model/seenModel')
 const usersModel = require('../model/usersModel')
 
 const index = async (req, res) => {
+
   const userId = parseInt(req.params.userId, 10)
   const isExisting = userId
     ? await usersModel.isUserExisting(['id', userId])
@@ -15,18 +16,26 @@ const index = async (req, res) => {
   }
   seenModel
     .displayUserSeen(userId)
-    .catch(() => {
-      throw [500, 'Request failed']
+    .then(result => {
+      if (!result.rowCount === 0) return ([])
+
+      const promises = []
+      result.rows.forEach(elem => {
+        promises.push(
+          usersModel.getUserInfo({id: elem.id})
+        )
+      })
+      return (Promise.all(promises))
     })
     .then(result => {
-      if (!result.rowCount) throw [204, 'No_watchers_found']
-      res.json(result.rows)
+      const rowResult = result.map(elem =>{
+        return elem.rows[0]
+      })
+      res.status(200).json(rowResult)
     })
-    .catch(err => {
-      res.status(err[0])
-      res.write(err[1])
+    .catch((e) => {
+      res.status(500).send("Something Went Wrong")
     })
-    .finally(() => res.end())
 }
 
 module.exports = {

@@ -22,6 +22,7 @@ function show(req, res) {
     })
   }
 
+
 // GOAL : 
 //   when user is not logged in take some info
 //   request BDD to see if Data are correct !

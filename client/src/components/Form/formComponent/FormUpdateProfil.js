@@ -67,8 +67,6 @@ class FormUpdateProfil extends React.Component {
     // Normalement je devrais avoir un context avec le user_id
     // s'il est connecte
 
-    console.log('componentDidmount called ...')
-    //this._updateData(this.context.store.user)
     axios
       .get('/tags/all')
       .then(resp => {
@@ -181,8 +179,6 @@ class FormUpdateProfil extends React.Component {
       default: __managedefault
     }
 
-    // => changement je vais itere sur this.state.data
-    //let updatedData = fields.map(elem => {
     let updatedData = this.state.data.map(elem => {
       if (keysname.indexOf(elem.name > -1)) {
         // ...new elem syntax is made in order to copy object
@@ -195,8 +191,6 @@ class FormUpdateProfil extends React.Component {
       return null
     })
     return updatedData
-    //this.currentData
-    //this.setState({ data: updatedData })
   }
 }
 

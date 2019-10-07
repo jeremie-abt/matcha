@@ -23,8 +23,10 @@ const FormLogin = ({ fields, setUserLogged }) => {
     if (!submittedData.username || !submittedData.password)
       return setIsValid(false)
     axios.post('/users/authenticate', submittedData)
-      .catch(e => console.log("attention il y a eu une error : ", e))
-      .then(async (resp) => {
+      .catch(e => {
+        console.log("attention il y a eu une error : ", e)
+      })
+      .then((resp) => {
         const token = resp.data
         const cookies = new Cookies()
         cookies.set("token", token)
