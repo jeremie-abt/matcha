@@ -23,11 +23,13 @@ const FormLogin = ({ fields, setUserLogged }) => {
     setTimeout(() => setIsValid(true), 3000)
   }
 
-  const handleSubmit = (submittedData) => {
+  const handleSubmit = ({ state }) => {
 
-    if (!submittedData.username || !submittedData.password)
+    if (!state.username || !state.password){
       return setIsValid(false)
-    axios.post('/users/authenticate', submittedData)
+    }
+    
+    axios.post('/users/authenticate', state)
     .then((resp) => {
       const token = resp.data
       const cookies = new Cookies()

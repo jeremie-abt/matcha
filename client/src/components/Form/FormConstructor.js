@@ -11,8 +11,6 @@ import UserContext from '../../context/UserContext'
 function FormConstructor(props) {
   
   const context = useContext(UserContext)
-  if (!Array.isArray(context.store.user.tags))
-  throw "context tags is not an Array"
   
   const checkboxObj = {}
   const stateObj = {}
