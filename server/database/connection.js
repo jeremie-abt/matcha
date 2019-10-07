@@ -4,7 +4,8 @@
 const { Client } = require('pg')
 
 const client = new Client({
-  user: 'dalauren',
+  user: 'postgres',
+  password: 'admin',
   host: 'localhost',
   database: 'matcha'
 })
