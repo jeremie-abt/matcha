@@ -1,28 +1,13 @@
-import React from 'react'
-import { Card, Container, Columns } from 'react-bulma-components'
+import React, { useContext } from 'react'
+import { Card, Columns } from 'react-bulma-components'
+import userContext from '../../context/UserContext'
 
 //need { ...userInfos } as parameters
 function Profil() {
   //need to be deleted
-  const userInfos = {
-    age: 18,
-    bio: '',
-    birthdate: null,
-    email: 'test@gmail.com',
-    firstname: 'jabt',
-    gender: 'female',
-    id: 7,
-    lastname: 'non',
-    localisation: '',
-    online: false,
-    password:
-      '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
-    popularity_score: 0.5,
-    sexual_orientation: 'bisexual',
-    tags: null,
-    username: 'jabt',
-    verified_mail: false
-  }
+  
+  const context = useContext(userContext)
+  const userInfos = context.store.user
 
   return (
     <Card className='card-profil'>
