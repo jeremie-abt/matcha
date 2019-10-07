@@ -11,9 +11,6 @@ const createToken = require('../helpers/ManageToken')
 // je fais request avec le user id mais on pourra changer
 function show(req, res) {
   
-  // const { username, password } = req.body
-
-  // console.log("req params : ", req.params)
   userModel.getUserInfo({id : req.tokenInfo.id})
     .then(resp => {
       if (resp.rowCount !== 1)
@@ -35,7 +32,7 @@ function ManageAuthentification(req, res) {
 
   const {username, password} = req.body
   
-  if (username === undefined || password === undefined){
+  if (!username || !password){
     res.status(500).send("somenthing went wrong")
   }
   userModel.isUserExisting(["username", username])
@@ -43,9 +40,7 @@ function ManageAuthentification(req, res) {
       const cryptPassword = Crypto.SHA256(password).toString()
       if (
         response.rows.length !== 1 ||
-        response.rows[0].password !== cryptPassword // ||
-        // response.rows[0].verified_mail === false 
-        // ligne du dessus commmente pour le debeug mais faudra la remettre
+        response.rows[0].password !== cryptPassword
       ) {
         res.status(400).send("wrong Data")
         return
