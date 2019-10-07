@@ -1,12 +1,12 @@
 const client = require('../database/connection')
 
-function createNotification(userId, receiverId, content) {
+function createNotification(userId, receiverId, type) {
   const query =
     'INSERT INTO notifications' +
-    '(user_id, receiver_id, content, created_at)' +
+    '(user_id, receiver_id, type, created_at)' +
     'VALUES ($1, $2, $3, now())'
 
-  return client.query(query, [userId, receiverId, content])
+  return client.query(query, [userId, receiverId, type])
 }
 
 function updateNotificationToSeen(notifId) {
@@ -15,20 +15,9 @@ function updateNotificationToSeen(notifId) {
   return client.query(query, [true, notifId])
 }
 
-function findById(notifId) {
-  const query = 'SELECT * FROM notifications WHERE id = $1'
-
-  return query.client(query, [notifId])
-}
-
-function deleteNotif(notifId) {
-  const query = 'DELETE FROM notifications WHERE id = $1'
-
-  return client.query(query, [notifId])
-}
-
-function getAllNotification(receiverId) {
-  const query = 'SELECT * FROM notifications WHERE receiver_id = $1'
+function getAllNotifications(receiverId) {
+  const query =
+    'Select user_id, max(created_at), type from notifications where receiver_id = $1 group by user_id, type'
 
   return client.query(query, [receiverId])
 }
@@ -36,7 +25,5 @@ function getAllNotification(receiverId) {
 module.exports = {
   createNotification,
   updateNotificationToSeen,
-  deleteNotif,
-  getAllNotification,
-  findById
+  getAllNotifications
 }

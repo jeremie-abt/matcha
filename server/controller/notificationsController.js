@@ -14,9 +14,9 @@ const index = async (req, res) => {
     return
   }
   notificationsModel
-    .getAllNotification(receiverId)
-    .catch(() => {
-      throw [500, 'request failed']
+    .getAllNotifications(receiverId)
+    .catch(err => {
+      throw err
     })
     .then(result => {
       if (!result.rowCount) throw [204, 'No notifications found']
@@ -30,13 +30,12 @@ const index = async (req, res) => {
 }
 
 const add = async (req, res) => {
-  let { userId, receiverId } = req.body
-  const { content } = req.body
+  const { type } = req.body
+  const userId = parseInt(req.body.userId, 10)
+  const receiverId = parseInt(req.body.receiverId, 10)
   let isValid = false
 
-  userId = parseInt(req.body.userId, 10)
-  receiverId = parseInt(req.body.receiverId, 10)
-  if (userId && receiverId && content)
+  if (userId && receiverId && type)
     isValid = await userHelper.checkUsersValidity([userId, receiverId])
   if (!isValid) {
     res.status(400).send('A param is missing or bad value or already exist')
@@ -44,7 +43,7 @@ const add = async (req, res) => {
     return
   }
   notificationsModel
-    .createNotification(userId, receiverId, content)
+    .createNotification(userId, receiverId, type)
     .catch(err => {
       throw err
     })
