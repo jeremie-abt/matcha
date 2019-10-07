@@ -92,7 +92,6 @@ class FormUpdateProfil extends React.Component {
         'is-medium': true
       })
     }
-    //const data = this._updateData(this.context.store.user)
     return (
       <FormConstructor
         buttonStyle={buttonStyle}
@@ -109,8 +108,6 @@ class FormUpdateProfil extends React.Component {
       .put('/users/' + this.context.store.user.id, { ...formData })
       .then(resp => {
         if (resp.status === 200) {
-          // transformation de formData.tags en tableau
-          console.log("formdata iiciicic : ", formData)
           this.context.updateState(formData)
         }
       })

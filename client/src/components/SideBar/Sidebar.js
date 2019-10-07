@@ -1,5 +1,4 @@
 import React from 'react'
-//import { Columns } from 'react-bulma-components'
 
 import SidebarStyle from './SidebarStyle'
 

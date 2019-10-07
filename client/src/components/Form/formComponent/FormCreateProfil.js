@@ -65,7 +65,7 @@ class FormCreateProfil extends React.Component {
   }
 
   handleSubmit = formData => {
-    console.log("formdata : ", formData)
+
     alert('Not implemented')
   }
 
