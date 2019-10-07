@@ -3,11 +3,10 @@ import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
 
-import { Redirect } from 'react-router-dom'
+import Cookies from 'universal-cookie'
 
-const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
+const FormLogin = ({ fields, setUserLogged }) => {
   const [isValid, setIsValid] = useState(true)
-  const [redirect, setRedirect] = useState(false)
 
   const buttonStyle = {
     classes: classNames({
@@ -19,38 +18,22 @@ const FormLogin = ({ fields, updateUser, updateIsAuth }) => {
     }
   }
 
-  let userData = {}
-  const handleSubmit = submittedData => {
+  const handleSubmit = (submittedData) => {
+
     if (!submittedData.username || !submittedData.password)
       return setIsValid(false)
-    axios
-      .post('/users/getUser', { ...submittedData })
-      .then(result => {
-        if (result.status === 200) {
-          userData = result.data
-          return axios.get('tags/all')
-        } else if (result.status === 204) alert('Invalid data')
-      })
-      .then(result => {
-        if (result.data.tags) {
-          const tagsWithName = result.data
-            .filter(elem => {
-              return userData.tags.includes(elem.id)
-            })
-            .map(elem => elem.name)
-          userData.tags = tagsWithName
-        }
-        setRedirect(true)
-        updateUser(userData)
-        updateIsAuth()
-      })
-      .catch(e => {
-        console.log(e)
+    axios.post('/users/authenticate', submittedData)
+      .catch(e => console.log("attention il y a eu une error : ", e))
+      .then(async (resp) => {
+        const token = resp.data
+        const cookies = new Cookies()
+        cookies.set("token", token)
+        setUserLogged()
       })
   }
+
   return (
     <div>
-      {redirect && <Redirect to='/profil' />}
       <FormConstructor
         buttonStyle={buttonStyle}
         fields={fields}

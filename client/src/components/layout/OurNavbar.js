@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Level, Content } from 'react-bulma-components'
+import { Navbar, Level, Content, Button } from 'react-bulma-components'
 
 import HeaderLinks from './HeaderLinks'
 import UserContext from '../../context/UserContext'
@@ -22,7 +22,9 @@ function OurNavbar() {
           <UserContext.Consumer>
             {context => {
               if (!context.store.isAuth) return <HeaderLinks />
-              else return <p>Deconnexion button not Implemented yet</p>
+              else return (
+                <Button onClick={context.HandleDisconnection}>Deconnect</Button>
+              )              
             }}
           </UserContext.Consumer>
         </Level.Side>
