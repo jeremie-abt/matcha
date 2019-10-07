@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Container, Columns } from 'react-bulma-components'
+import { Card, Columns } from 'react-bulma-components'
 
 //need { ...userInfos } as parameters
 function Profil() {
