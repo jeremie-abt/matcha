@@ -69,7 +69,6 @@ function FormConstructor(props) {
             elem.checkboxValues.map(checkboxElem => {
               checkboxComponent = (
                 <Checkbox
-                  test={checkboxElem.id}
                   categorie={elem.name}
                   name={checkboxElem.name}
                   label={checkboxElem.name}
