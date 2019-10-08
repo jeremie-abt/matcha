@@ -34,6 +34,7 @@ const index = async (req, res) => {
       res.status(200).json(rowResult)
     })
     .catch((e) => {
+      console.log("erreur : ", e)
       res.status(500).send("Something Went Wrong")
     })
 }
