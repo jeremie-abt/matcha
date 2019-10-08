@@ -39,9 +39,9 @@ apiRouter.get('/tags/:tagId', tagsController.show)
 apiRouter.get('/seen/:userId', seenController.index)
 
 // likes routes
-apiRouter.get('/likes/:userId', likesController.index)
-apiRouter.post('/likes/add', likesController.add)
-apiRouter.delete('/likes/delete', likesController.del)
+apiRouter.get('/like/:userId', likesController.index)
+apiRouter.post('/like/add', likesController.add)
+apiRouter.delete('/like/delete', likesController.del)
 
 // blocked routes
 apiRouter.get('/blocked/:userId', blockedController.index)

@@ -3,6 +3,7 @@ const likesModel = require('../model/likesModel')
 const userHelper = require('../helpers/userHelper')
 
 const index = async (req, res) => {
+  
   const userId = parseInt(req.params.userId, 10)
   const isExisting = userId
     ? await usersModel.isUserExisting(['id', userId])
@@ -15,18 +16,26 @@ const index = async (req, res) => {
   }
   likesModel
     .displayUsersLiked(userId)
-    .catch(() => {
-      throw [500, 'Request failed']
-    })
     .then(result => {
-      if (!result.rowCount) throw [204, 'No like found']
-      res.json(result.rows)
-    })
-    .catch(err => {
-      res.status(err[0])
-      res.write(err[1])
-    })
-    .finally(() => res.end())
+      if (result.rowCount === 0) return ([])
+
+      const promises = []
+      result.rows.forEach(elem => {
+        promises.push(
+            usersModel.getUserInfo({id: elem.id})
+          )
+        })
+        return (Promise.all(promises))
+      })
+      .then(result => {
+        const rowResult = result.map(elem =>{
+          return elem.rows[0]
+        })
+        res.status(200).json(rowResult)
+      })
+      .catch(() => {
+        res.status(500).send("Something Went Wrong")
+      })
 }
 
 const add = async (req, res) => {
