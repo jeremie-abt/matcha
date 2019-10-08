@@ -18,18 +18,28 @@ const FormLogin = ({ fields, setUserLogged }) => {
     }
   }
 
-  const handleSubmit = (submittedData) => {
+  function printError () {
+    setIsValid(false)
+    setTimeout(() => setIsValid(true), 3000)
+  }
 
-    if (!submittedData.username || !submittedData.password)
+  const handleSubmit = ({ state }) => {
+
+    if (!state.username || !state.password){
       return setIsValid(false)
-    axios.post('/users/authenticate', submittedData)
-      .catch(e => console.log("attention il y a eu une error : ", e))
-      .then(async (resp) => {
-        const token = resp.data
-        const cookies = new Cookies()
-        cookies.set("token", token)
-        setUserLogged()
-      })
+    }
+    
+    axios.post('/users/authenticate', state)
+    .then((resp) => {
+      const token = resp.data
+      const cookies = new Cookies()
+      cookies.set("token", token)
+      setUserLogged()
+    })
+    .catch(e => {
+      printError()
+      // console.log("attention il y a eu une error : ", e)
+    })
   }
 
   return (
