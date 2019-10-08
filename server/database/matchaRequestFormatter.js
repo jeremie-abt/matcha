@@ -24,22 +24,19 @@ class reqFormatter {
    */
 
   _eq = '=' // equl
-
   _gt = '>' // greater than
-  
   _ge = '>=' // greate equal
-
   _lt = '<' // less than
- 
   _le = '<=' // less equal
-
   _ne = '!=' // not equal
-
+  
   /**
    *  method to call when you want to make a new request
    *  and flush all the existing params
    */
   flush() {
+    
+    
     this.table = 'matcha'
 
     this._joinStatement = ''

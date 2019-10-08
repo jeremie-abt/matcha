@@ -79,7 +79,7 @@
       "resolved": "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz",
       "version": "1.1.1"
     },
-    "ejs": "^2.6.2",
+    "ejs": "^2.7.1",
     "encodeurl": {
       "integrity": "sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=",
       "resolved": "https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz",
@@ -194,13 +194,14 @@
       "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.6.2.tgz",
       "version": "0.6.2"
     },
+    "node": "^12.11.1",
     "nodemailer": "^6.3.0",
     "nodemodule": {
       "integrity": "sha1-e3XaP8q0RC1SbauC5VYq9CBjyD0=",
       "resolved": "https://registry.npmjs.org/nodemodule/-/nodemodule-0.3.0.tgz",
       "version": "0.3.0"
     },
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.3",
     "on-finished": {
       "integrity": "sha1-IPEzZIGwg811M3mSoWlxqi2QaUc=",
       "requires": {
@@ -423,5 +424,8 @@
       "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz",
       "version": "4.0.2"
     }
+  },
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1"
   }
 }
