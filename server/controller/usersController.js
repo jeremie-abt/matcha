@@ -2,9 +2,10 @@
 const Crypto = require('crypto-js')
 
 const userModel = require('../model/usersModel')
-
 const { sendMail } = require('../helpers/MailSender')
-const createToken = require('../helpers/ManageToken')
+
+const { createToken, generateMailToken } = 
+  require('../helpers/ManageToken')
 
 // je met le user id dans le token donc 
 // je fais request avec le user id mais on pourra changer
@@ -73,35 +74,43 @@ function create(req, res) {
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel.isUserAlreadyCreated(userAccountInfos)
-    .catch( () => {
-      res.status(404).send("something got wrong")
+    .catch(() => {
+      res.status(500).send("something got wrong")
     })
     .then(response => {
       if (response.rowCount === 1) {
-        throw "This user already exists"
+        res.status(500).send("This user already exists")
+        return false
       }
       return userModel.createUser(userAccountInfos)
     })
     .then (response => {
-      if (response.rowCount === 1) {
-        // eslint-disable-next-line no-use-before-define
-        const token = generateToken(res, response.rows[0].id)
-        // eslint-disable-next-line no-use-before-define
-        
-        sendMail(token, userAccountInfos.email, "/confirmationMail/")
-        if (token !== -1) {
-          res.status(200)
-          res.write(
-              `user : ${userAccountInfos.username} successfully `
-              + `created, you must validate this account by email`)
-        } else {
-          res.status(404)
-          res.write("something got wrong")
-        }
+
+      // enfaite maintenan la logique du mail c le front qui va gerer
+      if (response && response.rowCount === 1) {
+        res.status(200).json(response.rows[0])
+        res.end()
+      } else {
+        res.status(500).send("something went wrong !")
         res.end()
       }
+ 
+ 
+      /* if (response && response.rowCount === 1) {
+        // eslint-disable-next-line no-use-before-define
+        const token = generateMailToken(res)
+        // eslint-disable-next-line no-use-before-define
+        sendMail(token, userAccountInfos.email, "/confirmationMail/")
+        res.cookie("mailToken", token)
+        res.status(200)
+        res.write(
+            `user : ${userAccountInfos.username} successfully `
+            + `created, you must validate this account by email`)
+        res.end()
+      } */
     })
     .catch(err => {
+      console.log("err : ", err)
       res.status(404).send(err)
     })
 }
@@ -167,16 +176,33 @@ function del(req, res) {
     })
 }
 
+function sendTokenMail(req, res) {
+
+
+  const token = Crypto.lib.WordArray.random(28).toString()
+  const { redirectionLink, id, email } =
+      req.body
+
+  sendMail(token, email, redirectionLink)
+  res.cookie("mailToken", {
+    id, token,
+    expires: new Date(Date.now() + 8 * 3600000)
+  })
+  res.status(200)
+  res.end()
+}
+
 const confirmationMail = (req, res) => {
   if (typeof req.cookies.permission === "undefined"){
     res.status(404).send("Bad token or Cookie")
     return
   }
-  const sessionToken = req.cookies.permission.token
-  const {token} = req.params
+  const sessionToken = req.cookies.mailToken
+  const { token } = req.params
   
+
   if (sessionToken === token) {
-    res.clearCookie("permission")
+    res.clearCookie("mailToken")
     userModel.verifyMail(req.cookies.permission.id)
       .catch(() => {
         res.status(500).send("something got wrong")
@@ -204,5 +230,6 @@ module.exports = {
   update,
   del,
   confirmationMail,
-  ManageAuthentification
+  ManageAuthentification,
+  sendTokenMail
 }

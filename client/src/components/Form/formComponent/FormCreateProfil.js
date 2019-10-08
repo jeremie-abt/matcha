@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import classNames from 'classnames'
+import axios from 'axios'
 import FormConstructor from '../FormConstructor'
+import Crypto from 'crypto-js'
+import Cookies from 'universal-cookie'
 
-let fields = [
+const fields = [
   {
     name: 'firstname',
     label: 'firstname',
@@ -36,79 +39,114 @@ let fields = [
   }
 ]
 
-class FormCreateProfil extends React.Component {
-  constructor() {
-    super()
-    this.state = {}
-    this.state['data'] = fields
+const buttonStyle = {
+  classes: classNames({
+    'is-primary': true,
+    'is-medium': true
+  }),
+  style: {
+    fullwidth: true
   }
+}
 
-  render() {
-    const buttonStyle = {
-      classes: classNames({
-        'is-primary': true,
-        'is-medium': true
-      }),
-      style: {
-        fullwidth: true
+function generateMailToken() {
+
+  return Crypto.lib.WordArray.random(28).toString()
+}
+
+function parseFormData(formData) {
+  
+  const {
+    email, password, confirmpassword
+  } = formData
+
+  
+  const verifyMailPattern = RegExp(
+    "^.{1,25}@.{2,15}\\.[^.]{3,5}$"
+  )
+  if (confirmpassword !== password)
+    return "Password and confirmpassword are not the same ..."
+  else if (!verifyMailPattern.exec(email))
+    return "please send a valid email ..."
+  // faut faire des verifs sur les firstname et tout ? 
+  return true
+}
+
+function FormCreateProfil({ setUserLogged}) {
+  
+  const [msg, setMsg] = useState('')
+  
+  const handleSubmit = ({state}) => {
+    
+    const dataObligated = [
+      'firstname', 'lastname', 'username', 'email',
+      'password', 'confirmpassword'
+    ]
+    const isAllDataGiven = 
+      dataObligated.every(elem => {
+        if (!state[elem]){
+          setMsg("pls fill all input")
+          return false
+        }
+        return true
+      })
+    if (isAllDataGiven) {
+      const ret = parseFormData(state)
+      if (ret === true) {
+        // creation du user
+        axios.post('/users', state)
+          .catch((e) => {
+            console.log("petite erreur visiblement ", e)
+          })
+          .then(resp => {
+            if (resp){
+              return axios.post(
+                '/users/authenticate', state
+              )
+            }
+          })
+          .then(resp => {
+
+          if (resp) {
+              return [
+                axios.post(
+                  "/auth/sendTokenMail/",
+                  {
+                    redirectionLink: "http://localhost:3000/confirmationMail/",
+                    id: resp.data.id,
+                    email: state.email
+                  }
+                ),
+                resp.data
+              ]
+            }
+          })
+          .then(resp => {
+            if (resp) {
+              const cookies = new Cookies()
+              cookies.set("token", resp[1])
+              setUserLogged()
+            }
+          })
+          .catch(e=> {
+            console.log("oui nous somme ici : ", e)
+          })
+      } else {
+        setMsg(ret)
       }
     }
-    return (
-      <div>
-        <FormConstructor
-          buttonStyle={buttonStyle}
-          fields={this.state.data}
-          handleForm={this.handleSubmit}
-        />
-      </div>
-    )
   }
-
-  handleSubmit = formData => {
-
-    alert('Not implemented')
-  }
-
-  _updateData(newData) {
-    // New Data Object avec certaines keys
-    // this.state.data : tab d'objet, chacun de ces object contient une var name
-    // qui va faire la jonction avec le newData
-
-    const keysname = Object.keys(newData)
-
-    function __managedefault(newElem) {
-      return newElem
-    }
-
-    function __managetext(newElem) {
-      newElem['placeholder'] = newData[newElem.name]
-      return newElem
-    }
-
-    function __managecheckbox(newElem) {
-      return newElem
-    }
-
-    const funcTabPtr = {
-      text: __managetext,
-      email: __managetext,
-      checkbox: __managecheckbox,
-      default: __managedefault
-    }
-
-    let updatedData = this.state.data.map(elem => {
-      if (keysname.indexOf(elem.name > -1)) {
-        // ...new elem syntax is made in order to copy object
-        const funcPtr =
-          Object.keys(funcTabPtr).indexOf(elem.type) > -1
-            ? funcTabPtr[elem.type]
-            : funcTabPtr['default']
-        return funcPtr({ ...elem })
-      }
-      return null
-    })
-    this.setState({ data: updatedData })
-  }
+  
+  return (
+    <div>
+      <FormConstructor
+        buttonStyle={buttonStyle}
+        fields={fields}
+        handleForm={handleSubmit}
+        msg={msg}
+      />
+    </div>
+  )
 }
 
 export default FormCreateProfil

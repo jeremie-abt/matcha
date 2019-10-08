@@ -51,6 +51,11 @@ apiRouter.delete('/blocked/delete', blockedController.del)
 // Auth
 apiRouter.get('/auth/confirmationMail/:token',
     usersController.confirmationMail)
+// jai mis post car get ne me semblait pas logique
+apiRouter.post('/auth/sendTokenMail',
+    usersController.sendTokenMail)
+
+
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter

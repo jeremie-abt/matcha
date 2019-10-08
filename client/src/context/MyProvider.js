@@ -17,12 +17,14 @@ function MyProvider (props) {
 
   const setUserContext = () => {
     const cookies = new Cookies()
+
     axios.get('/users/getUser', {
       headers: {
         authorization: 'Bearer ' + cookies.get("token")
       }
     })
       .then(resp => {
+        console.log("resp : ", resp.data)
         updateUser(resp.data)
       })
       .catch(e => {console.log("bad Cookie !!")})

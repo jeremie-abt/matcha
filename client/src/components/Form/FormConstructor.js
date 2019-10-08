@@ -9,7 +9,7 @@ import MyRadio from './InputStyle/RadioStyle'
 import UserContext from '../../context/UserContext'
 
 function FormConstructor(props) {
-  
+ 
   const context = useContext(UserContext)
   
   const checkboxObj = {}
@@ -153,7 +153,7 @@ function FormConstructor(props) {
       }
       <Button onClick={handleSubmit}> Valider </Button>
       <Content size={'small'} style={{ color: 'red' }}>
-        {!props.isValid ? 'pls fill all input' : ''}
+        {props.msg}
       </Content>
     </div>
   )

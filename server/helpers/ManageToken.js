@@ -14,4 +14,7 @@ function createToken(id) {
   return token
 }
 
-module.exports = createToken
+
+module.exports = {
+  createToken
+}

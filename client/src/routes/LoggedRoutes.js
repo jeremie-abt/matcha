@@ -4,6 +4,7 @@ import UserPage from '../pages/UserPage'
 import UserContext from '../context/UserContext'
 
 import DefaultPage from '../components/GeneralRedirection/LoggedDefaultPage'
+import TokenHandlingPage from '../pages/TokenHandlingPage'
 
 function LoggedRoutes() {
   return (
@@ -18,7 +19,15 @@ function LoggedRoutes() {
               key={1}
               exact
             />,
-            
+          
+            <Route
+              path='/confirmationMail/:token'
+              render={() => <TokenHandlingPage action="verifyaccount"/>}
+              userInfos={context.store.user}
+              key={3}
+              exact
+            />,
+
             <Route
               path='*'
               component={DefaultPage}
