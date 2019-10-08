@@ -2,7 +2,6 @@
 const Crypto = require('crypto-js')
 
 const userModel = require('../model/usersModel')
-const tagsModel = require('../model/tagsModel')
 
 const { sendMail } = require('../helpers/MailSender')
 const createToken = require('../helpers/ManageToken')
@@ -70,7 +69,6 @@ function create(req, res) {
     }
     userAccountInfos[element] = value
   })
-  console.log("userAccount : ", userAccountInfos)
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel.isUserAlreadyCreated(userAccountInfos)

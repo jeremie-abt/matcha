@@ -38,7 +38,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
     })
     .catch(e => {
       printError()
-      console.log("attention il y a eu une error : ", e)
+      // console.log("attention il y a eu une error : ", e)
     })
   }
 
