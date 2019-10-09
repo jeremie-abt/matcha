@@ -58,9 +58,11 @@ function createUser(userInfo) {
 }
 
 function verifyMail(id) {
-  ReqFormatter.table = 'users'
-  ReqFormatter.addFields({
-    verifiedMail: true
+  const query = new ReqFormatter()
+  
+  query.table = 'users'
+  query.addFields({
+    verified_mail: true
   }).where({
     and: {
       eq: {
@@ -68,8 +70,8 @@ function verifyMail(id) {
       }
     }
   })
-  const [statement, args] = ReqFormatter.generateQuery('update')
-  ReqFormatter.flush()
+  const [statement, args] = query.generateQuery('update')
+  query.flush()
   return client.query(statement, args)
 }
 

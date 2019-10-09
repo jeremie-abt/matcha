@@ -74,9 +74,6 @@ function create(req, res) {
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel.isUserAlreadyCreated(userAccountInfos)
-    .catch(() => {
-      res.status(500).send("something got wrong")
-    })
     .then(response => {
       if (response.rowCount === 1) {
         res.status(500).send("This user already exists")
@@ -94,23 +91,9 @@ function create(req, res) {
         res.status(500).send("something went wrong !")
         res.end()
       }
- 
- 
-      /* if (response && response.rowCount === 1) {
-        // eslint-disable-next-line no-use-before-define
-        const token = generateMailToken(res)
-        // eslint-disable-next-line no-use-before-define
-        sendMail(token, userAccountInfos.email, "/confirmationMail/")
-        res.cookie("mailToken", token)
-        res.status(200)
-        res.write(
-            `user : ${userAccountInfos.username} successfully `
-            + `created, you must validate this account by email`)
-        res.end()
-      } */
     })
     .catch(err => {
-      console.log("err : ", err)
+      console.log("\n\nerr : ", err, "\n\n")
       res.status(404).send(err)
     })
 }
@@ -178,47 +161,37 @@ function del(req, res) {
 
 function sendTokenMail(req, res) {
 
-
   const token = Crypto.lib.WordArray.random(28).toString()
-  const { redirectionLink, id, email } =
+  const { redirectionLink, email } =
       req.body
 
   sendMail(token, email, redirectionLink)
-  res.cookie("mailToken", {
-    id, token,
-    expires: new Date(Date.now() + 8 * 3600000)
-  })
-  res.status(200)
-  res.end()
+  res.cookie("mailToken", token).send("Ok")
 }
 
 const confirmationMail = (req, res) => {
-  if (typeof req.cookies.permission === "undefined"){
-    res.status(404).send("Bad token or Cookie")
-    return
-  }
-  const sessionToken = req.cookies.mailToken
-  const { token } = req.params
-  
 
-  if (sessionToken === token) {
-    res.clearCookie("mailToken")
-    userModel.verifyMail(req.cookies.permission.id)
-      .catch(() => {
+  const cookieToken = req.cookies.mailToken
+  const { token } = req.params
+
+  if (cookieToken === token) {
+    userModel.verifyMail(req.tokenInfo.id)
+    .then(resp => {
+      if (resp.rowCount !== 1){
+        console.log("Email not confirmed ")
         res.status(500).send("something got wrong")
-      })
-      .then(resp => {
-        if (resp.rowCount !== 1){
-          res.write("something got wrong")
-          res.status(500)
-        }
-        else{
-          res.write("email Confirmed")
-          res.status(204)
-        }
-        res.end()
-      })
-      .catch( () => { throw "err" } )
+      }
+      else {
+        console.log("Email confirmed ")
+        res.clearCookie("mailToken")
+        res.status(204).send("email confirmed")
+      }
+      res.end()
+    })
+    .catch((e) => {
+      console.log("error : ", e)
+      res.status(500).send("something got wrong")
+    })
   }
   else 
     res.status(404).send("bad token")

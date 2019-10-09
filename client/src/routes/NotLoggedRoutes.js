@@ -5,13 +5,19 @@ import RegisterPage from '../pages/RegisterPage'
 import LoginPage from '../pages/LoginPage'
 import DefaultPage from '../components/GeneralRedirection/NotLoggedDefaultPage'
 
+import TokenHandlingPage from '../pages/TokenHandlingPage'
+
 
 function NotLoggedRoutes() {
   return (
     <Switch>
-      <Route path='/' component={LoginPage} exact />
-      <Route path='/register' component={RegisterPage} exact />
-      <Route path='*' component={DefaultPage} />
+      <Route exact path='/' component={LoginPage} />
+      <Route path='/register' component={RegisterPage} />
+      <Route
+        path='/confirmationMail/:token'
+        render={ () => <TokenHandlingPage action="verifyaccount"/> }
+        key={2}
+      />,
     </Switch>
   )
 }

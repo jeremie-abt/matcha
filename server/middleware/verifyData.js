@@ -1,6 +1,7 @@
 const userModel = require("../model/usersModel")
 
 const userExist = (req, res, next) => {
+
   const userId = parseInt(req.params.userId, 10)
   userModel.isUserExisting(userId)
     .catch(() => {

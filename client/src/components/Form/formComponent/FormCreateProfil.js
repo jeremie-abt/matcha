@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import 'react-bulma-components/dist/react-bulma-components.min.css'
+import { redirect } from 'react-router-dom'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
@@ -96,36 +96,39 @@ function FormCreateProfil({ setUserLogged}) {
         // creation du user
         axios.post('/users', state)
           .catch((e) => {
-            console.log("petite erreur visiblement ", e)
+            console.log("users already existing ", e)
           })
-          .then(resp => {
+          /*.then(resp => {
             if (resp){
               return axios.post(
                 '/users/authenticate', state
               )
             }
-          })
+          })*/
           .then(resp => {
 
           if (resp) {
-              return [
+              return(
                 axios.post(
                   "/auth/sendTokenMail/",
                   {
                     redirectionLink: "http://localhost:3000/confirmationMail/",
                     id: resp.data.id,
                     email: state.email
-                  }
-                ),
-                resp.data
-              ]
+                  },
+                  {withCredentials: true}
+                )
+              )
             }
           })
           .then(resp => {
             if (resp) {
-              const cookies = new Cookies()
-              cookies.set("token", resp[1])
-              setUserLogged()
+              setMsg(
+                "C'est bon ton profil a ete cree, il te suffit"
+                + " de le valider par mail et tu pourras te connecter !\n"
+                + " c bon ca ou redirection et tout ?"
+              )
+//              setUserLogged()
             }
           })
           .catch(e=> {

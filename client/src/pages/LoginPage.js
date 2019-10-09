@@ -27,12 +27,16 @@ function LoginPage() {
               <h1> Sign-in</h1>
             </Content>
             <MyContext.Consumer>
-              {context => (
-                <LoginForm
+              {context => {
+                /*{
+                  console.log("context : ", conte)
+                }*/
+                return <LoginForm
                   fields={fields}
                   setUserLogged={context.setUserLogged}
                 />
-              )}
+              }
+              }
             </MyContext.Consumer>
           </Card.Content>
         </Card>

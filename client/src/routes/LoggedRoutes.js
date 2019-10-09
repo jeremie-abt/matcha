@@ -17,24 +17,22 @@ function LoggedRoutes() {
               render={() => <UserPage userInfos={context.store.user} />}
               userInfos={context.store.user}
               key={1}
-              exact
             />,
           
-            <Route
+            /*<Route
               path='/confirmationMail/:token'
-              render={() => <TokenHandlingPage action="verifyaccount"/>}
+              render={ () => <TokenHandlingPage action="verifyaccount"/> }
+              key={2}
+            />,*/
+            // trouver comment faire le truc du dessous
+
+            <Route
+              path='/'
+              component={DefaultPage}
               userInfos={context.store.user}
               key={3}
               exact
-            />,
-
-            <Route
-              path='*'
-              component={DefaultPage}
-              userInfos={context.store.user}
-              key={2}
-              exact
-            />]
+          />]
           )
         }}
       </UserContext.Consumer>

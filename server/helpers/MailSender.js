@@ -31,6 +31,7 @@ function sendMail(token, mail, path) {
     }
   })
 
+  console.log("mail : ", mail )
   transporter.sendMail({
     from: 'no-reply@matcha.om', // sender address
     to: mail, // list of receivers

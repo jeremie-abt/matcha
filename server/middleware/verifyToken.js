@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const key = require('../config/jwtSecretKey');
 
 function verifyToken(req, res, next) {
-  
+ 
   if (!('authorization' in req.headers)) {
     res.status(404).send('token not given');
     return;

@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
+import userContext from '../../../context/UserContext'
 
 import Cookies from 'universal-cookie'
 
 const FormLogin = ({ fields, setUserLogged }) => {
+  const context = useContext(userContext)
   const [isValid, setIsValid] = useState(true)
-
   const buttonStyle = {
     classes: classNames({
       'is-primary': true,
@@ -41,6 +42,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
     })
   }
 
+  console.log("mail : ", context.store.user.verified_mail)
   return (
     <div>
       <FormConstructor
@@ -48,6 +50,10 @@ const FormLogin = ({ fields, setUserLogged }) => {
         fields={fields}
         handleForm={handleSubmit}
         isValid={isValid}
+        msg={
+          context.store.user.verified_mail === false &&
+          "Veuillez verifier votre mail"
+        }
       />
     </div>
   )

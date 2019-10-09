@@ -11,9 +11,9 @@ import UserContext from '../../context/UserContext'
 function FormConstructor(props) {
  
   const context = useContext(UserContext)
-  
   const checkboxObj = {}
   const stateObj = {}
+
   props.fields.forEach(elem => {
     if (elem.type === "checkbox") {
       checkboxObj[elem.name] = context.store.user[elem.name]
@@ -33,7 +33,7 @@ function FormConstructor(props) {
         onChange={handleChange}
         value={state[elem.name]}
         key={elem.name + elem.type}
-        placeholder={placeholder}
+        placeholder={context.store.isAtuh && placeholder}
       />
     )
   }
