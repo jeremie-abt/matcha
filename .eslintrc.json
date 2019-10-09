@@ -20,6 +20,7 @@
     "no-throw-literal": "off",
     "nonblock-statement-body-position": "off",
     "curly": "off",
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
+    "no-console": "off"
   }
 }
