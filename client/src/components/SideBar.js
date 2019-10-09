@@ -2,8 +2,6 @@ import React from 'react'
 import { Menu } from 'react-bulma-components'
 
 function SideBar({ curComponent, setCurComponent }) {
-  //const components = ['profil', 'update', 'seen', 'like']
-
   const isActive = el => {
     if (curComponent === el) return 'is-active'
   }
@@ -18,12 +16,17 @@ function SideBar({ curComponent, setCurComponent }) {
           Profil
         </Menu.List.Item>
         <Menu.List.Item
-          className={'update'}
+          className={isActive('update')}
           onClick={() => setCurComponent('update')}
         >
           Account
         </Menu.List.Item>
-        <Menu.List.Item>Images</Menu.List.Item>
+        <Menu.List.Item
+          className={isActive('images')}
+          onClick={() => setCurComponent('images')}
+        >
+          Images
+        </Menu.List.Item>
       </Menu.List>
 
       <Menu.List title='Relations'>

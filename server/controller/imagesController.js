@@ -1,6 +1,6 @@
 const imageModel = require('../model/imagesModel')
 
-const show = (req, res) => {
+const index = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
   if (!userId) {
     res.status(400).send('User not found')
@@ -11,18 +11,14 @@ const show = (req, res) => {
   imageModel
     .getImagesFromUserId(userId)
     .then(response => {
-      if (!response.rows.length) {
-        res.status(404).send('No images found')
-        return
-      }
-      const { url } = response.rows[0]
-      res.json({ url })
+      console.log(response.rows)
+      const { rows } = response
+      res.json(rows)
     })
     .catch(e => {
       throw e
     })
     .finally(() => res.end())
-  // need front here
 }
 
 const update = (req, res) => {
@@ -115,7 +111,7 @@ const add = async (req, res) => {
 }
 
 module.exports = {
-  show,
+  index,
   del,
   update,
   add

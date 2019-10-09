@@ -7,25 +7,20 @@ import Title from '../components/PageTitle'
 
 // dynamic components
 import Profil from '../components/Profil/Profil'
+import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Histo'
 
 function UserPage({ userInfos }) {
-  
-  const [curComponent, setCurComponent] = useState('profil')
+  const [curComponent, setCurComponent] = useState('images')
   const componentsMapping = {
     profil: <Profil userInfos={userInfos} />,
-    like: <Histo type="like" />,
-    seen: <Histo type="seen" />,
+    images: <Images userId={userInfos.id} />,
+    like: <Histo type='like' />,
+    seen: <Histo type='seen' />,
     update: <UpdateForm />
   }
-  /*const componentsMapping = {
-    profil: () => <Profil userInfos={userInfos} />,
-    like: () => <Histo type="like" />,
-    seen: () => <Histo type="seen" />,
-    update: () => <UpdateForm />
-  }*/
-  
+
   return (
     <PageSkeleton>
       <Title name='User Information' />
