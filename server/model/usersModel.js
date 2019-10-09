@@ -21,6 +21,21 @@ function isUserAlreadyCreated(userInfo) {
   return client.query(statement, values)
 }
 
+
+function getUserInfo(requiredData) {
+  const Query = new ReqFormatter  ()
+
+  Query.table = "users"
+  Query.where({
+    and: {
+      eq: {
+        ...requiredData
+      }
+    }
+  })
+  return client.query(...Query.generateQuery("select"))
+}
+
 function isUserExisting(requiredData) {
   const statement = `SELECT * FROM users WHERE ${requiredData[0]} = $1`
 
@@ -90,5 +105,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  verifyMail
+  verifyMail,
+  getUserInfo
 }

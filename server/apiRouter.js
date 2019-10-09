@@ -9,7 +9,7 @@ const blockedController = require('./controller/blockedController')
 const notificationsController = require('./controller/notificationsController')
 
 // middleware
-// const dataVerifMid = require("./middleware/verify_data")
+const dataVerifToken = require("./middleware/verifyToken")
 
 const apiRouter = express.Router()
 
@@ -19,11 +19,12 @@ const apiRouter = express.Router()
 
 // code de creation de router
 
-// User routes
-apiRouter.post('/users/getUser', usersController.show)
+// user routes
+apiRouter.get('/users/getUser', dataVerifToken.verifyToken, usersController.show)
 apiRouter.post('/users', usersController.create)
 apiRouter.put('/users/:userId', usersController.update)
 apiRouter.delete('/users/:userId/delete', usersController.del)
+apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
 
 // Images routes
 apiRouter.get('/:user_id/images', imagesController.show)
