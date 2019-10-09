@@ -17,7 +17,8 @@ function updateNotificationToSeen(notifId) {
 
 function getAllNotifications(receiverId) {
   const query =
-    'Select user_id, max(created_at), type from notifications where receiver_id = $1 group by user_id, type'
+    `Select user_id, max(created_at), type from notifications where`
+    + ` receiver_id = $1 group by user_id, type`
 
   return client.query(query, [receiverId])
 }
