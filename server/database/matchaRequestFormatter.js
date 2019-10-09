@@ -23,20 +23,28 @@ class reqFormatter {
    *        of the query
    */
 
-  _eq = '=' // equl
-  _gt = '>' // greater than
-  _ge = '>=' // greate equal
-  _lt = '<' // less than
-  _le = '<=' // less equal
+  _eq = '='
+
+  // equl
+  _gt = '>'
+
+  // greater than
+  _ge = '>='
+
+  // greate equal
+  _lt = '<'
+
+  // less than
+  _le = '<='
+
+  // less equal
   _ne = '!=' // not equal
-  
+
   /**
    *  method to call when you want to make a new request
    *  and flush all the existing params
    */
   flush() {
-    
-    
     this.table = 'matcha'
 
     this._joinStatement = ''
@@ -61,9 +69,8 @@ class reqFormatter {
   /**
    * @param {Object} args
    */
-  // ~! A test 
+  // ~! A test
   addAggregation(args) {
-
     const fieldBuilder = (fieldName, aggregatedFieldName) => {
       this._fieldNames = this._fieldNames.map(x => {
         if (x === fieldName) {
@@ -75,12 +82,11 @@ class reqFormatter {
 
     // !~ a test sans forEach
     Object.keys(args).forEach(topKey => {
-      
       // !~ si ca beug essaye d'inverser aggregation et field
       // !~ foreach c'est que pour les array
       args[topKey].forEach(([field, aggregations]) => {
         let aggregationsArray = aggregations
-        
+
         if (!Array.isArray(aggregationsArray)) {
           aggregationsArray = [aggregations]
         } else {
@@ -90,10 +96,9 @@ class reqFormatter {
 
         Object.values(aggregationsArray).forEach(aggregation => {
           if (aggregatedFullName === '') {
-            aggregatedFullName = `${aggregation.toUpperCase()  }()`
+            aggregatedFullName = `${aggregation.toUpperCase()}()`
           } else {
-            aggregatedFullName =
-              `${aggregation.toUpperCase()  }(${  aggregatedFullName  })`
+            aggregatedFullName = `${aggregation.toUpperCase()}(${aggregatedFullName})`
           }
         })
         const len = aggregations.length
@@ -103,7 +108,7 @@ class reqFormatter {
           ')'.repeat(len)
 
         fieldBuilder(field, aggregatedFullName)
-        })
+      })
     })
     return this
   }
@@ -119,7 +124,7 @@ class reqFormatter {
     if (this._groupBy === '') {
       groupByStatement = 'GROUP BY '
     } else {
-      groupByStatement = `${this._groupBy  } `
+      groupByStatement = `${this._groupBy} `
     }
     if (!Array.isArray(fieldsName)) {
       arrayFieldsName = [fieldsName]
@@ -165,7 +170,7 @@ class reqFormatter {
     if (this._order_by === '') {
       orderByStatement = 'ORDER BY '
     } else {
-      orderByStatement = `${this._order_by  }, `
+      orderByStatement = `${this._order_by}, `
     }
     orderByConditions.forEach(elem => {
       orderByStatement += `${elem[0]} ${elem[1].toUpperCase()}, `
@@ -193,12 +198,10 @@ class reqFormatter {
    */
 
   addFields(fields) {
-
     if (Array.isArray(fields)) {
       this._fieldNames = this._fieldNames.concat(fields)
     } else {
-
-      Object.entries(fields).forEach( ([key, val]) => {
+      Object.entries(fields).forEach(([key, val]) => {
         this._fieldNames.push(key)
         this._fieldValues.push(val)
       })
@@ -224,13 +227,12 @@ class reqFormatter {
    * @param {Object} args
    */
   where(args) {
-
     /**
      * @param {Object} args   sub object of args
      * @param {string} type   either ("or" and "and")
      */
 
-     const subProcedure = (condition, type) => {
+    const subProcedure = (condition, type) => {
       Object.entries(condition).forEach(([operator, val]) => {
         Object.entries(val).forEach(([field, value]) => {
           this._addWhereCondition(
@@ -262,11 +264,10 @@ class reqFormatter {
    *    je trouve ca ok a voir
    */
   generateQuery(type) {
-    
     function _getSelect(fieldNames, fieldValues) {
       const statement = 'SELECT '
       let fieldStatement = ''
-      
+
       if (fieldValues.length === 0) {
         if (fieldNames.length > 0) {
           fieldStatement += fieldNames.join(', ')
@@ -277,20 +278,17 @@ class reqFormatter {
         for (let i = 0; i < fieldNames.length; i += 1) {
           fieldStatement += `${fieldNames[i]} AS ${fieldValues[i]}, `
         }
-        fieldStatement = fieldStatement.substring(
-          0,
-          fieldStatement.length - 2
-        )
+        fieldStatement = fieldStatement.substring(0, fieldStatement.length - 2)
       }
       if (fieldStatement === '') return -1
-      return `${statement + fieldStatement  } FROM ${this.table}`
+      return `${statement + fieldStatement} FROM ${this.table}`
     }
-    
+
     function _getInsert(fieldNames, fieldValues) {
       let statement = `INSERT INTO ${this.table} (`
 
       if (fieldValues.length <= 0) return -1
-      statement += `${fieldNames.join(', ')  }) `
+      statement += `${fieldNames.join(', ')}) `
       statement += 'VALUES ('
       const index = this._value_index
       for (let i = index; i < fieldValues.length + index; i += 1) {
@@ -298,33 +296,30 @@ class reqFormatter {
         this._value_linker.push(fieldValues[i - index])
       }
       this._value_index += fieldValues.length
-      statement = `${statement.substring(0, statement.length - 2)  })`
+      statement = `${statement.substring(0, statement.length - 2)})`
       return statement
     }
-    
+
     function _getUpdate(fieldNames, fieldValues) {
       let statement = `UPDATE ${this.table} SET `
-      
-      if (
-        fieldNames.length !== fieldValues.length ||
-        fieldNames.length <= 0
-        ) {
-          return -1
-        }
 
-        // !~ clairement un beug ici dans la boucle !!! a regler
-        // const len_computed = i + fieldNames.length // eviter la boucle inf ...
-        
-        for (let i = 0; i < fieldValues.length; i += 1) { 
+      if (fieldNames.length !== fieldValues.length || fieldNames.length <= 0) {
+        return -1
+      }
+
+      // !~ clairement un beug ici dans la boucle !!! a regler
+      // const len_computed = i + fieldNames.length // eviter la boucle inf ...
+
+      for (let i = 0; i < fieldValues.length; i += 1) {
         // fieldNames.forEach(index => {
-          statement += `${fieldNames[i]} = $${this._value_index}, `
-          this._value_linker.push(fieldValues[i])
-          this._value_index += 1
-        }
-        statement = statement.substring(0, statement.length - 2)
-        return statement
+        statement += `${fieldNames[i]} = $${this._value_index}, `
+        this._value_linker.push(fieldValues[i])
+        this._value_index += 1
+      }
+      statement = statement.substring(0, statement.length - 2)
+      return statement
     }
-    
+
     function _getDelete() {
       return `DELETE FROM ${this.table} `
     }
@@ -343,43 +338,33 @@ class reqFormatter {
       // je sais c'est sale mais c'est la seule fasons pour que
       // l'inheritance de variable soit faite
       const [fieldNames, fieldValues] = this._getFields()
-  
+
       const fieldStatement = typeHandlers[requestType](fieldNames, fieldValues)
-      const finalStatement =
-        `${fieldStatement 
-        } ${ 
-        this._joinStatement 
-        } ${ 
-        this._whereStatement 
-        } ${ 
-        this._groupBy 
-        }${this._order_by 
-        }${this._limit 
-        };`
+      const finalStatement = `${fieldStatement} ${this._joinStatement} ${this._whereStatement} ${this._groupBy}${this._order_by}${this._limit};`
       return [finalStatement, this._value_linker]
     }
   }
-  
-  _in = (field, value) => { 
+
+  _in = (field, value) => {
     let whereStatement = `${field} IN (`
+    // eslint-disable-next-line array-callback-return
     value.map(elem => {
       whereStatement += `$${this._value_index}, `
       this._value_index += 1
       this._value_linker.push(elem)
     })
     whereStatement = whereStatement.substring(0, whereStatement.length - 2)
-    whereStatement += ")"
+    whereStatement += ')'
     this._whereStatement += whereStatement
   }
 
   _addWhereCondition(field, value, operator, type) {
-
     if (this._whereStatement === '') {
       this._whereStatement += 'WHERE '
     } else {
       this._whereStatement += `${type} `
     }
-    
+
     const op = this[operator]
     if (typeof op === 'function') {
       op(field, value)
@@ -539,6 +524,5 @@ class reqFormatter {
  *
  *
  */
-
 
 module.exports = reqFormatter
