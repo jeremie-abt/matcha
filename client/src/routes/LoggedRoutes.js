@@ -4,7 +4,6 @@ import UserPage from '../pages/UserPage'
 import UserContext from '../context/UserContext'
 
 import DefaultPage from '../components/GeneralRedirection/LoggedDefaultPage'
-import TokenHandlingPage from '../pages/TokenHandlingPage'
 
 function LoggedRoutes() {
   return (

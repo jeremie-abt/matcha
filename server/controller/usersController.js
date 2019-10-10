@@ -10,7 +10,7 @@ const { createToken, generateMailToken } =
 // je met le user id dans le token donc 
 // je fais request avec le user id mais on pourra changer
 function show(req, res) {
-  
+ 
   userModel.getUserInfo({id : req.tokenInfo.id})
     .then(resp => {
       if (resp.rowCount !== 1)
@@ -43,7 +43,7 @@ function ManageAuthentification(req, res) {
         response.rows.length !== 1 ||
         response.rows[0].password !== cryptPassword
       ) {
-        res.status(400).send("wrong Data")
+        res.status(401).send("Wrong data")
         return
       }
       const user = response.rows[0]
@@ -162,27 +162,25 @@ function del(req, res) {
 function sendTokenMail(req, res) {
 
   const token = Crypto.lib.WordArray.random(28).toString()
-  const { redirectionLink, email } =
+  const { redirectionLink, email, id } =
       req.body
 
-  sendMail(token, email, redirectionLink)
+  sendMail(token, email, redirectionLink, id)
   res.cookie("mailToken", token).send("Ok")
 }
 
 const confirmationMail = (req, res) => {
 
   const cookieToken = req.cookies.mailToken
-  const { token } = req.params
+  const { token, userId } = req.params
 
   if (cookieToken === token) {
-    userModel.verifyMail(req.tokenInfo.id)
+    userModel.verifyMail(userId)
     .then(resp => {
       if (resp.rowCount !== 1){
-        console.log("Email not confirmed ")
         res.status(500).send("something got wrong")
       }
       else {
-        console.log("Email confirmed ")
         res.clearCookie("mailToken")
         res.status(204).send("email confirmed")
       }

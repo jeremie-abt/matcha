@@ -1,10 +1,7 @@
-import React, { useState, useContext } from 'react'
-import { redirect } from 'react-router-dom'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
-import Crypto from 'crypto-js'
-import Cookies from 'universal-cookie'
 
 const fields = [
   {
@@ -47,11 +44,6 @@ const buttonStyle = {
   style: {
     fullwidth: true
   }
-}
-
-function generateMailToken() {
-
-  return Crypto.lib.WordArray.random(28).toString()
 }
 
 function parseFormData(formData) {

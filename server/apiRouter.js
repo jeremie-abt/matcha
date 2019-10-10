@@ -50,8 +50,8 @@ apiRouter.post('/blocked/add', blockedController.add)
 apiRouter.delete('/blocked/delete', blockedController.del)
 
 // Auth
-apiRouter.get('/auth/confirmationMail/:token',
-    dataVerifToken.verifyToken, usersController.confirmationMail)
+apiRouter.get('/auth/confirmationMail/:userId/:token',
+    usersController.confirmationMail)
 // jai mis post car get ne me semblait pas logique
 apiRouter.post('/auth/sendTokenMail',
     usersController.sendTokenMail)

@@ -10,12 +10,13 @@ const mailIdentifier = require("../config/mailIdentifiant")
  *                      which will handle the actual request )
  */
 
-function sendMail(token, mail, path) {
+function sendMail(token, mail, path, id) {
   // je veux lui envoyer un lien :
   // https://localhost:8081/api/auth/confirm
- 
+
   const link = 
-    `${path}${token}`
+  `${path}${id}/${token}`
+  console.log("link : ", link)
   const BodyMsg = 'Your about to find the love of your '
       + 'life, Clink on the following '
       + `<a href='${link}'>link</a>`

@@ -13,7 +13,6 @@ function TokenHandlingPage({action, ...props}) {
   const [isValid, setIsValid] = useState(false)
   const [isFalse, setIsFalse] = useState(false)
 
-  console.log("aslut")
   useEffect(() => {
     
     if (action === "verifyaccount") {
@@ -23,7 +22,7 @@ function TokenHandlingPage({action, ...props}) {
         const cookies = new Cookies()
         const token = params.token
         axios.get(
-          "/auth/confirmationMail/" + token,
+          "/auth/confirmationMail/" + params.userId + "/" +  token,
           {
             withCredentials: true,
             headers: {
@@ -42,9 +41,6 @@ function TokenHandlingPage({action, ...props}) {
       }
     }
   }, [isAuth, action, props.match.params, contextUser])
-
-      // faire un call axios pour verifier ce token et mettre a jour
-      // le profil !
  
   return (
     <div>
