@@ -64,7 +64,7 @@ function parseFormData(formData) {
   return true
 }
 
-function FormCreateProfil({ setUserLogged}) {
+function FormCreateProfil() {
   
   const [msg, setMsg] = useState('')
   
@@ -90,13 +90,6 @@ function FormCreateProfil({ setUserLogged}) {
           .catch((e) => {
             console.log("users already existing ", e)
           })
-          /*.then(resp => {
-            if (resp){
-              return axios.post(
-                '/users/authenticate', state
-              )
-            }
-          })*/
           .then(resp => {
 
           if (resp) {
@@ -120,7 +113,6 @@ function FormCreateProfil({ setUserLogged}) {
                 + " de le valider par mail et tu pourras te connecter !\n"
                 + " c bon ca ou redirection et tout ?"
               )
-//              setUserLogged()
             }
           })
           .catch(e=> {

@@ -14,17 +14,8 @@ function LoggedRoutes() {
             <Route
               path='/profil'
               render={() => <UserPage userInfos={context.store.user} />}
-              userInfos={context.store.user}
               key={1}
             />,
-          
-            /*<Route
-              path='/confirmationMail/:token'
-              render={ () => <TokenHandlingPage action="verifyaccount"/> }
-              key={2}
-            />,*/
-            // trouver comment faire le truc du dessous
-
             <Route
               path='/'
               component={DefaultPage}

@@ -32,9 +32,6 @@ function MyProvider (props) {
     }
   }
 
-/*  const setUserContext = () => {
-  }*/
-
   const HandleDisconnection = () => {
     const cookies = new Cookies()
     cookies.remove("token")
@@ -58,11 +55,7 @@ function MyProvider (props) {
   const _verifyIfAuth = () => {
 
     if (isAuth === false && Object.entries(user).length === 0) {
-      //const cookies = new Cookies()
-      ///const token = cookies.get("token")
       setUserLogged()
-      /*if (token !== undefined) {
-      }*/
     }
   }
 

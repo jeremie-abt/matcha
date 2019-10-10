@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie'
 
 const FormLogin = ({ fields, setUserLogged }) => {
   const [msg, setMsg] = useState('')
-  //const [isValid, setIsValid] = useState(true)
+  //const [isValidtIsValid] = useState(true)
   const buttonStyle = {
     classes: classNames({
       'is-primary': true,

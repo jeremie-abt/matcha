@@ -19,12 +19,6 @@ function UserPage({ userInfos }) {
     seen: <Histo type="seen" />,
     update: <UpdateForm />
   }
-  /*const componentsMapping = {
-    profil: () => <Profil userInfos={userInfos} />,
-    like: () => <Histo type="like" />,
-    seen: () => <Histo type="seen" />,
-    update: () => <UpdateForm />
-  }*/
   
   return (
     <PageSkeleton>

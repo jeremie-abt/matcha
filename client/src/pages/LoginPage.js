@@ -28,9 +28,6 @@ function LoginPage() {
             </Content>
             <MyContext.Consumer>
               {context => {
-                /*{
-                  console.log("context : ", conte)
-                }*/
                 return <LoginForm
                   fields={fields}
                   setUserLogged={context.setUserLogged}

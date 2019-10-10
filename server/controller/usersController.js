@@ -4,11 +4,9 @@ const Crypto = require('crypto-js')
 const userModel = require('../model/usersModel')
 const { sendMail } = require('../helpers/MailSender')
 
-const { createToken, generateMailToken } = 
+const { createToken } = 
   require('../helpers/ManageToken')
 
-// je met le user id dans le token donc 
-// je fais request avec le user id mais on pourra changer
 function show(req, res) {
  
   userModel.getUserInfo({id : req.tokenInfo.id})
@@ -83,7 +81,6 @@ function create(req, res) {
     })
     .then (response => {
 
-      // enfaite maintenan la logique du mail c le front qui va gerer
       if (response && response.rowCount === 1) {
         res.status(200).json(response.rows[0])
         res.end()
