@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
+import MatchaModal from '../../../components/Modal'
 
 import Cookies from 'universal-cookie'
 
 const FormLogin = ({ fields, setUserLogged }) => {
-  const [msg, setMsg] = useState('')
-  //const [isValidtIsValid] = useState(true)
+  const [msg, setMsg] = useState([])
   const buttonStyle = {
     classes: classNames({
       'is-primary': true,
@@ -18,16 +18,12 @@ const FormLogin = ({ fields, setUserLogged }) => {
     }
   }
 
-  function printMsg(msg) {
-    setMsg(msg)
-    setTimeout(() => setMsg(''), 3000)
-  }
-
   const handleSubmit = ({ state }) => {
     let keepRefToToken
 
     if (!state.username || !state.password) {
-      return setMsg('Pls fill all the input !')
+      setMsg(['Pls fill all the input !', 'danger'])
+      return
     }
     axios
       .post('/users/authenticate', state)
@@ -42,7 +38,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
       .then(resp => {
         if (resp) {
           if (resp.data.verified_mail === false) {
-            printMsg('veuillez valider votre email avant de pouvoir vous co')
+            setMsg(['Please confirm your mail', 'danger'])
           } else {
             const cookies = new Cookies()
             cookies.set('token', keepRefToToken)
@@ -51,19 +47,20 @@ const FormLogin = ({ fields, setUserLogged }) => {
         }
       })
       .catch(e => {
-        if (e.response.status === 401)
-          printMsg("Can't logged in, Data provided are wrong")
-        else printMsg("Can't logged in, Something went wrong")
+        if (e.response.status === 401) setMsg(['Wrong Data', 'danger'])
+        else setMsg(['Something went wrong', 'danger'])
       })
   }
 
   return (
     <div>
+      {Object.entries(msg).length !== 0 && (
+        <MatchaModal color={msg[1]} msg={msg[0]} setMsg={setMsg}></MatchaModal>
+      )}
       <FormConstructor
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
-        msg={msg}
       />
     </div>
   )

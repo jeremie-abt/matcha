@@ -5,11 +5,14 @@ import Cookies from 'universal-cookie'
 import axios from 'axios'
 import userContext from '../context/UserContext'
 
+import MatchaModal from '../components/Modal'
+
 function TokenHandlingPage({ action, ...props }) {
   const contextUser = useContext(userContext)
   const isAuth = contextUser.store.isAuth
   const [isValid, setIsValid] = useState(false)
   const [isFalse, setIsFalse] = useState(false)
+  const [redirect, setredirect] = useState(false)
 
   useEffect(() => {
     if (action === 'verifyaccount') {
@@ -36,10 +39,24 @@ function TokenHandlingPage({ action, ...props }) {
     }
   }, [isAuth, action, props.match.params, contextUser])
 
+  const close = () => {
+    if (isValid || isFalse) {
+      setredirect(true)
+    }
+  }
+
+  let msg = []
+  if (isValid === true) {
+    msg = ['Email confirmed !', 'success']
+  } else if (isFalse === true) {
+    msg = ['Email not confirmed, you should retry !', 'danger']
+  }
   return (
     <div>
-      {(isFalse || isValid) && <Redirect to='/' />}
-      En cours patientez revenez dans quelques instant
+      {redirect && <Redirect to='/' />}
+      {Object.entries(msg).length !== 0 && (
+        <MatchaModal color={msg[1]} msg={msg[0]} onClose={close}></MatchaModal>
+      )}
     </div>
   )
 }
