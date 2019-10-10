@@ -24,22 +24,21 @@ function showAllTags() {
 }
 
 /**
- * 
+ *
  * @param {array} names, list of names
  */
-const idFromName = (names) => {
+const idFromName = names => {
   const query = new ReqFormatter()
 
-  query.table = "tags"
-  query.addFields(["id"])
-    .where({
-      and: {
-        in: {
-          name: names
-        }
+  query.table = 'tags'
+  query.addFields(['id']).where({
+    and: {
+      in: {
+        name: names
       }
-    })
-  return client.query(...query.generateQuery("select"))
+    }
+  })
+  return client.query(...query.generateQuery('select'))
 }
 
 module.exports = {

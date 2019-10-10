@@ -4,43 +4,43 @@ import UserContext from './UserContext'
 import Cookies from 'universal-cookie'
 import axios from 'axios'
 
-
-function MyProvider (props) {
-
+function MyProvider(props) {
   const [user, setUser] = useState({})
   const [isAuth, setIsAuth] = useState(false)
 
   const setUserLogged = () => {
-    setIsAuth(true)
-    setUserContext()
-  }
-
-  const setUserContext = () => {
     const cookies = new Cookies()
-    axios.get('/users/getUser', {
-      headers: {
-        authorization: 'Bearer ' + cookies.get("token")
-      }
-    })
-      .then(resp => {
-        updateUser(resp.data)
-      })
-      .catch(e => {console.log("bad Cookie !!")})
+    const token = cookies.get('token')
+
+    if (token !== undefined) {
+      axios
+        .get('/users/getUser', {
+          headers: {
+            authorization: 'Bearer ' + cookies.get('token')
+          }
+        })
+        .then(resp => {
+          if (resp.data.verified_mail === true) setIsAuth(true)
+          updateUser(resp.data)
+        })
+        .catch(e => {
+          console.log('bad Cookie !!', e)
+        })
+    }
   }
 
   const HandleDisconnection = () => {
     const cookies = new Cookies()
-    cookies.remove("token")
+    cookies.remove('token')
     setIsAuth(false)
     updateUser(false)
   }
 
-  const updateUser = (newUser) => {
-
+  const updateUser = newUser => {
     if (newUser === false) {
       setUser({})
     } else {
-      const newUserContext = {...user}
+      const newUserContext = { ...user }
       Object.entries(newUser).forEach(([key, val]) => {
         newUserContext[key] = val
       })
@@ -49,13 +49,8 @@ function MyProvider (props) {
   }
 
   const _verifyIfAuth = () => {
-
-    if (isAuth === false) {
-      const cookies = new Cookies()
-      const token = cookies.get("token")
-      if (token !== undefined) {
-        setUserLogged()
-      }
+    if (isAuth === false && Object.entries(user).length === 0) {
+      setUserLogged()
     }
   }
 

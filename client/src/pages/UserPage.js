@@ -11,21 +11,14 @@ import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Histo'
 
 function UserPage({ userInfos }) {
-  
   const [curComponent, setCurComponent] = useState('profil')
   const componentsMapping = {
     profil: <Profil userInfos={userInfos} />,
-    like: <Histo type="like" />,
-    seen: <Histo type="seen" />,
+    like: <Histo type='like' />,
+    seen: <Histo type='seen' />,
     update: <UpdateForm />
   }
-  /*const componentsMapping = {
-    profil: () => <Profil userInfos={userInfos} />,
-    like: () => <Histo type="like" />,
-    seen: () => <Histo type="seen" />,
-    update: () => <UpdateForm />
-  }*/
-  
+
   return (
     <PageSkeleton>
       <Title name='User Information' />

@@ -5,7 +5,7 @@ import userContext from '../../context/UserContext'
 //need { ...userInfos } as parameters
 function Profil() {
   //need to be deleted
-  
+
   const context = useContext(userContext)
   const userInfos = context.store.user
 
