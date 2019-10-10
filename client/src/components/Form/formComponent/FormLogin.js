@@ -18,47 +18,43 @@ const FormLogin = ({ fields, setUserLogged }) => {
     }
   }
 
-  function printMsg (msg) {
+  function printMsg(msg) {
     setMsg(msg)
     setTimeout(() => setMsg(''), 3000)
   }
 
   const handleSubmit = ({ state }) => {
-    
     let keepRefToToken
-  
-    if (!state.username || !state.password){
-      return setMsg("Pls fill all the input !")
+
+    if (!state.username || !state.password) {
+      return setMsg('Pls fill all the input !')
     }
-    axios.post('/users/authenticate', state)
-    .then((resp) => {
-      keepRefToToken = resp.data
-      return axios.get(
-        '/users/getUser',
-        {
+    axios
+      .post('/users/authenticate', state)
+      .then(resp => {
+        keepRefToToken = resp.data
+        return axios.get('/users/getUser', {
           headers: {
             authorization: 'Bearer ' + keepRefToToken
           }
+        })
+      })
+      .then(resp => {
+        if (resp) {
+          if (resp.data.verified_mail === false) {
+            printMsg('veuillez valider votre email avant de pouvoir vous co')
+          } else {
+            const cookies = new Cookies()
+            cookies.set('token', keepRefToToken)
+            setUserLogged()
+          }
         }
-      )
-    })
-    .then(resp => {
-      if (resp){
-        if (resp.data.verified_mail === false) {
-          printMsg("veuillez valider votre email avant de pouvoir vous co")
-        } else {
-          const cookies = new Cookies()
-          cookies.set("token", keepRefToToken)
-          setUserLogged()
-        }
-      }
-    })
-    .catch(e => {
-      if (e.response.status === 401)
-        printMsg("Can't logged in, Data provided are wrong")
-      else
-        printMsg("Can't logged in, Something went wrong")
-    })
+      })
+      .catch(e => {
+        if (e.response.status === 401)
+          printMsg("Can't logged in, Data provided are wrong")
+        else printMsg("Can't logged in, Something went wrong")
+      })
   }
 
   return (

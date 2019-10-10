@@ -28,12 +28,13 @@ function LoginPage() {
             </Content>
             <MyContext.Consumer>
               {context => {
-                return <LoginForm
-                  fields={fields}
-                  setUserLogged={context.setUserLogged}
-                />
-              }
-              }
+                return (
+                  <LoginForm
+                    fields={fields}
+                    setUserLogged={context.setUserLogged}
+                  />
+                )
+              }}
             </MyContext.Consumer>
           </Card.Content>
         </Card>

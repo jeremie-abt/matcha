@@ -14,7 +14,7 @@ function LoginPage() {
                 <h1 className='register-title'>Join Matcha</h1>
               </Content>
               <Card.Content className='register-format'>
-                <FormCreateProfil/>
+                <FormCreateProfil />
               </Card.Content>
             </Card>
           </Columns.Column>

@@ -7,16 +7,16 @@ import DefaultRedirectPage from '../components/GeneralRedirection/NotLoggedDefau
 
 import TokenHandlingPage from '../pages/TokenHandlingPage'
 
-
 function NotLoggedRoutes() {
   return (
     <Switch>
       <Route path='/register' component={RegisterPage} />
       <Route
         path='/confirmationMail/:userId/:token'
-        render={ () => <TokenHandlingPage action="verifyaccount"/> }
+        render={() => <TokenHandlingPage action='verifyaccount' />}
         key={2}
-      />,
+      />
+      ,
       <Route path='/' component={LoginPage} />
       <Route exact path='*' component={DefaultRedirectPage} />
     </Switch>

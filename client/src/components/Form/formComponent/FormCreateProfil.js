@@ -47,83 +47,76 @@ const buttonStyle = {
 }
 
 function parseFormData(formData) {
-  
-  const {
-    email, password, confirmpassword
-  } = formData
+  const { email, password, confirmpassword } = formData
 
-  
-  const verifyMailPattern = RegExp(
-    "^.{1,25}@.{2,15}\\.[^.]{3,5}$"
-  )
+  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{3,5}$')
   if (confirmpassword !== password)
-    return "Password and confirmpassword are not the same ..."
+    return 'Password and confirmpassword are not the same ...'
   else if (!verifyMailPattern.exec(email))
-    return "please send a valid email ..."
-  // faut faire des verifs sur les firstname et tout ? 
+    return 'please send a valid email ...'
+  // faut faire des verifs sur les firstname et tout ?
   return true
 }
 
 function FormCreateProfil() {
-  
   const [msg, setMsg] = useState('')
-  
-  const handleSubmit = ({state}) => {
-    
+
+  const handleSubmit = ({ state }) => {
     const dataObligated = [
-      'firstname', 'lastname', 'username', 'email',
-      'password', 'confirmpassword'
+      'firstname',
+      'lastname',
+      'username',
+      'email',
+      'password',
+      'confirmpassword'
     ]
-    const isAllDataGiven = 
-      dataObligated.every(elem => {
-        if (!state[elem]){
-          setMsg("pls fill all input")
-          return false
-        }
-        return true
-      })
+    const isAllDataGiven = dataObligated.every(elem => {
+      if (!state[elem]) {
+        setMsg('pls fill all input')
+        return false
+      }
+      return true
+    })
     if (isAllDataGiven) {
       const ret = parseFormData(state)
       if (ret === true) {
         // creation du user
-        axios.post('/users', state)
-          .catch((e) => {
-            console.log("users already existing ", e)
+        axios
+          .post('/users', state)
+          .catch(e => {
+            console.log('users already existing ', e)
           })
           .then(resp => {
-
-          if (resp) {
-              return(
-                axios.post(
-                  "/auth/sendTokenMail/",
-                  {
-                    redirectionLink: "http://localhost:3000/confirmationMail/",
-                    id: resp.data.id,
-                    email: state.email
-                  },
-                  {withCredentials: true}
-                )
+            if (resp) {
+              return axios.post(
+                '/auth/sendTokenMail/',
+                {
+                  redirectionLink: 'http://localhost:3000/confirmationMail/',
+                  id: resp.data.id,
+                  email: state.email
+                },
+                { withCredentials: true }
               )
             }
           })
           .then(resp => {
             if (resp) {
               setMsg(
-                "C'est bon ton profil a ete cree, il te suffit"
-                + " de le valider par mail et tu pourras te connecter !\n"
-                + " c bon ca ou redirection et tout ?"
+                "C'est bon ton profil a ete cree, il te suffit" +
+                  ' de le valider par mail et tu pourras te connecter !\n' +
+                  ' c bon ca ou redirection et tout ?'
               )
             }
           })
-          .catch(e=> {
-            console.log("oui nous somme ici : ", e)
+          .catch(e => {
+            console.log('oui nous somme ici : ', e)
           })
       } else {
         setMsg(ret)
       }
     }
   }
-  
+
   return (
     <div>
       <FormConstructor

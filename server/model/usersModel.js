@@ -21,11 +21,10 @@ function isUserAlreadyCreated(userInfo) {
   return client.query(statement, values)
 }
 
-
 function getUserInfo(requiredData) {
-  const Query = new ReqFormatter  ()
+  const Query = new ReqFormatter()
 
-  Query.table = "users"
+  Query.table = 'users'
   Query.where({
     and: {
       eq: {
@@ -33,7 +32,7 @@ function getUserInfo(requiredData) {
       }
     }
   })
-  return client.query(...Query.generateQuery("select"))
+  return client.query(...Query.generateQuery('select'))
 }
 
 function isUserExisting(requiredData) {
@@ -59,17 +58,19 @@ function createUser(userInfo) {
 
 function verifyMail(id) {
   const query = new ReqFormatter()
-  
+
   query.table = 'users'
-  query.addFields({
-    verified_mail: true
-  }).where({
-    and: {
-      eq: {
-        id
+  query
+    .addFields({
+      verified_mail: true
+    })
+    .where({
+      and: {
+        eq: {
+          id
+        }
       }
-    }
-  })
+    })
   const [statement, args] = query.generateQuery('update')
   query.flush()
   return client.query(statement, args)

@@ -22,9 +22,12 @@ function OurNavbar() {
           <UserContext.Consumer>
             {context => {
               if (!context.store.isAuth) return <HeaderLinks />
-              else return (
-                <Button onClick={context.HandleDisconnection}>Deconnect</Button>
-              )              
+              else
+                return (
+                  <Button onClick={context.HandleDisconnection}>
+                    Deconnect
+                  </Button>
+                )
             }}
           </UserContext.Consumer>
         </Level.Side>

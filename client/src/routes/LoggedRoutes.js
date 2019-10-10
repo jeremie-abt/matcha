@@ -10,7 +10,7 @@ function LoggedRoutes() {
     <Switch>
       <UserContext.Consumer>
         {context => {
-          return ([
+          return [
             <Route
               path='/profil'
               render={() => <UserPage userInfos={context.store.user} />}
@@ -22,8 +22,8 @@ function LoggedRoutes() {
               userInfos={context.store.user}
               key={3}
               exact
-          />]
-          )
+            />
+          ]
         }}
       </UserContext.Consumer>
     </Switch>

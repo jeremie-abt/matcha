@@ -11,26 +11,18 @@ import LoggedRoutes from './routes/LoggedRoutes'
 const history = createBrowserHistory()
 
 const AppRouter = () => (
-
   <Router history={history}>
     <div>
       <MyProvider>
         <UserContext.Consumer>
-          {
-            context => {
-              if (context.store.isAuth === false)
-                return <NotLoggedRoutes />
-              else
-                return <LoggedRoutes />
-            }
-          }
+          {context => {
+            if (context.store.isAuth === false) return <NotLoggedRoutes />
+            else return <LoggedRoutes />
+          }}
         </UserContext.Consumer>
       </MyProvider>
     </div>
   </Router>
-
-  
-
 )
 
 export default AppRouter

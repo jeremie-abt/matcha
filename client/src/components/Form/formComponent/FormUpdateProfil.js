@@ -64,7 +64,6 @@ class FormUpdateProfil extends React.Component {
   static contextType = UserContext
 
   componentDidMount() {
-    
     axios
       .get('/tags/all')
       .then(resp => {
@@ -101,9 +100,8 @@ class FormUpdateProfil extends React.Component {
     )
   }
 
-  handleSubmit = ({state, checkbox}) => {
-    
-    const formData = {...state, ...checkbox}
+  handleSubmit = ({ state, checkbox }) => {
+    const formData = { ...state, ...checkbox }
     axios
       .put('/users/' + this.context.store.user.id, { ...formData })
       .then(resp => {
