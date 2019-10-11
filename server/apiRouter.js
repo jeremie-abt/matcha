@@ -29,6 +29,11 @@ apiRouter.post('/users', usersController.create)
 apiRouter.put('/users/:userId', usersController.update)
 apiRouter.delete('/users/:userId/delete', usersController.del)
 apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
+apiRouter.post(
+  '/users/updatePassword',
+  dataVerifToken.verifyToken,
+  usersController.updatePassword
+)
 
 // Images routes
 apiRouter.get('/:user_id/images', imagesController.show)
@@ -54,10 +59,9 @@ apiRouter.post('/blocked/add', blockedController.add)
 apiRouter.delete('/blocked/delete', blockedController.del)
 
 // Auth
-apiRouter.get(
-  '/auth/confirmationMail/:userId/:token',
-  usersController.confirmationMail
-)
+apiRouter.get('/auth/confirmationMail/:token', usersController.confirmationMail)
+apiRouter.get('/auth/verifyMail/:userId', usersController.verifyMail)
+
 // jai mis post car get ne me semblait pas logique
 apiRouter.post('/auth/sendTokenMail', usersController.sendTokenMail)
 

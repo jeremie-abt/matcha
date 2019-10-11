@@ -8,7 +8,8 @@ import UserContext from './context/UserContext'
 import NotLoggedRoutes from './routes/NotLoggedRoutes'
 import LoggedRoutes from './routes/LoggedRoutes'
 
-import TokenHandlingPage from './pages/TokenHandlingPage'
+import ValidateMail from './pages/ValidateMail'
+import ChangePasswordPage from './pages/ChangePasswordPage'
 
 const history = createBrowserHistory()
 
@@ -18,9 +19,14 @@ const AppRouter = () => (
       <MyProvider>
         <Switch>
           <Route
+            path='/changePassword/:userId/:token'
+            render={() => <ChangePasswordPage />}
+            key={50}
+          />
+          <Route
             path='/confirmationMail/:userId/:token'
-            render={() => <TokenHandlingPage />}
-            key={2}
+            render={() => <ValidateMail />}
+            key={72}
           />
           <UserContext.Consumer>
             {context => {

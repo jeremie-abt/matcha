@@ -87,6 +87,30 @@ function create(req, res) {
     })
 }
 
+function updatePassword(req, res) {
+  if (req.body.password === undefined) {
+    res.status(404).send('Wrong Data')
+  }
+
+  res.clearCookie('mailToken')
+  const hash = Crypto.SHA256(req.body.password).toString()
+  userModel
+    .updateUser(
+      {
+        password: hash
+      },
+      req.tokenInfo.id
+    )
+    .then(() => {
+      console.log('It has worked')
+      res.status(200).send()
+    })
+    .catch(e => {
+      console.log(e)
+      res.status(404).send()
+    })
+}
+
 function update(req, res) {
   const fieldsWanted = [
     'firstname',
@@ -97,7 +121,6 @@ function update(req, res) {
     'tags',
     'gender'
   ]
-  if ('password' in req.body) console.log('password update not implemented Yet')
   const toUpdateFields = {}
   fieldsWanted.forEach(elem => {
     if (elem in req.body) {
@@ -158,35 +181,43 @@ function sendTokenMail(req, res) {
   res.cookie('mailToken', token).send('Ok')
 }
 
+const verifyMail = (req, res) => {
+  const { userId } = req.params
+
+  userModel
+    .verifyMail(userId)
+    .then(resp => {
+      if (resp.rowCount !== 1) {
+        res.status(500).send('something got wrong')
+      } else {
+        res.clearCookie('mailToken')
+        res.status(200).send('email confirmed')
+      }
+      res.end()
+    })
+    .catch(e => {
+      console.log('error : ', e)
+      res.status(500).send('something got wrong')
+    })
+}
+
 const confirmationMail = (req, res) => {
   const cookieToken = req.cookies.mailToken
-  const { token, userId } = req.params
+  const { token } = req.params
 
   if (cookieToken === token) {
-    userModel
-      .verifyMail(userId)
-      .then(resp => {
-        if (resp.rowCount !== 1) {
-          res.status(500).send('something got wrong')
-        } else {
-          res.clearCookie('mailToken')
-          res.status(204).send('email confirmed')
-        }
-        res.end()
-      })
-      .catch(e => {
-        console.log('error : ', e)
-        res.status(500).send('something got wrong')
-      })
-  } else res.status(404).send('bad token')
+    res.status(200).send('OK')
+  } else res.status(404).send('nop')
 }
 
 module.exports = {
   show,
   create,
   update,
+  updatePassword,
   del,
   confirmationMail,
+  verifyMail,
   ManageAuthentification,
   sendTokenMail
 }

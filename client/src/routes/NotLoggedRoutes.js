@@ -9,7 +9,7 @@ function NotLoggedRoutes() {
   return (
     <Switch>
       <Route path='/register' component={RegisterPage} />
-      <Route path='/' component={LoginPage} />
+      <Route exact path='/' component={LoginPage} />
       <Route exact path='*' component={DefaultRedirectPage} />
     </Switch>
   )

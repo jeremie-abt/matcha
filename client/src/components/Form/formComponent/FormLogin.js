@@ -38,12 +38,8 @@ const FormLogin = ({ fields, setUserLogged }) => {
       .then(resp => {
         if (resp) {
           const cookies = new Cookies()
-          cookies.set('token', keepRefToToken)
+          cookies.set('token', keepRefToToken, { path: '/' })
           setUserLogged()
-          /*if (resp.data.verified_mail === false) {
-            setMsg(['Please confirm your mail', 'danger'])
-          } else {
-          }*/
         }
       })
       .catch(e => {
