@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
-import MatchaModal from '../../../components/Modal'
+import MatchaModal from '../../miscellaneous/Modal'
 
 import Cookies from 'universal-cookie'
 

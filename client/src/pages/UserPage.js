@@ -4,17 +4,17 @@ import { Button, Content } from 'react-bulma-components'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 
-import SideBar from '../components/SideBar'
+import SideBar from '../components/layout/SideBar'
 import PageSkeleton from '../components/layout/PageSkeleton'
-import Title from '../components/PageTitle'
+import Title from '../components/layout/PageTitle'
 
 // component
-import MatchaModal from '../components/Modal'
+import MatchaModal from '../components/miscellaneous/Modal'
 
 // dynamic components
 import Profil from '../components/Profil/Profil'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
-import Histo from '../components/Histo'
+import Histo from '../components/Profil/Histo'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])

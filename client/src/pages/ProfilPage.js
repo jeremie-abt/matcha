@@ -1,7 +1,7 @@
-import React from 'react'
+/*import React from 'react'
 import PageSkeleton from '../components/PageSkeleton'
-import Sidebar from '../components/SideBar/Sidebar'
-
+import Sidebar from '../components/layout/SideBar'*/
+/**
 function ProfilPage(props) {
   return (
     <div>
@@ -12,4 +12,4 @@ function ProfilPage(props) {
   )
 }
 
-export default ProfilPage
+export default ProfilPage*/

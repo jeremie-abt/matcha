@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
 
-import MatchaModal from '../../../components/Modal'
+import MatchaModal from '../../miscellaneous/Modal'
 
 const fields = [
   {

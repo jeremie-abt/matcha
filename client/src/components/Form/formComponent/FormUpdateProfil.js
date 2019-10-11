@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import axios from 'axios'
 import UserContext from '../../../context/UserContext'
 
-import MatchaModal from '../../../components/Modal'
+import MatchaModal from '../../../components/miscellaneous/Modal'
 
 let fields = [
   {

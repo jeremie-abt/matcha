@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 import { Redirect } from 'react-router'
 import axios from 'axios'
 
-import MatchaModal from '../components/Modal'
+import MatchaModal from '../components/miscellaneous/Modal'
 
 function TokenHandlingPage({ ...props }) {
   const [isValid, setIsValid] = useState(false)
@@ -28,9 +28,7 @@ function TokenHandlingPage({ ...props }) {
   }, [props.match.params])
 
   const close = () => {
-    if (isValid || isFalse) {
-      setredirect(true)
-    }
+    setredirect(true)
   }
 
   let msg = []
