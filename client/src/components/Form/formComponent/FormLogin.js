@@ -37,13 +37,13 @@ const FormLogin = ({ fields, setUserLogged }) => {
       })
       .then(resp => {
         if (resp) {
-          if (resp.data.verified_mail === false) {
+          const cookies = new Cookies()
+          cookies.set('token', keepRefToToken)
+          setUserLogged()
+          /*if (resp.data.verified_mail === false) {
             setMsg(['Please confirm your mail', 'danger'])
           } else {
-            const cookies = new Cookies()
-            cookies.set('token', keepRefToToken)
-            setUserLogged()
-          }
+          }*/
         }
       })
       .catch(e => {

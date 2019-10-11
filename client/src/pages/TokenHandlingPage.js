@@ -1,43 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router'
 import { Redirect } from 'react-router'
-import Cookies from 'universal-cookie'
 import axios from 'axios'
-import userContext from '../context/UserContext'
 
 import MatchaModal from '../components/Modal'
 
-function TokenHandlingPage({ action, ...props }) {
-  const contextUser = useContext(userContext)
-  const isAuth = contextUser.store.isAuth
+function TokenHandlingPage({ ...props }) {
   const [isValid, setIsValid] = useState(false)
   const [isFalse, setIsFalse] = useState(false)
   const [redirect, setredirect] = useState(false)
 
   useEffect(() => {
-    if (action === 'verifyaccount') {
-      const params = props.match.params
-      if (Object.keys(params).includes('token')) {
-        const cookies = new Cookies()
-        const token = params.token
-        axios
-          .get('/auth/confirmationMail/' + params.userId + '/' + token, {
-            withCredentials: true,
-            headers: {
-              authorization: 'Bearer ' + cookies.get('token')
-            }
-          })
-          .then(resp => {
-            if (resp.status === 204) {
-              setIsValid(true)
-            }
-          })
-          .catch(e => {
-            setIsFalse(true)
-          })
-      }
-    }
-  }, [isAuth, action, props.match.params, contextUser])
+    const params = props.match.params
+    const token = params.token
+    axios
+      .get('/auth/confirmationMail/' + params.userId + '/' + token, {
+        withCredentials: true
+      })
+      .then(resp => {
+        if (resp.status === 204) {
+          setIsValid(true)
+        }
+      })
+      .catch(e => {
+        setIsFalse(true)
+      })
+  }, [props.match.params])
 
   const close = () => {
     if (isValid || isFalse) {

@@ -86,7 +86,7 @@ function FormCreateProfil() {
         axios
           .post('/users', state)
           .catch(e => {
-            console.log('users already existing ', e)
+            setMsg(['user already created', 'danger'])
           })
           .then(resp => {
             if (resp) {
@@ -110,7 +110,6 @@ function FormCreateProfil() {
             }
           })
           .catch(e => {
-            console.log('whattt : ', e)
             setMsg([
               'Request failed contact the devTeam if it persist',
               'danger'

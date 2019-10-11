@@ -1,18 +1,28 @@
 import React from 'react'
 import { Modal, Notification } from 'react-bulma-components'
 
-function MatchaModal({ setMsg, ...props }) {
+function MatchaModal(props) {
   const close = setMsg => {
     setMsg([])
   }
 
-  return (
-    <Modal show={true} onClose={() => close(setMsg)} {...props}>
-      <Modal.Card>
-        <Notification color={props.color}>{props.msg}</Notification>
-      </Modal.Card>
-    </Modal>
-  )
+  if (props.setMsg === undefined) {
+    return (
+      <Modal show={true} {...props}>
+        <Modal.Card>
+          <Notification color={props.color}>{props.msg}</Notification>
+        </Modal.Card>
+      </Modal>
+    )
+  } else {
+    return (
+      <Modal show={true} onClose={() => close(props.setMsg)} {...props}>
+        <Modal.Card>
+          <Notification color={props.color}>{props.msg}</Notification>
+        </Modal.Card>
+      </Modal>
+    )
+  }
 }
 
 export default MatchaModal

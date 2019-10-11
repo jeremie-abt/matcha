@@ -2,7 +2,7 @@ import React from 'react'
 import PageSkeleton from '../components/PageSkeleton'
 import Sidebar from '../components/SideBar/Sidebar'
 
-function ProfilPage() {
+function ProfilPage(props) {
   return (
     <div>
       <PageSkeleton>

@@ -7,6 +7,7 @@ import axios from 'axios'
 function MyProvider(props) {
   const [user, setUser] = useState({})
   const [isAuth, setIsAuth] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
 
   const setUserLogged = () => {
     const cookies = new Cookies()
@@ -20,7 +21,8 @@ function MyProvider(props) {
           }
         })
         .then(resp => {
-          if (resp.data.verified_mail === true) setIsAuth(true)
+          if (resp.data.verified_mail === true) setIsVerified(true)
+          setIsAuth(true)
           updateUser(resp.data)
         })
         .catch(e => {
@@ -60,6 +62,7 @@ function MyProvider(props) {
       value={{
         store: {
           isAuth,
+          isVerified,
           user
         },
         updateState: updateUser,
