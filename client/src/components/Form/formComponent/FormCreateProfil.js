@@ -51,7 +51,7 @@ const buttonStyle = {
 function parseFormData(formData) {
   const { email, password, confirmpassword } = formData
 
-  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{3,5}$')
+  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
   if (confirmpassword !== password)
     return 'Password and confirmpassword are not the same ...'
   else if (!verifyMailPattern.exec(email))
@@ -130,6 +130,7 @@ function FormCreateProfil() {
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
+        msg={msg}
       />
     </div>
   )

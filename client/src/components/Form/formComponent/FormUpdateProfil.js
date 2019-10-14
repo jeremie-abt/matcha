@@ -130,6 +130,7 @@ class FormUpdateProfil extends React.Component {
           buttonStyle={buttonStyle}
           fields={this.state.data}
           handleForm={this.handleSubmit}
+          msg={this.state.msg}
         />
         <Button onClick={this.handleNewPassword}> Change your password</Button>
       </div>

@@ -16,14 +16,29 @@ import Profil from '../components/Profil/Profil'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 
+import socket from '../index'
+
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('profil')
+
   const componentsMapping = {
     profil: <Profil userInfos={userInfos} />,
     like: <Histo type='like' />,
     seen: <Histo type='seen' />,
     update: <UpdateForm />
+  }
+  // temporary function to try notifications
+  // firing multiple times for nothing
+  const prout = () => {
+    const type = 'view'
+    socket.emit('notifSent', {
+      userData: { firstname: 'David', lastname: 'Laurent' },
+      userId: 3,
+      receiverId: 7,
+      type,
+      socketId: socket.id
+    })
   }
 
   // ca ok de mettre ca la tu penses ?
@@ -68,22 +83,22 @@ function UserPage({ userInfos }) {
     )
   }
   return (
-    <div>
-      <PageSkeleton>
-        <Title name='User Information' />
-        <Container className='user-container'>
-          <Columns>
-            <Columns.Column size='one-third'>
-              <SideBar
-                curComponent={curComponent}
-                setCurComponent={setCurComponent}
-              />
-            </Columns.Column>
-            <Columns.Column>{componentsMapping[curComponent]}</Columns.Column>
-          </Columns>
-        </Container>
-      </PageSkeleton>
-    </div>
+    <PageSkeleton>
+      <Title name='User Information' />
+      {/* temporary button to try notifications */}
+      <button onClick={prout}>yolo</button>
+      <Container className='user-container'>
+        <Columns>
+          <Columns.Column size='one-third'>
+            <SideBar
+              curComponent={curComponent}
+              setCurComponent={setCurComponent}
+            />
+          </Columns.Column>
+          <Columns.Column>{componentsMapping[curComponent]}</Columns.Column>
+        </Columns>
+      </Container>
+    </PageSkeleton>
   )
 }
 

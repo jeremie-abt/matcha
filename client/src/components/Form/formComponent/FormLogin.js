@@ -57,6 +57,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
+        msg={msg}
       />
     </div>
   )
