@@ -5,6 +5,8 @@ import classNames from 'classnames'
 import axios from 'axios'
 import UserContext from '../../../context/UserContext'
 
+import MatchaModal from '../../../components/miscellaneous/Modal'
+
 let fields = [
   {
     name: 'firstname',
@@ -80,8 +82,13 @@ class FormUpdateProfil extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: fields
+      data: fields,
+      msg: []
     }
+  }
+
+  setMsg = val => {
+    this.setState({ msg: val })
   }
 
   render() {
@@ -92,16 +99,29 @@ class FormUpdateProfil extends React.Component {
       })
     }
     return (
-      <FormConstructor
-        buttonStyle={buttonStyle}
-        fields={this.state.data}
-        handleForm={this.handleSubmit}
-      />
+      <div>
+        {Object.entries(this.state.msg).length !== 0 && (
+          <MatchaModal
+            color={this.state.msg[1]}
+            msg={this.state.msg[0]}
+            setMsg={this.setMsg}
+          >
+            {this.state.msg}
+          </MatchaModal>
+        )}
+        <FormConstructor
+          buttonStyle={buttonStyle}
+          fields={this.state.data}
+          handleForm={this.handleSubmit}
+          msg={this.state.msg}
+        />
+      </div>
     )
   }
 
   handleSubmit = ({ state, checkbox }) => {
     const formData = { ...state, ...checkbox }
+
     axios
       .put('/users/' + this.context.store.user.id, { ...formData })
       .then(resp => {
@@ -110,7 +130,7 @@ class FormUpdateProfil extends React.Component {
         }
       })
       .catch(e => {
-        throw e
+        this.setState({ msg: ['Something Went wrong please retry', 'danger'] })
       })
   }
 }

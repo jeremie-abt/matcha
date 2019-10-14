@@ -3,6 +3,8 @@ import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
 
+import MatchaModal from '../../miscellaneous/Modal'
+
 const fields = [
   {
     name: 'firstname',
@@ -49,7 +51,7 @@ const buttonStyle = {
 function parseFormData(formData) {
   const { email, password, confirmpassword } = formData
 
-  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{3,5}$')
+  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
   if (confirmpassword !== password)
     return 'Password and confirmpassword are not the same ...'
   else if (!verifyMailPattern.exec(email))
@@ -59,7 +61,7 @@ function parseFormData(formData) {
 }
 
 function FormCreateProfil() {
-  const [msg, setMsg] = useState('')
+  const [msg, setMsg] = useState([])
 
   const handleSubmit = ({ state }) => {
     const dataObligated = [
@@ -72,7 +74,7 @@ function FormCreateProfil() {
     ]
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {
-        setMsg('pls fill all input')
+        setMsg(['pls fill all input', 'danger'])
         return false
       }
       return true
@@ -84,7 +86,7 @@ function FormCreateProfil() {
         axios
           .post('/users', state)
           .catch(e => {
-            console.log('users already existing ', e)
+            setMsg(['user already created', 'danger'])
           })
           .then(resp => {
             if (resp) {
@@ -101,24 +103,29 @@ function FormCreateProfil() {
           })
           .then(resp => {
             if (resp) {
-              setMsg(
-                "C'est bon ton profil a ete cree, il te suffit" +
-                  ' de le valider par mail et tu pourras te connecter !\n' +
-                  ' c bon ca ou redirection et tout ?'
-              )
+              setMsg([
+                'Profil created, you must valide your profil by email',
+                'success'
+              ])
             }
           })
           .catch(e => {
-            console.log('oui nous somme ici : ', e)
+            setMsg([
+              'Request failed contact the devTeam if it persist',
+              'danger'
+            ])
           })
       } else {
-        setMsg(ret)
+        setMsg([ret, 'danger'])
       }
     }
   }
 
   return (
     <div>
+      {Object.entries(msg).length !== 0 && (
+        <MatchaModal color={msg[1]} msg={msg[0]} setMsg={setMsg}></MatchaModal>
+      )}
       <FormConstructor
         buttonStyle={buttonStyle}
         fields={fields}

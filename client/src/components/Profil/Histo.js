@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react'
 import axios from 'axios'
-import userContext from '../context/UserContext'
+import userContext from '../../context/UserContext'
 import { Card, Media, Heading, Content } from 'react-bulma-components'
 
 function Histo({ type }) {
