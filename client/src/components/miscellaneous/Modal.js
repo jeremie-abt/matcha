@@ -6,22 +6,26 @@ function MatchaModal(props) {
     setMsg([])
   }
 
-  if (props.setMsg === undefined) {
-    return (
-      <Modal show={true} {...props}>
-        <Modal.Card>
-          <Notification color={props.color}>{props.msg}</Notification>
-        </Modal.Card>
-      </Modal>
-    )
+  if (props.color === 'success') {
+    if (props.setMsg === undefined) {
+      return (
+        <Modal show={true} {...props}>
+          <Modal.Card>
+            <Notification color={props.color}>{props.msg}</Notification>
+          </Modal.Card>
+        </Modal>
+      )
+    } else {
+      return (
+        <Modal show={true} onClose={() => close(props.setMsg)} {...props}>
+          <Modal.Card>
+            <Notification color={props.color}>{props.msg}</Notification>
+          </Modal.Card>
+        </Modal>
+      )
+    }
   } else {
-    return (
-      <Modal show={true} onClose={() => close(props.setMsg)} {...props}>
-        <Modal.Card>
-          <Notification color={props.color}>{props.msg}</Notification>
-        </Modal.Card>
-      </Modal>
-    )
+    return null
   }
 }
 
