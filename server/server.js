@@ -20,3 +20,8 @@ app.use(bodyParser.json())
 app.use('/api', apiRouter)
 
 app.listen(8081)
+
+// eslint-disable-next-line no-unused-vars
+const socketManager = require('./socket/socketManager')
+
+module.exports.app = app
