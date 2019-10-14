@@ -35,8 +35,9 @@ function MyProvider(props) {
 
   const HandleDisconnection = () => {
     const cookies = new Cookies()
-    cookies.remove('token')
+    cookies.remove('token', { path: '/' })
     setIsAuth(false)
+    setIsVerified(false)
     updateUser(false)
   }
 

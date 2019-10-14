@@ -5,7 +5,7 @@ import axios from 'axios'
 
 import MatchaModal from '../components/miscellaneous/Modal'
 
-function TokenHandlingPage({ ...props }) {
+function ValidateMail(props) {
   const [isValid, setIsValid] = useState(false)
   const [isFalse, setIsFalse] = useState(false)
   const [redirect, setredirect] = useState(false)
@@ -14,11 +14,18 @@ function TokenHandlingPage({ ...props }) {
     const params = props.match.params
     const token = params.token
     axios
-      .get('/auth/confirmationMail/' + params.userId + '/' + token, {
+      .get('/auth/confirmationMail/' + token, {
         withCredentials: true
       })
       .then(resp => {
-        if (resp.status === 204) {
+        if (resp.status === 200) {
+          return axios.get('/auth/verifyMail/' + params.userId, {
+            withCredentials: true
+          })
+        }
+      })
+      .then(resp => {
+        if (resp && resp.status === 200) {
           setIsValid(true)
         }
       })
@@ -47,4 +54,4 @@ function TokenHandlingPage({ ...props }) {
   )
 }
 
-export default withRouter(TokenHandlingPage)
+export default withRouter(ValidateMail)

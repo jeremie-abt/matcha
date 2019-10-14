@@ -4,6 +4,7 @@ import FormConstructor from '../FormConstructor'
 import classNames from 'classnames'
 import axios from 'axios'
 import UserContext from '../../../context/UserContext'
+import { Button } from 'react-bulma-components'
 
 import MatchaModal from '../../../components/miscellaneous/Modal'
 
@@ -31,11 +32,6 @@ let fields = [
   {
     name: 'password',
     label: 'password',
-    type: 'password'
-  },
-  {
-    name: 'confirmpassword',
-    label: 'confirmpassword',
     type: 'password'
   },
   {
@@ -87,6 +83,27 @@ class FormUpdateProfil extends React.Component {
     }
   }
 
+  handleNewPassword = e => {
+    axios
+      .post(
+        '/auth/sendTokenMail',
+        {
+          redirectionLink: 'http://localhost:3000/changePassword/',
+          id: this.context.store.user.id,
+          email: this.context.store.user.email
+        },
+        { withCredentials: true }
+      )
+      .then(resp => {
+        // affichage
+        console.log('not implemeted ...')
+      })
+      .catch(e => {
+        // afficahge
+        console.log('not implemeted ...')
+      })
+  }
+
   setMsg = val => {
     this.setState({ msg: val })
   }
@@ -115,6 +132,7 @@ class FormUpdateProfil extends React.Component {
           handleForm={this.handleSubmit}
           msg={this.state.msg}
         />
+        <Button onClick={this.handleNewPassword}> Change your password</Button>
       </div>
     )
   }
