@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import UserContext from './UserContext'
 import setSocket from './socket'
 
@@ -9,13 +9,22 @@ function MyProvider(props) {
   const [user, setUser] = useState({})
   const [isAuth, setIsAuth] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
+  const [hasFetched, setHasFetched] = useState(false)
+
+  useEffect(() => {
+    const verifyIfAuth = async() => {
+      const ret = await setUserLogged()
+      setHasFetched(true)
+    }
+    verifyIfAuth()
+  }, [])
 
   const setUserLogged = () => {
     const cookies = new Cookies()
     const token = cookies.get('token')
 
     if (token !== undefined) {
-      axios
+      return axios
         .get('/users/getUser', {
           headers: {
             authorization: 'Bearer ' + cookies.get('token')
@@ -26,11 +35,14 @@ function MyProvider(props) {
           setIsAuth(true)
           updateUser(resp.data)
           setSocket(resp.data.id)
+          return resp.data
         })
         .catch(e => {
           console.log('bad Cookie !!', e)
+          return undefined
         })
     }
+    else return new Promise((resolve, reject) => resolve(undefined))
   }
 
   const HandleDisconnection = () => {
@@ -41,6 +53,9 @@ function MyProvider(props) {
     updateUser(false)
   }
 
+
+  
+  // fonction pour pouvoir update le user et le isAuth 
   const updateUser = newUser => {
     if (newUser === false) {
       setUser({})
@@ -53,28 +68,38 @@ function MyProvider(props) {
     }
   }
 
+  // fonction qui ne va etre call uniquement au lancement !
+  // Donc il faut anbsolument pas que l'app en tout cas le
+  // router soit rendu ! Donc un isFetched je pense
   const _verifyIfAuth = () => {
     if (isAuth === false && Object.entries(user).length === 0) {
       setUserLogged()
     }
   }
 
-  _verifyIfAuth()
+  //_verifyIfAuth()
   return (
-    <UserContext.Provider
-      value={{
-        store: {
-          isAuth,
-          isVerified,
-          user
-        },
-        updateState: updateUser,
-        setUserLogged: setUserLogged,
-        HandleDisconnection: HandleDisconnection
-      }}
-    >
-      {props.children}
-    </UserContext.Provider>
+    <div>
+      {
+        (!hasFetched && <div>loading ...</div>
+          ||
+        <UserContext.Provider
+          value={{
+            store: {
+              isAuth,
+              isVerified,
+              user
+            },
+            updateState: updateUser,
+            setUserLogged: setUserLogged,
+            HandleDisconnection: HandleDisconnection
+          }}
+        >
+          {props.children}
+        </UserContext.Provider>
+        )
+      }
+    </div>
   )
 }
 

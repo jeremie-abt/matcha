@@ -30,7 +30,10 @@ const AppRouter = () => (
           />
           <UserContext.Consumer>
             {context => {
-              if (context.store.isAuth === false) return <NotLoggedRoutes />
+              if (context.store.isAuth === false){
+                
+                return <NotLoggedRoutes />
+              }
               else return <LoggedRoutes />
             }}
           </UserContext.Consumer>

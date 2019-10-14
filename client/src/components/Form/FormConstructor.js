@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 import { Button, Form, Content } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
@@ -10,19 +10,26 @@ import UserContext from '../../context/UserContext'
 
 function FormConstructor(props) {
   const context = useContext(UserContext)
-  const checkboxObj = {}
-  const stateObj = {}
-
-  props.fields.forEach(elem => {
-    if (elem.type === 'checkbox') {
-      checkboxObj[elem.name] = context.store.user[elem.name]
-    } else if (elem.type === 'radio') {
-      stateObj[elem.name] = context.store.user[elem.name]
-    }
-  })
-
-  const [state, setState] = useState(stateObj)
-  const [checkbox, setCheckbox] = useState(checkboxObj)
+  const [state, setState] = useState({})
+  const [checkbox, setCheckbox] = useState({})
+  
+  useEffect(() => {
+    console.log("useEffect called")
+    console.log("state suer : ", context.store.user)
+    const checkboxObj = {}
+    const stateObj = {}
+    props.fields.forEach(elem => {
+      if (elem.type === 'checkbox') {
+        if (context.store.user[elem.name] !== undefined)
+          checkboxObj[elem.name] = context.store.user[elem.name]
+      } else if (elem.type === 'radio') {
+        stateObj[elem.name] = context.store.user[elem.name]
+      }
+    })
+    setCheckbox(checkboxObj)
+    setState(stateObj)
+  }, [props.fields, context.store.user, context.store.isAuth])
+  
 
   const _renderText = ({ elem, placeholder }) => {
     return (
@@ -58,8 +65,11 @@ function FormConstructor(props) {
       <Form.Field key={elem.name + elem.type}>
         <Form.Control>
           <Form.Label>{elem.title}</Form.Label>
-          {// le data-key est la car je n'arrive pas a
+          {// le data-key est la car je n'arrive pas a 
+          
           // access l'attribute key dans handlechange
+          }
+          {
           elem.checkboxValues.map(checkboxElem => {
             checkboxComponent = (
               <Checkbox
@@ -74,6 +84,8 @@ function FormConstructor(props) {
             )
             return checkboxComponent
           })}
+        }
+        <div>tags</div>
         </Form.Control>
       </Form.Field>
     )
