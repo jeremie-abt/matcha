@@ -10,25 +10,25 @@ function MyProvider(props) {
   const [isAuth, setIsAuth] = useState(false)
 
   const setUserLogged = () => {
-    setIsAuth(true)
-    setUserContext()
-  }
-
-  const setUserContext = () => {
     const cookies = new Cookies()
-    axios
-      .get('/users/getUser', {
-        headers: {
-          authorization: 'Bearer ' + cookies.get('token')
-        }
-      })
-      .then(resp => {
-        updateUser(resp.data)
-        setSocket(resp.data.id)
-      })
-      .catch(e => {
-        console.log('bad Cookie !!')
-      })
+    const token = cookies.get('token')
+
+    if (token !== undefined) {
+      axios
+        .get('/users/getUser', {
+          headers: {
+            authorization: 'Bearer ' + cookies.get('token')
+          }
+        })
+        .then(resp => {
+          if (resp.data.verified_mail === true) setIsAuth(true)
+          updateUser(resp.data)
+          setSocket(resp.data.id)
+        })
+        .catch(e => {
+          console.log('bad Cookie !!', e)
+        })
+    }
   }
 
   const HandleDisconnection = () => {
@@ -51,12 +51,8 @@ function MyProvider(props) {
   }
 
   const _verifyIfAuth = () => {
-    if (isAuth === false) {
-      const cookies = new Cookies()
-      const token = cookies.get('token')
-      if (token !== undefined) {
-        setUserLogged()
-      }
+    if (isAuth === false && Object.entries(user).length === 0) {
+      setUserLogged()
     }
   }
 

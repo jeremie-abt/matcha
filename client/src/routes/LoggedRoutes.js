@@ -10,23 +10,20 @@ function LoggedRoutes() {
     <Switch>
       <UserContext.Consumer>
         {context => {
-          return ([
+          return [
             <Route
               path='/profil'
               render={() => <UserPage userInfos={context.store.user} />}
-              userInfos={context.store.user}
               key={1}
-              exact
             />,
-            
             <Route
-              path='*'
+              path='/'
               component={DefaultPage}
               userInfos={context.store.user}
-              key={2}
+              key={3}
               exact
-            />]
-          )
+            />
+          ]
         }}
       </UserContext.Consumer>
     </Switch>

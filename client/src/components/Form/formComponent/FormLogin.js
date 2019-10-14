@@ -6,8 +6,8 @@ import axios from 'axios'
 import Cookies from 'universal-cookie'
 
 const FormLogin = ({ fields, setUserLogged }) => {
-  const [isValid, setIsValid] = useState(true)
-
+  const [msg, setMsg] = useState('')
+  //const [isValidtIsValid] = useState(true)
   const buttonStyle = {
     classes: classNames({
       'is-primary': true,
@@ -18,27 +18,43 @@ const FormLogin = ({ fields, setUserLogged }) => {
     }
   }
 
-  function printError () {
-    setIsValid(false)
-    setTimeout(() => setIsValid(true), 3000)
+  function printMsg(msg) {
+    setMsg(msg)
+    setTimeout(() => setMsg(''), 3000)
   }
 
   const handleSubmit = ({ state }) => {
+    let keepRefToToken
 
-    if (!state.username || !state.password){
-      return setIsValid(false)
+    if (!state.username || !state.password) {
+      return setMsg('Pls fill all the input !')
     }
-    
-    axios.post('/users/authenticate', state)
-    .then((resp) => {
-      const token = resp.data
-      const cookies = new Cookies()
-      cookies.set("token", token)
-      setUserLogged()
-    })
-    .catch(e => {
-      printError()
-    })
+    axios
+      .post('/users/authenticate', state)
+      .then(resp => {
+        keepRefToToken = resp.data
+        return axios.get('/users/getUser', {
+          headers: {
+            authorization: 'Bearer ' + keepRefToToken
+          }
+        })
+      })
+      .then(resp => {
+        if (resp) {
+          if (resp.data.verified_mail === false) {
+            printMsg('veuillez valider votre email avant de pouvoir vous co')
+          } else {
+            const cookies = new Cookies()
+            cookies.set('token', keepRefToToken)
+            setUserLogged()
+          }
+        }
+      })
+      .catch(e => {
+        if (e.response.status === 401)
+          printMsg("Can't logged in, Data provided are wrong")
+        else printMsg("Can't logged in, Something went wrong")
+      })
   }
 
   return (
@@ -47,7 +63,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
-        isValid={isValid}
+        msg={msg}
       />
     </div>
   )

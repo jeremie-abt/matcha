@@ -27,14 +27,14 @@ function LoginPage() {
               <h1> Sign-in</h1>
             </Content>
             <MyContext.Consumer>
-              {context => (
-                <LoginForm
-                  fields={fields}
-                  updateUser={context.updateState}
-                  updateIsAuth={context.updateIsAuth}
-                  setUserLogged={context.setUserLogged}
-                />
-              )}
+              {context => {
+                return (
+                  <LoginForm
+                    fields={fields}
+                    setUserLogged={context.setUserLogged}
+                  />
+                )
+              }}
             </MyContext.Consumer>
           </Card.Content>
         </Card>

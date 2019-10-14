@@ -1,34 +1,33 @@
 const nodemailer = require('nodemailer')
 
-const mailIdentifier = require("../config/mailIdentifiant")
-const domainName = require('../config/domainName')
+const mailIdentifier = require('../config/mailIdentifiant')
 
 /**
- * 
- * @param {string} token 
- * @param {string} mail 
+ *
+ * @param {string} token
+ * @param {string} mail
  * @param {string} path path in the mail URL ( correspond to the endpoint
  *                      which will handle the actual request )
  */
 
-function sendMail(token, mail, path) {
+function sendMail(token, mail, path, id) {
   // je veux lui envoyer un lien :
   // https://localhost:8081/api/auth/confirm
-  
-  const link = 
-    `${domainName  }api/auth${path}${
-     token}`
-  const BodyMsg = 'Your about to find the love of your '
-      + 'life, Clink on the following link if you want : ' 
-      + `<a href='${link}'>Bite</a>`
+
+  const link = `${path}${id}/${token}`
+  const BodyMsg =
+    'Your about to find the love of your ' +
+    'life, Clink on the following ' +
+    `<a href='${link}'>link</a>` +
+    ` to register your account`
   const transporter = nodemailer.createTransport({
     sendmail: true,
     host: 'smtp.ethereal.email',
     port: 587,
     secure: false,
     auth: {
-        user: mailIdentifier.username,
-        pass: mailIdentifier.password
+      user: mailIdentifier.username,
+      pass: mailIdentifier.password
     }
   })
 
@@ -40,6 +39,6 @@ function sendMail(token, mail, path) {
   })
 }
 
-module.exports= {
+module.exports = {
   sendMail
 }

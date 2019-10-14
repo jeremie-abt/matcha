@@ -2,14 +2,13 @@
 const Crypto = require('crypto-js')
 
 const userModel = require('../model/usersModel')
-
 const { sendMail } = require('../helpers/MailSender')
-const createToken = require('../helpers/ManageToken')
 
-// je met le user id dans le token donc 
-// je fais request avec le user id mais on pourra changer
+const { createToken } = 
+  require('../helpers/ManageToken')
+
 function show(req, res) {
-  
+ 
   userModel.getUserInfo({id : req.tokenInfo.id})
     .then(resp => {
       if (resp.rowCount !== 1)
@@ -42,7 +41,7 @@ function ManageAuthentification(req, res) {
         response.rows.length !== 1 ||
         response.rows[0].password !== cryptPassword
       ) {
-        res.status(400).send("wrong Data")
+        res.status(401).send("Wrong data")
         return
       }
       const user = response.rows[0]
@@ -73,35 +72,25 @@ function create(req, res) {
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel.isUserAlreadyCreated(userAccountInfos)
-    .catch( () => {
-      res.status(404).send("something got wrong")
-    })
     .then(response => {
       if (response.rowCount === 1) {
-        throw "This user already exists"
+        res.status(500).send("This user already exists")
+        return false
       }
       return userModel.createUser(userAccountInfos)
     })
     .then (response => {
-      if (response.rowCount === 1) {
-        // eslint-disable-next-line no-use-before-define
-        const token = generateToken(res, response.rows[0].id)
-        // eslint-disable-next-line no-use-before-define
-        
-        sendMail(token, userAccountInfos.email, "/confirmationMail/")
-        if (token !== -1) {
-          res.status(200)
-          res.write(
-              `user : ${userAccountInfos.username} successfully `
-              + `created, you must validate this account by email`)
-        } else {
-          res.status(404)
-          res.write("something got wrong")
-        }
+
+      if (response && response.rowCount === 1) {
+        res.status(200).json(response.rows[0])
+        res.end()
+      } else {
+        res.status(500).send("something went wrong !")
         res.end()
       }
     })
     .catch(err => {
+      console.log("\n\nerr : ", err, "\n\n")
       res.status(404).send(err)
     })
 }
@@ -167,32 +156,37 @@ function del(req, res) {
     })
 }
 
+function sendTokenMail(req, res) {
+
+  const token = Crypto.lib.WordArray.random(28).toString()
+  const { redirectionLink, email, id } =
+      req.body
+
+  sendMail(token, email, redirectionLink, id)
+  res.cookie("mailToken", token).send("Ok")
+}
+
 const confirmationMail = (req, res) => {
-  if (typeof req.cookies.permission === "undefined"){
-    res.status(404).send("Bad token or Cookie")
-    return
-  }
-  const sessionToken = req.cookies.permission.token
-  const {token} = req.params
-  
-  if (sessionToken === token) {
-    res.clearCookie("permission")
-    userModel.verifyMail(req.cookies.permission.id)
-      .catch(() => {
+
+  const cookieToken = req.cookies.mailToken
+  const { token, userId } = req.params
+
+  if (cookieToken === token) {
+    userModel.verifyMail(userId)
+    .then(resp => {
+      if (resp.rowCount !== 1){
         res.status(500).send("something got wrong")
-      })
-      .then(resp => {
-        if (resp.rowCount !== 1){
-          res.write("something got wrong")
-          res.status(500)
-        }
-        else{
-          res.write("email Confirmed")
-          res.status(204)
-        }
-        res.end()
-      })
-      .catch( () => { throw "err" } )
+      }
+      else {
+        res.clearCookie("mailToken")
+        res.status(204).send("email confirmed")
+      }
+      res.end()
+    })
+    .catch((e) => {
+      console.log("error : ", e)
+      res.status(500).send("something got wrong")
+    })
   }
   else 
     res.status(404).send("bad token")
@@ -204,5 +198,6 @@ module.exports = {
   update,
   del,
   confirmationMail,
-  ManageAuthentification
+  ManageAuthentification,
+  sendTokenMail
 }
