@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import UserContext from './UserContext'
+import setSocket from './socket'
 
 import Cookies from 'universal-cookie'
 import axios from 'axios'
@@ -22,6 +23,7 @@ function MyProvider(props) {
         .then(resp => {
           if (resp.data.verified_mail === true) setIsAuth(true)
           updateUser(resp.data)
+          setSocket(resp.data.id)
         })
         .catch(e => {
           console.log('bad Cookie !!', e)
