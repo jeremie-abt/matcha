@@ -1,4 +1,6 @@
 const express = require('express')
+const multer = require('multer')
+const path = require('path')
 
 const usersController = require('./controller/usersController')
 const tagsController = require('./controller/tagsController')
@@ -10,8 +12,10 @@ const notificationsController = require('./controller/notificationsController')
 
 // middleware
 const dataVerifToken = require('./middleware/verifyToken')
+// handle multi-format type data
 
 const apiRouter = express.Router()
+const upload = multer({ dest: 'uploads/' })
 
 // require of controller
 
@@ -33,7 +37,7 @@ apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
 // Images routes
 apiRouter.get('/:userId/images', imagesController.index)
 apiRouter.put('/images/update', imagesController.update)
-apiRouter.post('/images/add', imagesController.add)
+apiRouter.post('/images/add', upload.single('myImage'), imagesController.add)
 apiRouter.delete('/images/delete', imagesController.del)
 
 // Tags routes

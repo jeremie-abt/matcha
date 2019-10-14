@@ -11,7 +11,6 @@ const index = (req, res) => {
   imageModel
     .getImagesFromUserId(userId)
     .then(response => {
-      console.log(response.rows)
       const { rows } = response
       res.json(rows)
     })
@@ -84,6 +83,7 @@ const del = (req, res) => {
 }
 
 const add = async (req, res) => {
+  console.log(req.file)
   let { userId, position } = req.body
   const { url } = req.body
   userId = parseInt(userId, 10)
@@ -106,7 +106,7 @@ const add = async (req, res) => {
       if (result.rowCount) res.status(200).send('ok')
       else throw 'Error during image upload'
     })
-    .catch(err => res.status(404).sned(err))
+    .catch(err => res.status(404).send(err))
     .finally(() => res.end())
 }
 

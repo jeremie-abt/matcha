@@ -1,36 +1,35 @@
 import React from 'react'
-import { Card, Columns, Image } from 'react-bulma-components'
+import { Columns, Image, Tag } from 'react-bulma-components'
 
-const ImageComponent = ({ images }) => {
-  console.log(images)
+const ImageComponent = ({ images, deleteImage }) => {
   const NoImage = () => {
     return <div>No Image</div>
   }
 
-  const MyImage = ({ url }) => {
+  const MyImage = ({ url, position }) => {
     return (
-      <div style={{ width: '70px', height: '70px' }}>
-        <Image src={url} alt='' className='my-image' />
+      <div className='image'>
+        <Tag remove position={position} onClick={deleteImage} />
+        <Image src={url} alt='' className='my-images' />
+        <div>{position}</div>
       </div>
     )
   }
 
   return (
-    <Card className='card-fullwidth'>
-      <Card.Content>
-        <Columns centered>
-          <Columns.Column className='has-text-centered images-container'>
-            {images.length ? (
-              images.map(img => {
-                return <MyImage url={img.url} key={img.position} />
-              })
-            ) : (
-              <NoImage />
-            )}
-          </Columns.Column>
-        </Columns>
-      </Card.Content>
-    </Card>
+    <Columns centered className='images-container'>
+      {images.length ? (
+        images.map((img, index) => {
+          return (
+            <Columns.Column key={index}>
+              <MyImage url={img.url} position={img.position} />
+            </Columns.Column>
+          )
+        })
+      ) : (
+        <NoImage />
+      )}
+    </Columns>
   )
 }
 
