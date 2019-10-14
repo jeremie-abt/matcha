@@ -1,8 +1,17 @@
-const { io } = require('../server')
+// eslint-disable-next-line import/order
+const app = require('../server')
+
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+
+server.listen(8000, () => {
+  console.log('server is listening')
+})
+
 const notificationsModel = require('../model/notificationsModel')
 const notifContent = require('../socket/notificationsContent')
 
-module.exports = socket => {
+io.on('connection', socket => {
   console.log('User connected')
   socket.on('join', id => {
     socket.join(`room${id}`)
@@ -30,4 +39,4 @@ module.exports = socket => {
         throw err
       })
   })
-}
+})
