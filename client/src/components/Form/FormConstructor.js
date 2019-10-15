@@ -121,6 +121,13 @@ function FormConstructor(props) {
       setState(newState)
     }
   }
+  if (props.handleChange) {
+    props.handleChange({
+      state
+    })
+  }
+
+  let handleChangeFunc = handleChange
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -151,7 +158,10 @@ function FormConstructor(props) {
       })}
       <Button onClick={handleSubmit}> Valider </Button>
       <Content size={'small'} style={{ color: 'red' }}>
-        {props.msg[1] === 'danger' && props.msg[0]}
+        {props.msg &&
+          props.msg.length === 2 &&
+          props.msg[1] === 'danger' &&
+          props.msg[0]}
       </Content>
     </div>
   )

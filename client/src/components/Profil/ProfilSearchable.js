@@ -8,10 +8,6 @@ function ProfilSearchable({ userInfos }) {
         <div>
           <h4>username</h4>
           <p>{userInfos.username}</p>
-          <h4>gender</h4>
-          <p>{userInfos.gender}</p>
-          <h4>sexual orientation</h4>
-          <p>{userInfos.sexual_orientation}</p>
         </div>
         <div>
           <Button>Like</Button>

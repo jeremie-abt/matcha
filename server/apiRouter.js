@@ -7,6 +7,7 @@ const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
 const blockedController = require('./controller/blockedController')
 const notificationsController = require('./controller/notificationsController')
+const SearchController = require('./controller/SearchController')
 
 // middleware
 const dataVerifToken = require('./middleware/verifyToken')
@@ -27,12 +28,20 @@ apiRouter.get(
 )
 apiRouter.post('/users', usersController.create)
 apiRouter.put('/users/:userId', usersController.update)
+// e.preventDefault()
 apiRouter.delete('/users/:userId/delete', usersController.del)
 apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
 apiRouter.post(
   '/users/updatePassword',
   dataVerifToken.verifyToken,
   usersController.updatePassword
+)
+
+// search
+apiRouter.get(
+  '/search',
+  dataVerifToken.verifyToken,
+  SearchController.searchProfils
 )
 
 // Images routes
