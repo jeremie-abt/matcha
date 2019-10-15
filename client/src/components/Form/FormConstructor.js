@@ -94,7 +94,6 @@ function FormConstructor(props) {
    *  Parent of form generation.
    */
   const handleChange = e => {
-    //e.preventDefault()
     if (e.target.type === 'checkbox') {
       const categorie = e.target.getAttribute('categorie')
       const key = parseInt(e.target.getAttribute('data-key'))

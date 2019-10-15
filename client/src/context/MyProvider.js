@@ -66,7 +66,6 @@ function MyProvider(props) {
     }
   }
 
-  //_verifyIfAuth()
   return (
     <div>
       {(!hasFetched && <div>loading ...</div>) || (
