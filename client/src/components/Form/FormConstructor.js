@@ -26,7 +26,7 @@ function FormConstructor(props) {
     })
     setCheckbox(checkboxObj)
     setState(stateObj)
-  }, [context.store, props.fields, context.isAuth, context.store.user.tags])
+  }, [context.store.user, props.fields])
 
   const _renderText = ({ elem, placeholder }) => {
     return (
