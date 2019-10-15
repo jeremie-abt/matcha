@@ -12,10 +12,8 @@ function FormConstructor(props) {
   const context = useContext(UserContext)
   const [state, setState] = useState({})
   const [checkbox, setCheckbox] = useState({})
-  
+
   useEffect(() => {
-    console.log("useEffect called")
-    console.log("state suer : ", context.store.user)
     const checkboxObj = {}
     const stateObj = {}
     props.fields.forEach(elem => {
@@ -28,8 +26,7 @@ function FormConstructor(props) {
     })
     setCheckbox(checkboxObj)
     setState(stateObj)
-  }, [props.fields, context.store.user, context.store.isAuth])
-  
+  }, [context.store, props.fields, context.isAuth, context.store.user.tags])
 
   const _renderText = ({ elem, placeholder }) => {
     return (
@@ -61,40 +58,43 @@ function FormConstructor(props) {
   const _renderCheckbox = elem => {
     let checkboxComponent
 
-    return (
-      <Form.Field key={elem.name + elem.type}>
-        <Form.Control>
-          <Form.Label>{elem.title}</Form.Label>
-          {// le data-key est la car je n'arrive pas a 
-          
-          // access l'attribute key dans handlechange
-          }
-          {
-          elem.checkboxValues.map(checkboxElem => {
-            checkboxComponent = (
-              <Checkbox
-                categorie={elem.name}
-                name={checkboxElem.name}
-                label={checkboxElem.name}
-                handleChange={handleChange}
-                checked={checkbox[elem.name].includes(checkboxElem.id)}
-                key={checkboxElem.id}
-                data-key={checkboxElem.id}
-              />
-            )
-            return checkboxComponent
-          })}
-        }
-        <div>tags</div>
-        </Form.Control>
-      </Form.Field>
-    )
+    if (checkbox[elem.name]) {
+      return (
+        <Form.Field key={elem.name + elem.type}>
+          <Form.Control>
+            <Form.Label>{elem.title}</Form.Label>
+
+            {
+              // le data-key est la car je n'arrive pas a
+              // access l'attribute key dans handlechange
+            }
+            {elem.checkboxValues.map(checkboxElem => {
+              checkboxComponent = (
+                <Checkbox
+                  categorie={elem.name}
+                  name={checkboxElem.name}
+                  label={checkboxElem.name}
+                  handleChange={handleChange}
+                  checked={checkbox[elem.name].includes(checkboxElem.id)}
+                  key={checkboxElem.id}
+                  data-key={checkboxElem.id}
+                />
+              )
+              return checkboxComponent
+            })}
+          </Form.Control>
+        </Form.Field>
+      )
+    } else {
+      return null
+    }
   }
 
   /**
    *  Parent of form generation.
    */
   const handleChange = e => {
+    //e.preventDefault()
     if (e.target.type === 'checkbox') {
       const categorie = e.target.getAttribute('categorie')
       const key = parseInt(e.target.getAttribute('data-key'))
@@ -109,7 +109,8 @@ function FormConstructor(props) {
       const newCheckboxObj = { ...checkbox }
       newCheckboxObj[categorie] = newCurCheckboxObj
       setCheckbox(newCheckboxObj)
-    } else if (e.target.type === 'radio') {
+    }
+    if (e.target.type === 'radio') {
       const categorie = e.target.getAttribute('categorie')
       const newState = { ...state }
 

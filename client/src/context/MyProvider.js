@@ -12,8 +12,8 @@ function MyProvider(props) {
   const [hasFetched, setHasFetched] = useState(false)
 
   useEffect(() => {
-    const verifyIfAuth = async() => {
-      const ret = await setUserLogged()
+    const verifyIfAuth = async () => {
+      await setUserLogged()
       setHasFetched(true)
     }
     verifyIfAuth()
@@ -31,9 +31,10 @@ function MyProvider(props) {
           }
         })
         .then(resp => {
-          if (resp.data.verified_mail === true) setIsVerified(true)
           setIsAuth(true)
-          updateUser(resp.data)
+          if (resp.data.verified_mail === true) setIsVerified(true)
+          setUser(resp.data)
+          //updateUser(resp.data)
           setSocket(resp.data.id)
           return resp.data
         })
@@ -41,8 +42,7 @@ function MyProvider(props) {
           console.log('bad Cookie !!', e)
           return undefined
         })
-    }
-    else return new Promise((resolve, reject) => resolve(undefined))
+    } else return new Promise((resolve, reject) => resolve(undefined))
   }
 
   const HandleDisconnection = () => {
@@ -53,9 +53,7 @@ function MyProvider(props) {
     updateUser(false)
   }
 
-
-  
-  // fonction pour pouvoir update le user et le isAuth 
+  // fonction pour pouvoir update le user et le isAuth
   const updateUser = newUser => {
     if (newUser === false) {
       setUser({})
@@ -68,21 +66,10 @@ function MyProvider(props) {
     }
   }
 
-  // fonction qui ne va etre call uniquement au lancement !
-  // Donc il faut anbsolument pas que l'app en tout cas le
-  // router soit rendu ! Donc un isFetched je pense
-  const _verifyIfAuth = () => {
-    if (isAuth === false && Object.entries(user).length === 0) {
-      setUserLogged()
-    }
-  }
-
   //_verifyIfAuth()
   return (
     <div>
-      {
-        (!hasFetched && <div>loading ...</div>
-          ||
+      {(!hasFetched && <div>loading ...</div>) || (
         <UserContext.Provider
           value={{
             store: {
@@ -97,8 +84,7 @@ function MyProvider(props) {
         >
           {props.children}
         </UserContext.Provider>
-        )
-      }
+      )}
     </div>
   )
 }

@@ -20,7 +20,7 @@ import socket from '../index'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
-  const [curComponent, setCurComponent] = useState('update')
+  const [curComponent, setCurComponent] = useState('profil')
 
   const componentsMapping = {
     profil: <Profil userInfos={userInfos} />,
