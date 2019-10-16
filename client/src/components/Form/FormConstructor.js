@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 import { Button, Form, Content } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
@@ -10,19 +10,23 @@ import UserContext from '../../context/UserContext'
 
 function FormConstructor(props) {
   const context = useContext(UserContext)
-  const checkboxObj = {}
-  const stateObj = {}
+  const [state, setState] = useState({})
+  const [checkbox, setCheckbox] = useState({})
 
-  props.fields.forEach(elem => {
-    if (elem.type === 'checkbox') {
-      checkboxObj[elem.name] = context.store.user[elem.name]
-    } else if (elem.type === 'radio') {
-      stateObj[elem.name] = context.store.user[elem.name]
-    }
-  })
-
-  const [state, setState] = useState(stateObj)
-  const [checkbox, setCheckbox] = useState(checkboxObj)
+  useEffect(() => {
+    const checkboxObj = {}
+    const stateObj = {}
+    props.fields.forEach(elem => {
+      if (elem.type === 'checkbox') {
+        if (context.store.user[elem.name] !== undefined)
+          checkboxObj[elem.name] = context.store.user[elem.name]
+      } else if (elem.type === 'radio') {
+        stateObj[elem.name] = context.store.user[elem.name]
+      }
+    })
+    setCheckbox(checkboxObj)
+    setState(stateObj)
+  }, [context.store.user, props.fields])
 
   const _renderText = ({ elem, placeholder }) => {
     return (
@@ -54,29 +58,36 @@ function FormConstructor(props) {
   const _renderCheckbox = elem => {
     let checkboxComponent
 
-    return (
-      <Form.Field key={elem.name + elem.type}>
-        <Form.Control>
-          <Form.Label>{elem.title}</Form.Label>
-          {// le data-key est la car je n'arrive pas a
-          // access l'attribute key dans handlechange
-          elem.checkboxValues.map(checkboxElem => {
-            checkboxComponent = (
-              <Checkbox
-                categorie={elem.name}
-                name={checkboxElem.name}
-                label={checkboxElem.name}
-                handleChange={handleChange}
-                checked={checkbox[elem.name].includes(checkboxElem.id)}
-                key={checkboxElem.id}
-                data-key={checkboxElem.id}
-              />
-            )
-            return checkboxComponent
-          })}
-        </Form.Control>
-      </Form.Field>
-    )
+    if (checkbox[elem.name]) {
+      return (
+        <Form.Field key={elem.name + elem.type}>
+          <Form.Control>
+            <Form.Label>{elem.title}</Form.Label>
+
+            {
+              // le data-key est la car je n'arrive pas a
+              // access l'attribute key dans handlechange
+            }
+            {elem.checkboxValues.map(checkboxElem => {
+              checkboxComponent = (
+                <Checkbox
+                  categorie={elem.name}
+                  name={checkboxElem.name}
+                  label={checkboxElem.name}
+                  handleChange={handleChange}
+                  checked={checkbox[elem.name].includes(checkboxElem.id)}
+                  key={checkboxElem.id}
+                  data-key={checkboxElem.id}
+                />
+              )
+              return checkboxComponent
+            })}
+          </Form.Control>
+        </Form.Field>
+      )
+    } else {
+      return null
+    }
   }
 
   /**
@@ -97,7 +108,8 @@ function FormConstructor(props) {
       const newCheckboxObj = { ...checkbox }
       newCheckboxObj[categorie] = newCurCheckboxObj
       setCheckbox(newCheckboxObj)
-    } else if (e.target.type === 'radio') {
+    }
+    if (e.target.type === 'radio') {
       const categorie = e.target.getAttribute('categorie')
       const newState = { ...state }
 

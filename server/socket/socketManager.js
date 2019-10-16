@@ -5,14 +5,14 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 
 server.listen(8000, () => {
-  console.log('server is listening')
+  // console.log('server is listening')
 })
 
 const notificationsModel = require('../model/notificationsModel')
 const notifContent = require('../socket/notificationsContent')
 
 io.on('connection', socket => {
-  console.log('User connected')
+  // console.log('User connected')
   socket.on('join', id => {
     socket.join(`room${id}`)
   })
