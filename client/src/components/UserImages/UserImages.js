@@ -33,13 +33,26 @@ const UserImages = ({ userId }) => {
   const handleChange = e => {
     console.log(e.target.value)
     setFile(e.target.value)
+    axios
+      .post('/upload', file)
+      .then(res => {
+        console.log(res)
+        const { data } = res
+        axios
+          .post('images/add', { userId, position: 2, url: data.path })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(e => console.log(e))
+      })
+      .catch(err => console.log(err))
   }
 
   const UploadForm = () => {
     return (
       <div>
-        <form action='post' encType='multipart/form-data'>
-          <input type='file' name='myImage' onChange={handleChange} />
+        <form encType='multipart/form-data' onSubmit={handleSubmit}>
+          <input type='file' onChange={handleChange} />
           <input type='submit' value='Upload Photo' />
         </form>
       </div>

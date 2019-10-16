@@ -3,15 +3,14 @@ import { Route, Switch } from 'react-router-dom'
 
 import RegisterPage from '../pages/RegisterPage'
 import LoginPage from '../pages/LoginPage'
-import DefaultPage from '../components/GeneralRedirection/NotLoggedDefaultPage'
-
+import DefaultRedirectPage from '../components/GeneralRedirection/NotLoggedDefaultPage'
 
 function NotLoggedRoutes() {
   return (
     <Switch>
-      <Route path='/' component={LoginPage} exact />
-      <Route path='/register' component={RegisterPage} exact />
-      <Route path='*' component={DefaultPage} />
+      <Route path='/register' component={RegisterPage} />
+      <Route exact path='/' component={LoginPage} />
+      <Route exact path='*' component={DefaultRedirectPage} />
     </Switch>
   )
 }

@@ -348,6 +348,7 @@ class reqFormatter {
 
   _in = (field, value) => {
     let whereStatement = `${field} IN (`
+    // eslint-disable-next-line array-callback-return
     value.map(elem => {
       whereStatement += `$${this._value_index}, `
       this._value_index += 1
