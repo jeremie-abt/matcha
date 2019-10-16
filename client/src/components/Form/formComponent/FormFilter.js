@@ -13,7 +13,7 @@ const fields = [
   {
     name: 'maxAge',
     label: 'maxAge',
-    type: 'text'
+    type: 'range'
   },
   {
     name: 'maxScore',

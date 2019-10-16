@@ -11,6 +11,8 @@ import LoggedRoutes from './routes/LoggedRoutes'
 import ValidateMail from './pages/ValidateMail'
 import ChangePasswordPage from './pages/ChangePasswordPage'
 
+import DoubleRange from './components/Form/InputStyle/InputDoubleRange'
+
 const history = createBrowserHistory()
 
 const AppRouter = () => (
@@ -18,6 +20,7 @@ const AppRouter = () => (
     <div>
       <MyProvider>
         <Switch>
+          <Route component={DoubleRange} path='/test' />
           <Route
             path='/changePassword/:userId/:token'
             render={() => <ChangePasswordPage />}

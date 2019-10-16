@@ -5,8 +5,11 @@ import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
 import MyRadio from './InputStyle/RadioStyle'
+import Range from './InputStyle/InputDoubleRange'
 
 import UserContext from '../../context/UserContext'
+
+const defaultRange = [18, 44]
 
 function FormConstructor(props) {
   const context = useContext(UserContext)
@@ -22,11 +25,27 @@ function FormConstructor(props) {
           checkboxObj[elem.name] = context.store.user[elem.name]
       } else if (elem.type === 'radio') {
         stateObj[elem.name] = context.store.user[elem.name]
+      } else if (elem.type === 'range') {
+        stateObj[elem.name] = defaultRange
       }
     })
     setCheckbox(checkboxObj)
     setState(stateObj)
   }, [context.store.user, props.fields])
+
+  const _renderRange = elem => {
+    if (state[elem.name]) {
+      return (
+        <Range
+          name={elem.name}
+          range={state[elem.name]}
+          onChange={handleChange}
+        />
+      )
+    } else {
+      return null
+    }
+  }
 
   const _renderText = ({ elem, placeholder }) => {
     return (
@@ -94,9 +113,14 @@ function FormConstructor(props) {
    *  Parent of form generation.
    */
   const handleChange = e => {
+    console.log('e : ', e)
     let newState = { ...state }
     newState = { ...state }
-    if (e.target.type === 'checkbox') {
+
+    if (e.type && e.type === 'range') {
+      newState[e.name] = e.value
+      setState(newState)
+    } else if (e.target.type === 'checkbox') {
       const categorie = e.target.getAttribute('categorie')
       const key = parseInt(e.target.getAttribute('data-key'))
 
@@ -110,10 +134,12 @@ function FormConstructor(props) {
       const newCheckboxObj = { ...checkbox }
       newCheckboxObj[categorie] = newCurCheckboxObj
       setCheckbox(newCheckboxObj)
-    }
-    if (e.target.type === 'radio') {
+    } else if (e.target.type === 'radio') {
       const categorie = e.target.getAttribute('categorie')
       newState[categorie] = e.target.name
+      setState(newState)
+    } else if (e.target.type === 'range') {
+      newState[e.target.name] = e
       setState(newState)
     } else {
       newState[e.target.name] = e.target.value
@@ -148,6 +174,8 @@ function FormConstructor(props) {
           return _renderCheckbox(field)
         } else if (field.type === 'radio') {
           return _renderRadio(field)
+        } else if (field.type === 'range') {
+          return _renderRange(field)
         } else {
           return _renderText({
             elem: field
