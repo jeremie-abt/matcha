@@ -57,7 +57,6 @@ const del = (req, res) => {
     res.status(400).send('A param is missing')
     return
   }
-  // parseInt = atoi (just to be safe)
   const imageId = parseInt(req.body.imageId, 10)
   const userId = parseInt(req.body.userId, 10)
   if (!imageId || !userId || imageId < 0 || userId < 0) {
@@ -83,7 +82,6 @@ const del = (req, res) => {
 }
 
 const add = async (req, res) => {
-  console.log(req.file)
   let { userId, position } = req.body
   const { url } = req.body
   userId = parseInt(userId, 10)

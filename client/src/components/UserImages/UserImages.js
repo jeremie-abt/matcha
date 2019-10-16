@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useState, useEffect } from 'react'
 import { Card, Columns, Loader, Button } from 'react-bulma-components'
 import ImageComponent from './Images'
@@ -26,24 +27,36 @@ const UserImages = ({ userId }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log(file)
-    axios.post('/images/add', { file })
-  }
-
-  const handleChange = e => {
-    console.log(e.target.value)
-    setFile(e.target.value)
     axios
       .post('/upload', file)
       .then(res => {
-        console.log(res)
         const { data } = res
         axios
           .post('images/add', { userId, position: 2, url: data.path })
           .then(res => {
-            console.log(res)
+            const newImage = JSON.parse(res.config.data)
+            setUserImages([...userImages, newImage])
           })
           .catch(e => console.log(e))
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleChange = e => {
+    const data = new FormData()
+    data.append('file', e.target.files[0])
+    setFile(data)
+  }
+
+  const deleteImage = e => {
+    const imageId = e.target.getAttribute('id')
+    axios
+      .delete('/images/delete', { data: { imageId, userId } })
+      .then(res => {
+        const images = userImages.filter(img => img.id != imageId)
+        setUserImages(images)
+        console.log(res)
+        // notif -> image destroyed
       })
       .catch(err => console.log(err))
   }
@@ -59,17 +72,11 @@ const UserImages = ({ userId }) => {
     )
   }
 
-  const deleteImage = e => {
-    const pos = e.target.getAttribute('position')
-    console.log(pos)
-  }
-
   return (
     <Card className='card-fullwidth'>
       <Card.Content>
         <Columns centered>
           <Columns.Column className='has-text-centered'>
-            {/* if 0 image props = 0 else arr image */}
             {isLoading ? (
               <Loader />
             ) : (

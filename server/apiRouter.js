@@ -1,13 +1,5 @@
 const express = require('express')
-<<<<<<< Updated upstream
 const multer = require('multer')
-const path = require('path')
-=======
-<<<<<<< Updated upstream
-=======
-const multer = require('multer')
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 const usersController = require('./controller/usersController')
 const tagsController = require('./controller/tagsController')
@@ -19,40 +11,32 @@ const notificationsController = require('./controller/notificationsController')
 
 // middleware
 const dataVerifToken = require('./middleware/verifyToken')
-<<<<<<< HEAD
-// handle multi-format type data
-=======
->>>>>>> 51269fd6fd36f894a5800e72bfb6d49b2cbcf2d9
 
 const apiRouter = express.Router()
-const upload = multer({ dest: 'uploads/' })
 
 // multer
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, '/upload')
+    cb(null, 'img/')
   },
   filename(req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`)
   }
 })
-const upload = multer({ storage }).single('file')
+const upload = multer({ storage })
 
-apiRouter.post('/upload', (req, res) => {
-  // eslint-disable-next-line func-names
-  console.log(req.file)
-  upload(req, res, function(err) {
-    if (err instanceof multer.MulterError) {
-      console.log(err)
-      return res.status(500).json(err)
-    }
-    if (err) {
-      console.log(err)
-      return res.status(500).json(err)
-    }
+apiRouter.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    console.log('No file received')
+    res.send({ success: false })
+  } else {
+    console.log('file received')
     console.log(req.file)
-    return res.status(200).send(req.file)
-  })
+    res.send({
+      success: true,
+      path: `http://${req.hostname}:8081/${req.file.filename}`
+    })
+  }
 })
 // multer
 
@@ -75,7 +59,7 @@ apiRouter.post(
 // Images routes
 apiRouter.get('/:userId/images', imagesController.index)
 apiRouter.put('/images/update', imagesController.update)
-apiRouter.post('/images/add', upload.single('myImage'), imagesController.add)
+apiRouter.post('/images/add', imagesController.add)
 apiRouter.delete('/images/delete', imagesController.del)
 
 // Tags routes
