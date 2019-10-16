@@ -47,7 +47,7 @@ function FormFilter() {
   const [filters, setFilters] = useState({})
 
   function _calculateScore(a, b) {
-    let aScore = 0
+    let aScore
 
     aScore = a.score - b.score
     context.store.user.tags.forEach(elem => {

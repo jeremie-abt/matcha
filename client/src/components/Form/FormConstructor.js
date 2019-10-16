@@ -94,6 +94,8 @@ function FormConstructor(props) {
    *  Parent of form generation.
    */
   const handleChange = e => {
+    let newState = { ...state }
+    newState = { ...state }
     if (e.target.type === 'checkbox') {
       const categorie = e.target.getAttribute('categorie')
       const key = parseInt(e.target.getAttribute('data-key'))
@@ -111,23 +113,19 @@ function FormConstructor(props) {
     }
     if (e.target.type === 'radio') {
       const categorie = e.target.getAttribute('categorie')
-      const newState = { ...state }
-
       newState[categorie] = e.target.name
       setState(newState)
     } else {
-      const newState = { ...state }
       newState[e.target.name] = e.target.value
       setState(newState)
     }
+    if (props.handleChange) {
+      props.handleChange({ state: newState })
+    }
+    // pas ouff ca va etre call tous le temps alors que c une
+    // logique tres specifique pour le formFilter
+    // donc si tu as une autre idee !
   }
-  if (props.handleChange) {
-    props.handleChange({
-      state
-    })
-  }
-
-  let handleChangeFunc = handleChange
 
   const handleSubmit = e => {
     e.preventDefault()
