@@ -5,7 +5,7 @@ function RadioStyle({ handleChange, label, ...props }) {
   return (
     <Form.Radio {...props} onChange={handleChange}>
       {label}
-    </Form.Radio> 
+    </Form.Radio>
   )
 }
 

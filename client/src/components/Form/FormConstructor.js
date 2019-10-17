@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 
-import { Button, Form, Content } from 'react-bulma-components'
+import { Button, Form, Content, Columns } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
@@ -83,18 +83,22 @@ function FormConstructor(props) {
   }
 
   const _renderRadio = elem => {
-    return elem.radioValues.map(radioElem => {
-      return (
-        <MyRadio
-          categorie={elem.name}
-          label={radioElem}
-          name={radioElem}
-          handleChange={handleChange}
-          checked={state[elem.name] === radioElem}
-          key={radioElem + elem.type}
-        />
-      )
-    })
+    return (
+      <Columns.Column>
+        {elem.radioValues.map(radioElem => {
+          return (
+            <MyRadio
+              categorie={elem.name}
+              label={radioElem}
+              name={radioElem}
+              handleChange={handleChange}
+              checked={state[elem.name] === radioElem}
+              key={radioElem + elem.type}
+            />
+          )
+        })}
+      </Columns.Column>
+    )
   }
 
   const _renderCheckbox = elem => {
@@ -102,30 +106,32 @@ function FormConstructor(props) {
 
     if (checkbox[elem.name]) {
       return (
-        <Form.Field key={elem.name + elem.type}>
-          <Form.Control>
-            <Form.Label>{elem.title}</Form.Label>
+        <Columns.Column size={12}>
+          <Form.Field key={elem.name + elem.type}>
+            <Form.Control>
+              <Form.Label>{elem.title}</Form.Label>
 
-            {
-              // le data-key est la car je n'arrive pas a
-              // access l'attribute key dans handlechange
-            }
-            {elem.checkboxValues.map(checkboxElem => {
-              checkboxComponent = (
-                <Checkbox
-                  categorie={elem.name}
-                  name={checkboxElem.name}
-                  label={checkboxElem.name}
-                  handleChange={handleChange}
-                  checked={checkbox[elem.name].includes(checkboxElem.id)}
-                  key={checkboxElem.id}
-                  data-key={checkboxElem.id}
-                />
-              )
-              return checkboxComponent
-            })}
-          </Form.Control>
-        </Form.Field>
+              {
+                // le data-key est la car je n'arrive pas a
+                // access l'attribute key dans handlechange
+              }
+              {elem.checkboxValues.map(checkboxElem => {
+                checkboxComponent = (
+                  <Checkbox
+                    categorie={elem.name}
+                    name={checkboxElem.name}
+                    label={checkboxElem.name}
+                    handleChange={handleChange}
+                    checked={checkbox[elem.name].includes(checkboxElem.id)}
+                    key={checkboxElem.id}
+                    data-key={checkboxElem.id}
+                  />
+                )
+                return checkboxComponent
+              })}
+            </Form.Control>
+          </Form.Field>
+        </Columns.Column>
       )
     } else {
       return null
@@ -183,26 +189,28 @@ function FormConstructor(props) {
 
   return (
     <div>
-      {props.fields.map(field => {
-        if (field.type === 'text') {
-          return _renderText({
-            elem: field,
-            placeholder: context.store.user[field.name]
-          })
-        } else if (field.type === 'checkbox') {
-          return _renderCheckbox(field)
-        } else if (field.type === 'radio') {
-          return _renderRadio(field)
-        } else if (field.type === 'range') {
-          return _renderRange(field)
-        } else if (field.type === 'slider') {
-          return _renderSlider(field)
-        } else {
-          return _renderText({
-            elem: field
-          })
-        }
-      })}
+      <Columns>
+        {props.fields.map(field => {
+          if (field.type === 'text') {
+            return _renderText({
+              elem: field,
+              placeholder: context.store.user[field.name]
+            })
+          } else if (field.type === 'checkbox') {
+            return _renderCheckbox(field)
+          } else if (field.type === 'radio') {
+            return _renderRadio(field)
+          } else if (field.type === 'range') {
+            return _renderRange(field)
+          } else if (field.type === 'slider') {
+            return _renderSlider(field)
+          } else {
+            return _renderText({
+              elem: field
+            })
+          }
+        })}
+      </Columns>
       <Button onClick={handleSubmit}> Valider </Button>
       <Content size={'small'} style={{ color: 'red' }}>
         {props.msg &&

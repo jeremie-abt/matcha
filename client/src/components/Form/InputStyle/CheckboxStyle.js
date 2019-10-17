@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form } from 'react-bulma-components'
+import { Form, Columns } from 'react-bulma-components'
 
 function CheckboxStyle({ handleChange, label, ...props }) {
   return (
