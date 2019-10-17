@@ -6,9 +6,6 @@ import Cookies from 'universal-cookie'
 import userContext from '../../../context/UserContext'
 import ProfilSearchable from '../../../components/Profil/ProfilSearchable'
 
-const CancelToken = axios.CancelToken
-const source = CancelToken.source()
-
 const fields = [
   {
     name: 'maxAge',
@@ -80,9 +77,22 @@ function FormFilter() {
     } else return 0
   }
 
+  // setting the state correctly
+  useEffect(() => {
+    const filtersObj = {}
+    fields.forEach(elem => {
+      if (elem.type === 'range') {
+        filtersObj[elem.name] = elem.defaultValues
+      } else if (elem.type === 'slider') {
+        filtersObj[elem.name] = elem.defaultValue
+      }
+    })
+    setFilters(filtersObj)
+  }, [])
+
   useEffect(() => {
     axios
-      .get('/tags/all', { cancelToken: source.token })
+      .get('/tags/all')
       .then(resp => {
         const newData = [...fields]
         let input = newData.find(elem => elem.name === 'tags')
@@ -92,9 +102,6 @@ function FormFilter() {
       .catch(e => {
         console.log('le catch : ', e)
       })
-    return () => {
-      source.cancel('Operation canceled') // a suppr avant de pr
-    }
   }, [])
 
   // a vir si faut faire la memoization ca me semble bizarre tout de meme
