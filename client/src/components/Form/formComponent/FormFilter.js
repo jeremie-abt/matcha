@@ -12,18 +12,23 @@ const source = CancelToken.source()
 const fields = [
   {
     name: 'maxAge',
-    label: 'maxAge',
-    type: 'range'
+    label: 'age',
+    type: 'range',
+    range: [18, 98],
+    defaultValues: [18, 45]
   },
   {
     name: 'maxScore',
-    label: 'maxScore',
-    type: 'text'
+    label: 'score',
+    type: 'range',
+    range: [0, 10],
+    defaultValues: [1, 6]
   },
   {
     name: 'maxDistance',
     label: 'maxDistance',
-    type: 'text'
+    type: 'slider',
+    defaultValue: 80
   },
   {
     name: 'tags',
@@ -140,12 +145,21 @@ function FormFilter() {
             // eslint-disable-next-line default-case
             if (filter.startsWith('max')) {
               const filterName = filter.split('max')[1].toLowerCase()
-              if (
-                filters[filter] !== '' &&
-                elem[filterName] &&
-                elem[filterName] > filters[filter]
-              ) {
-                isFalse = true
+
+              if (elem[filterName]) {
+                if (Array.isArray(filters[filter])) {
+                  const boundaries = filters[filter]
+                  if (
+                    elem[filterName] < boundaries[0] ||
+                    elem[filterName] > boundaries[1]
+                  ) {
+                    isFalse = true
+                  }
+                } else {
+                  if (elem[filterName] > filters[filter]) {
+                    isFalse = true
+                  }
+                }
               }
             }
           })

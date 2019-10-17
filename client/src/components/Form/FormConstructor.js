@@ -6,10 +6,9 @@ import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
 import MyRadio from './InputStyle/RadioStyle'
 import Range from './InputStyle/InputDoubleRange'
+import Slider from './InputStyle/InputSlider'
 
 import UserContext from '../../context/UserContext'
-
-const defaultRange = [18, 44]
 
 function FormConstructor(props) {
   const context = useContext(UserContext)
@@ -26,20 +25,44 @@ function FormConstructor(props) {
       } else if (elem.type === 'radio') {
         stateObj[elem.name] = context.store.user[elem.name]
       } else if (elem.type === 'range') {
-        stateObj[elem.name] = defaultRange
+        stateObj[elem.name] = elem.defaultValues
+      } else if (elem.type === 'slider') {
+        stateObj[elem.name] = elem.defaultValue
       }
     })
     setCheckbox(checkboxObj)
     setState(stateObj)
   }, [context.store.user, props.fields])
 
+  const _renderSlider = elem => {
+    if (state[elem.name]) {
+      return (
+        <Slider
+          name={elem.name}
+          label={elem.label}
+          range={state[elem.name]}
+          onChange={handleChange}
+          defaultValue={elem.defaultValue}
+          key={elem.name + 'slider'}
+        />
+      )
+    } else {
+      return null
+    }
+  }
+
   const _renderRange = elem => {
     if (state[elem.name]) {
       return (
         <Range
           name={elem.name}
+          label={elem.label}
           range={state[elem.name]}
           onChange={handleChange}
+          defaultValues={elem.defaultValues}
+          min={elem.range[0]}
+          max={elem.range[1]}
+          key={elem.name + 'range'}
         />
       )
     } else {
@@ -113,11 +136,10 @@ function FormConstructor(props) {
    *  Parent of form generation.
    */
   const handleChange = e => {
-    console.log('e : ', e)
     let newState = { ...state }
     newState = { ...state }
 
-    if (e.type && e.type === 'range') {
+    if (e.type && (e.type === 'range' || e.type === 'slider')) {
       newState[e.name] = e.value
       setState(newState)
     } else if (e.target.type === 'checkbox') {
@@ -137,9 +159,6 @@ function FormConstructor(props) {
     } else if (e.target.type === 'radio') {
       const categorie = e.target.getAttribute('categorie')
       newState[categorie] = e.target.name
-      setState(newState)
-    } else if (e.target.type === 'range') {
-      newState[e.target.name] = e
       setState(newState)
     } else {
       newState[e.target.name] = e.target.value
@@ -176,6 +195,8 @@ function FormConstructor(props) {
           return _renderRadio(field)
         } else if (field.type === 'range') {
           return _renderRange(field)
+        } else if (field.type === 'slider') {
+          return _renderSlider(field)
         } else {
           return _renderText({
             elem: field
