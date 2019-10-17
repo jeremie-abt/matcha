@@ -6,10 +6,16 @@ const ImageComponent = ({ images, deleteImage }) => {
     return <div>No Image</div>
   }
 
-  const MyImage = ({ url, position }) => {
+  const MyImage = ({ url, position, id }) => {
     return (
       <div className='image'>
-        <Tag remove position={position} onClick={deleteImage} />
+        <Tag
+          remove
+          position={position}
+          onClick={deleteImage}
+          id={id}
+          url={url}
+        />
         <Image src={url} alt='' className='my-images' />
         <div>{position}</div>
       </div>
@@ -19,13 +25,15 @@ const ImageComponent = ({ images, deleteImage }) => {
   return (
     <Columns centered className='images-container'>
       {images.length ? (
-        images.map((img, index) => {
-          return (
-            <Columns.Column key={index}>
-              <MyImage url={img.url} position={img.position} />
-            </Columns.Column>
-          )
-        })
+        images
+          .sort((a, b) => a.position - b.position)
+          .map((img, index) => {
+            return (
+              <Columns.Column key={index}>
+                <MyImage url={img.url} position={img.position} id={img.id} />
+              </Columns.Column>
+            )
+          })
       ) : (
         <NoImage />
       )}

@@ -20,7 +20,10 @@ function updateImagePosition(position, imageId) {
 }
 
 function addImage(userId, position, url) {
-  const query = 'INSERT INTO images(user_id, position, url) VALUES ($1, $2, $3)'
+  const query =
+    'INSERT INTO images(user_id, position, url)' +
+    'VALUES ($1, $2, $3)' +
+    'RETURNING id'
 
   return client.query(query, [userId, position, url])
 }

@@ -35,7 +35,7 @@ const UserImages = ({ userId }) => {
           .post('images/add', { userId, position: 2, url: data.path })
           .then(res => {
             const newImage = JSON.parse(res.config.data)
-            setUserImages([...userImages, newImage])
+            setUserImages([...userImages, { id: res.data.id, ...newImage }])
           })
           .catch(e => console.log(e))
       })
@@ -50,8 +50,10 @@ const UserImages = ({ userId }) => {
 
   const deleteImage = e => {
     const imageId = e.target.getAttribute('id')
+    const url = e.target.getAttribute('url')
+
     axios
-      .delete('/images/delete', { data: { imageId, userId } })
+      .delete('/images/delete', { data: { imageId, userId, url } })
       .then(res => {
         const images = userImages.filter(img => img.id != imageId)
         setUserImages(images)

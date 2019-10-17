@@ -31,7 +31,6 @@ apiRouter.post('/upload', upload.single('file'), (req, res) => {
     res.send({ success: false })
   } else {
     console.log('file received')
-    console.log(req.file)
     res.send({
       success: true,
       path: `http://${req.hostname}:8081/${req.file.filename}`

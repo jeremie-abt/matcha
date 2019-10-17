@@ -1,4 +1,5 @@
 const imageModel = require('../model/imagesModel')
+const deleteFile = require('../helpers/deleteFile')
 
 const index = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
@@ -59,11 +60,14 @@ const del = (req, res) => {
   }
   const imageId = parseInt(req.body.imageId, 10)
   const userId = parseInt(req.body.userId, 10)
+  const { url } = req.body
+
   if (!imageId || !userId || imageId < 0 || userId < 0) {
     res.status(404).send('Need a valid int')
     res.end()
     return
   }
+  deleteFile.deleteImage(url)
   imageModel
     .deleteUserImage(imageId, userId)
     .catch(err => {
@@ -78,7 +82,6 @@ const del = (req, res) => {
     })
     .catch(err => res.satus(404).send(err))
     .finally(() => res.end())
-  // change render and 'then'
 }
 
 const add = async (req, res) => {
@@ -101,7 +104,7 @@ const add = async (req, res) => {
       throw err
     })
     .then(result => {
-      if (result.rowCount) res.status(200).send('ok')
+      if (result.rowCount) res.json(result.rows[0])
       else throw 'Error during image upload'
     })
     .catch(err => res.status(404).send(err))
