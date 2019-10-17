@@ -23,25 +23,19 @@ const index = (req, res) => {
 
 const update = (req, res) => {
   // check value params
-  if (!req.body.imageId || !req.body.position) {
+  if (!req.body.imageId) {
     res.status(400).send('A param is missing')
     res.end()
     return
   }
 
   const imgId = parseInt(req.body.imageId, 10)
-  const position = parseInt(req.body.position, 10)
-  if (position < 1 || position > 5) {
-    res.status(400).send('Minimum 1 image, max 5')
-    res.end()
-    return
-  }
-  if (!imgId || !position) {
+  if (!imgId) {
     res.status(400).send('Value must be positive')
     res.end()
   }
   imageModel
-    .updateImagePosition(position, imgId)
+    .updateImagePosition(imgId)
     .catch(err => res.status(404).send(err))
     .then(result => {
       if (result.rowCount) res.status(200).send('Image updated')
@@ -85,11 +79,11 @@ const del = (req, res) => {
 }
 
 const add = async (req, res) => {
-  let { userId, position } = req.body
+  let { userId } = req.body
   const { url } = req.body
+
   userId = parseInt(userId, 10)
-  position = parseInt(position, 10)
-  if (!userId && position < 1 && position > 5 && !url) {
+  if (!userId && !url) {
     res.status(400).send('Bad params value')
     return
   }
@@ -99,7 +93,7 @@ const add = async (req, res) => {
     return
   }
   imageModel
-    .addImage(userId, position, url)
+    .addImage(userId, url)
     .catch(err => {
       throw err
     })

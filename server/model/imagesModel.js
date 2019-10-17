@@ -13,19 +13,16 @@ function deleteUserImage(imageId, userId) {
   return client.query(query, [imageId, userId])
 }
 
-function updateImagePosition(position, imageId) {
-  const query = 'UPDATE images SET position = $1 WHERE id = $2;'
+function updateImagePosition(imageId) {
+  const query = 'UPDATE images SET is_profil = true WHERE id = $1;'
   // update the position of a image / 1 === profil
-  return client.query(query, [position, imageId])
+  return client.query(query, [imageId])
 }
 
-function addImage(userId, position, url) {
-  const query =
-    'INSERT INTO images(user_id, position, url)' +
-    'VALUES ($1, $2, $3)' +
-    'RETURNING id'
+function addImage(userId, url) {
+  const query = 'INSERT INTO images(user_id, url) VALUES ($1, $2) RETURNING id'
 
-  return client.query(query, [userId, position, url])
+  return client.query(query, [userId, url])
 }
 
 function checkUserNbImages(userId) {

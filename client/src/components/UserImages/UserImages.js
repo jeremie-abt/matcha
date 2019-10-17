@@ -32,7 +32,7 @@ const UserImages = ({ userId }) => {
       .then(res => {
         const { data } = res
         axios
-          .post('images/add', { userId, position: 2, url: data.path })
+          .post('images/add', { userId, url: data.path })
           .then(res => {
             const newImage = JSON.parse(res.config.data)
             setUserImages([...userImages, { id: res.data.id, ...newImage }])

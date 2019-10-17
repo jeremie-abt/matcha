@@ -6,18 +6,11 @@ const ImageComponent = ({ images, deleteImage }) => {
     return <div>No Image</div>
   }
 
-  const MyImage = ({ url, position, id }) => {
+  const MyImage = ({ url, id }) => {
     return (
       <div className='image'>
-        <Tag
-          remove
-          position={position}
-          onClick={deleteImage}
-          id={id}
-          url={url}
-        />
+        <Tag remove onClick={deleteImage} id={id} url={url} />
         <Image src={url} alt='' className='my-images' />
-        <div>{position}</div>
       </div>
     )
   }
@@ -30,7 +23,7 @@ const ImageComponent = ({ images, deleteImage }) => {
           .map((img, index) => {
             return (
               <Columns.Column key={index}>
-                <MyImage url={img.url} position={img.position} id={img.id} />
+                <MyImage url={img.url} id={img.id} />
               </Columns.Column>
             )
           })
