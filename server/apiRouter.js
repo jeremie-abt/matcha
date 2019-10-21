@@ -1,6 +1,7 @@
 const express = require('express')
 const multer = require('multer')
 
+const uploadFile = require('./helpers/upload')
 const usersController = require('./controller/usersController')
 const tagsController = require('./controller/tagsController')
 const seenController = require('./controller/seenController')
@@ -14,7 +15,7 @@ const dataVerifToken = require('./middleware/verifyToken')
 
 const apiRouter = express.Router()
 
-// multer
+// set multer
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, 'img/')
@@ -25,18 +26,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage })
 
-apiRouter.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    console.log('No file received')
-    res.send({ success: false })
-  } else {
-    console.log('file received')
-    res.send({
-      success: true,
-      path: `http://${req.hostname}:8081/${req.file.filename}`
-    })
-  }
-})
+apiRouter.post('/upload', upload.single('file'), uploadFile.add)
 // multer
 
 // user routes
