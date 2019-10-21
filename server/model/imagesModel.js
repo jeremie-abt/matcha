@@ -9,14 +9,12 @@ function getImagesFromUserId(id) {
 
 function deleteUserImage(imageId, userId) {
   const query = 'DELETE FROM images WHERE id = $1 AND user_id = $2'
-  // count row deleted to check if it was deleted or not
   return client.query(query, [imageId, userId])
 }
 
-function updateImagePosition(imageId) {
-  const query = 'UPDATE images SET is_profil = true WHERE id = $1;'
-  // update the position of a image / 1 === profil
-  return client.query(query, [imageId])
+function updateImage(imageId, isProfil) {
+  const query = 'UPDATE images SET is_profil = $2 WHERE id = $1;'
+  return client.query(query, [imageId, isProfil])
 }
 
 function addImage(userId, url) {
@@ -31,10 +29,17 @@ function checkUserNbImages(userId) {
   return client.query(query, [userId])
 }
 
+function getProfilImage(userId) {
+  const query = 'SELECT * FROM images where user_id = $1 AND is_profil = true'
+
+  return client.query(query, [userId])
+}
+
 module.exports = {
   getImagesFromUserId,
   deleteUserImage,
-  updateImagePosition,
+  updateImage,
   checkUserNbImages,
-  addImage
+  addImage,
+  getProfilImage
 }

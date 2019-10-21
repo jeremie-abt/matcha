@@ -1,29 +1,29 @@
 /* eslint-disable eqeqeq */
 import React, { useState, useEffect } from 'react'
-import { Card, Columns, Loader, Button } from 'react-bulma-components'
+import { Card, Columns, Button } from 'react-bulma-components'
 import ImageComponent from './Images'
 import axios from 'axios'
 
 const UserImages = ({ userId }) => {
   const [userImages, setUserImages] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
   const [file, setFile] = useState('')
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get(`/${userId}/images`)
-        .then(({ data }) => {
-          if (Object.keys(data).length) {
-            setUserImages([...data])
-          }
-          setIsLoading(false)
-        })
-        .catch(err => {
-          throw err
-        })
+      getImages(userId)
     }
   }, [userId])
+
+  const getImages = userId => {
+    axios
+      .get(`/${userId}/images`)
+      .then(({ data }) => {
+        if (Object.keys(data).length) setUserImages([...data])
+      })
+      .catch(err => {
+        throw err
+      })
+  }
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -34,10 +34,9 @@ const UserImages = ({ userId }) => {
         axios
           .post('images/add', { userId, url: data.path })
           .then(res => {
-            const newImage = JSON.parse(res.config.data)
-            setUserImages([...userImages, { id: res.data.id, ...newImage }])
+            getImages(userId)
           })
-          .catch(e => console.log(e))
+          .catch(err => console.log(err))
       })
       .catch(err => console.log(err))
   }
@@ -57,8 +56,17 @@ const UserImages = ({ userId }) => {
       .then(res => {
         const images = userImages.filter(img => img.id != imageId)
         setUserImages(images)
-        console.log(res)
         // notif -> image destroyed
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleProfilImage = e => {
+    const id = parseInt(e.target.getAttribute('id'), 10)
+    axios
+      .put('/images/update', { imageId: id, userId })
+      .then(res => {
+        getImages(userId)
       })
       .catch(err => console.log(err))
   }
@@ -79,11 +87,11 @@ const UserImages = ({ userId }) => {
       <Card.Content>
         <Columns centered>
           <Columns.Column className='has-text-centered'>
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <ImageComponent images={userImages} deleteImage={deleteImage} />
-            )}
+            <ImageComponent
+              images={userImages}
+              deleteImage={deleteImage}
+              handleProfilImage={handleProfilImage}
+            />
           </Columns.Column>
         </Columns>
         <div className='has-text-centered'>

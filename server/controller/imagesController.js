@@ -21,30 +21,43 @@ const index = (req, res) => {
     .finally(() => res.end())
 }
 
-const update = (req, res) => {
-  // check value params
-  if (!req.body.imageId) {
+const update = async (req, res) => {
+  if (!req.body.imageId || !req.body.userId) {
     res.status(400).send('A param is missing')
     res.end()
     return
   }
 
   const imgId = parseInt(req.body.imageId, 10)
+  const userId = parseInt(req.body.userId, 10)
   if (!imgId) {
     res.status(400).send('Value must be positive')
     res.end()
   }
-  imageModel
-    .updateImagePosition(imgId)
-    .catch(err => res.status(404).send(err))
+  let currentProfilImage = null
+  await imageModel
+    .getProfilImage(userId)
     .then(result => {
-      if (result.rowCount) res.status(200).send('Image updated')
-      else {
-        throw 'Error during update'
-      }
+      if (result.rowCount) currentProfilImage = result.rows[0].id
     })
-    .catch(err => res.status(404).send(err))
-    .finally(() => res.end())
+    .catch(err => {
+      throw err
+    })
+  if (!(currentProfilImage === imgId)) {
+    imageModel
+      .updateImage(imgId, true)
+      .catch(err => res.status(404).send(err))
+      .then(result => {
+        if (result.rowCount) {
+          imageModel.updateImage(currentProfilImage, false)
+          res.status(200).send('Image updated')
+        } else {
+          throw 'Error during update'
+        }
+      })
+      .catch(err => res.status(404).send(err))
+      .finally(() => res.end())
+  }
 }
 
 const del = (req, res) => {

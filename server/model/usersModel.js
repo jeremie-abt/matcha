@@ -97,7 +97,7 @@ function updateUser(updateInfo, userId) {
 }
 
 function deleteUser(userId) {
-  const statement = `DELETE FROM users ` + `WHERE id = $1`
+  const statement = `DELETE FROM users WHERE id = $1`
   return client.query(statement, [userId])
 }
 
