@@ -12,6 +12,12 @@ function SideBar({ curComponent, setCurComponent }) {
     <Menu className='sidebar'>
       <Menu.List title='User options'>
         <Menu.List.Item
+          className={isActive('search')}
+          onClick={() => setCurComponent('search')}
+        >
+          search
+        </Menu.List.Item>
+        <Menu.List.Item
           className={isActive('profil')}
           onClick={() => setCurComponent('profil')}
         >

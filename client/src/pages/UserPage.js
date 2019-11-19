@@ -15,14 +15,16 @@ import MatchaModal from '../components/miscellaneous/Modal'
 import Profil from '../components/Profil/Profil'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
+import FormFilter from '../components/Form/formComponent/FormFilter'
 
 import socket from '../index'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
-  const [curComponent, setCurComponent] = useState('profil')
+  const [curComponent, setCurComponent] = useState('search')
 
   const componentsMapping = {
+    search: <FormFilter />,
     profil: <Profil userInfos={userInfos} />,
     like: <Histo type='like' />,
     seen: <Histo type='seen' />,
