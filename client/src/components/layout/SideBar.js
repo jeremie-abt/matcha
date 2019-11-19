@@ -13,7 +13,7 @@ function SideBar({ curComponent, setCurComponent }) {
       <Menu.List title='User options'>
         <Menu.List.Item
           className={isActive('search')}
-          onClick={() => setCurComponent('serach')}
+          onClick={() => setCurComponent('search')}
         >
           search
         </Menu.List.Item>
