@@ -16,14 +16,16 @@ import Profil from '../components/Profil/Profil'
 import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
+import FormFilter from '../components/Form/formComponent/FormFilter'
 
 import socket from '../index'
 
 function UserPage({ userInfos }) {
-  const [curComponent, setCurComponent] = useState('images')
   const [msg, setMsg] = useState([])
+  const [curComponent, setCurComponent] = useState('search')
 
   const componentsMapping = {
+    search: <FormFilter />,
     profil: <Profil userInfos={userInfos} />,
     images: <Images userId={userInfos.id} />,
     like: <Histo type='like' />,
