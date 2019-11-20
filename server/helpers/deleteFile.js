@@ -5,7 +5,6 @@ const deleteImage = url => {
   const path = `img/${splitUrl[splitUrl.length - 1]}`
   fs.unlink(path, err => {
     if (err) throw err
-    console.log('file was deleted')
   })
 }
 module.exports = {

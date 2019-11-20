@@ -1,9 +1,6 @@
 const add = (req, res) => {
-  if (!req.file) {
-    console.log('No file received')
-    res.send({ success: false })
-  } else {
-    console.log('file received')
+  if (!req.file) res.send({ success: false })
+  else {
     res.send({
       success: true,
       path: `http://${req.hostname}:8081/${req.file.filename}`

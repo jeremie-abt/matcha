@@ -15,7 +15,6 @@ const ImageComponent = ({ images, deleteImage, handleProfilImage }) => {
   }
 
   const MyImage = ({ url, id, profil }) => {
-    console.log(profil)
     return (
       <div>
         <Tag remove onClick={deleteImage} id={id} url={url} />
