@@ -13,6 +13,7 @@ import MatchaModal from '../components/miscellaneous/Modal'
 
 // dynamic components
 import Profil from '../components/Profil/Profil'
+import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
@@ -26,10 +27,12 @@ function UserPage({ userInfos }) {
   const componentsMapping = {
     search: <FormFilter />,
     profil: <Profil userInfos={userInfos} />,
+    images: <Images userId={userInfos.id} />,
     like: <Histo type='like' />,
     seen: <Histo type='seen' />,
     update: <UpdateForm />
   }
+
   // temporary function to try notifications
   // firing multiple times for nothing
   const prout = () => {

@@ -10,7 +10,7 @@ function Profil() {
   const userInfos = context.store.user
 
   return (
-    <Card className='card-profil'>
+    <Card className='card-fullwidth'>
       <Card.Content className='profil'>
         <Columns centered>
           <Columns.Column>

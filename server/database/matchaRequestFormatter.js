@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /*
  *   jabt : module in order to produce modular statement
  *   for SQL

@@ -1,5 +1,7 @@
 const express = require('express')
+const multer = require('multer')
 
+const uploadFile = require('./helpers/upload')
 const usersController = require('./controller/usersController')
 const tagsController = require('./controller/tagsController')
 const seenController = require('./controller/seenController')
@@ -14,11 +16,19 @@ const dataVerifToken = require('./middleware/verifyToken')
 
 const apiRouter = express.Router()
 
-// require of controller
+// set multer
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'img/')
+  },
+  filename(req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`)
+  }
+})
+const upload = multer({ storage })
 
-// faire un loader de tous mes controller
-
-// code de creation de router
+apiRouter.post('/upload', upload.single('file'), uploadFile.add)
+// multer
 
 // user routes
 apiRouter.get(
@@ -45,7 +55,7 @@ apiRouter.get(
 )
 
 // Images routes
-apiRouter.get('/:user_id/images', imagesController.show)
+apiRouter.get('/:userId/images', imagesController.index)
 apiRouter.put('/images/update', imagesController.update)
 apiRouter.post('/images/add', imagesController.add)
 apiRouter.delete('/images/delete', imagesController.del)

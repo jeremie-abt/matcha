@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const apiRouter = require('./apiRouter')
 
 app.use(cookieParser())
+app.use(express.static('./img'))
 
 app.use(
   cors({
@@ -16,7 +17,6 @@ app.use(
 )
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
 app.use('/api', apiRouter)
 
 app.listen(8081)

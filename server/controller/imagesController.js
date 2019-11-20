@@ -1,6 +1,7 @@
 const imageModel = require('../model/imagesModel')
+const deleteFile = require('../helpers/deleteFile')
 
-const show = (req, res) => {
+const index = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
   if (!userId) {
     res.status(400).send('User not found')
@@ -11,50 +12,52 @@ const show = (req, res) => {
   imageModel
     .getImagesFromUserId(userId)
     .then(response => {
-      if (!response.rows.length) {
-        res.status(404).send('No images found')
-        return
-      }
-      const { url } = response.rows[0]
-      res.json({ url })
+      const { rows } = response
+      res.json(rows)
     })
     .catch(e => {
       throw e
     })
     .finally(() => res.end())
-  // need front here
 }
 
-const update = (req, res) => {
-  // check value params
-  if (!req.body.imageId || !req.body.position) {
+const update = async (req, res) => {
+  if (!req.body.imageId || !req.body.userId) {
     res.status(400).send('A param is missing')
     res.end()
     return
   }
 
   const imgId = parseInt(req.body.imageId, 10)
-  const position = parseInt(req.body.position, 10)
-  if (position < 1 || position > 5) {
-    res.status(400).send('Minimum 1 image, max 5')
-    res.end()
-    return
-  }
-  if (!imgId || !position) {
+  const userId = parseInt(req.body.userId, 10)
+  if (!imgId) {
     res.status(400).send('Value must be positive')
     res.end()
   }
-  imageModel
-    .updateImagePosition(position, imgId)
-    .catch(err => res.status(404).send(err))
+  let currentProfilImage = null
+  await imageModel
+    .getProfilImage(userId)
     .then(result => {
-      if (result.rowCount) res.status(200).send('Image updated')
-      else {
-        throw 'Error during update'
-      }
+      if (result.rowCount) currentProfilImage = result.rows[0].id
     })
-    .catch(err => res.status(404).send(err))
-    .finally(() => res.end())
+    .catch(err => {
+      throw err
+    })
+  if (!(currentProfilImage === imgId)) {
+    imageModel
+      .updateImage(imgId, true)
+      .catch(err => res.status(404).send(err))
+      .then(result => {
+        if (result.rowCount) {
+          imageModel.updateImage(currentProfilImage, false)
+          res.status(200).send('Image updated')
+        } else {
+          throw 'Error during update'
+        }
+      })
+      .catch(err => res.status(404).send(err))
+      .finally(() => res.end())
+  }
 }
 
 const del = (req, res) => {
@@ -62,14 +65,16 @@ const del = (req, res) => {
     res.status(400).send('A param is missing')
     return
   }
-  // parseInt = atoi (just to be safe)
   const imageId = parseInt(req.body.imageId, 10)
   const userId = parseInt(req.body.userId, 10)
+  const { url } = req.body
+
   if (!imageId || !userId || imageId < 0 || userId < 0) {
     res.status(404).send('Need a valid int')
     res.end()
     return
   }
+  deleteFile.deleteImage(url)
   imageModel
     .deleteUserImage(imageId, userId)
     .catch(err => {
@@ -84,15 +89,14 @@ const del = (req, res) => {
     })
     .catch(err => res.satus(404).send(err))
     .finally(() => res.end())
-  // change render and 'then'
 }
 
 const add = async (req, res) => {
-  let { userId, position } = req.body
+  let { userId } = req.body
   const { url } = req.body
+
   userId = parseInt(userId, 10)
-  position = parseInt(position, 10)
-  if (!userId && position < 1 && position > 5 && !url) {
+  if (!userId && !url) {
     res.status(400).send('Bad params value')
     return
   }
@@ -102,20 +106,20 @@ const add = async (req, res) => {
     return
   }
   imageModel
-    .addImage(userId, position, url)
+    .addImage(userId, url)
     .catch(err => {
       throw err
     })
     .then(result => {
-      if (result.rowCount) res.status(200).send('ok')
+      if (result.rowCount) res.json(result.rows[0])
       else throw 'Error during image upload'
     })
-    .catch(err => res.status(404).sned(err))
+    .catch(err => res.status(404).send(err))
     .finally(() => res.end())
 }
 
 module.exports = {
-  show,
+  index,
   del,
   update,
   add
