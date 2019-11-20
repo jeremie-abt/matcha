@@ -75,10 +75,8 @@ function create(req, res) {
     .then(response => {
       if (response && response.rowCount === 1) {
         res.status(200).json(response.rows[0])
-        res.end()
-      } else {
+      } else if (response) {
         res.status(500).send('something went wrong !')
-        res.end()
       }
     })
     .catch(err => {
