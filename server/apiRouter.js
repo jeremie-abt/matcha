@@ -8,6 +8,7 @@ const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
 const blockedController = require('./controller/blockedController')
+const reportsController = require('./controller/reportsController')
 const notificationsController = require('./controller/notificationsController')
 const SearchController = require('./controller/SearchController')
 
@@ -75,6 +76,9 @@ apiRouter.delete('/like/delete', likesController.del)
 apiRouter.get('/blocked/:userId', blockedController.index)
 apiRouter.post('/blocked/add', blockedController.add)
 apiRouter.delete('/blocked/delete', blockedController.del)
+
+// Reports routes
+apiRouter.post('/reports/add', reportsController.add)
 
 // Auth
 apiRouter.get('/auth/confirmationMail/:token', usersController.confirmationMail)
