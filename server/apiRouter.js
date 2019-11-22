@@ -38,7 +38,6 @@ apiRouter.get(
 )
 apiRouter.post('/users', usersController.create)
 apiRouter.put('/users/:userId', usersController.update)
-// e.preventDefault()
 apiRouter.delete('/users/:userId/delete', usersController.del)
 apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
 apiRouter.post(
