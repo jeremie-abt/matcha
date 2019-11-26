@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
+import { useToasts } from 'react-toast-notifications'
 import MatchaModal from '../../miscellaneous/Modal'
 
 import Cookies from 'universal-cookie'
 
 const FormLogin = ({ fields, setUserLogged }) => {
+  const { addToast } = useToasts()
   const [msg, setMsg] = useState([])
   const buttonStyle = {
     classes: classNames({
@@ -22,7 +24,10 @@ const FormLogin = ({ fields, setUserLogged }) => {
     let keepRefToToken
 
     if (!state.username || !state.password) {
-      setMsg(['Pls fill all the input !', 'danger'])
+      addToast('Merci de remplir entièrement le formulaire', {
+        appearance: 'error',
+        autoDismiss: true
+      })
       return
     }
     axios
@@ -36,15 +41,35 @@ const FormLogin = ({ fields, setUserLogged }) => {
         })
       })
       .then(resp => {
-        if (resp) {
-          const cookies = new Cookies()
-          cookies.set('token', keepRefToToken, { path: '/' })
-          setUserLogged()
+        if (resp.status === 200) {
+          const { banned } = resp.data
+          if (!banned) {
+            const cookies = new Cookies()
+            cookies.set('token', keepRefToToken, { path: '/' })
+            setUserLogged()
+          } else {
+            addToast(
+              'Cette utilisateur a été banni suite à de nombreux report',
+              {
+                appearance: 'error',
+                autoDismiss: true
+              }
+            )
+          }
         }
       })
       .catch(e => {
-        if (e.response.status === 401) setMsg(['Wrong Data', 'danger'])
-        else setMsg(['Something went wrong', 'danger'])
+        if (e.response.status === 401) {
+          addToast('Les données ne sont pas valide', {
+            appearance: 'error',
+            autoDismiss: true
+          })
+        } else {
+          addToast('An error occured', {
+            appearance: 'error',
+            autoDismiss: true
+          })
+        }
       })
   }
 
