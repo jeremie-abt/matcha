@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
 import { useToasts } from 'react-toast-notifications'
-import MatchaModal from '../../miscellaneous/Modal'
 
 import Cookies from 'universal-cookie'
 
 const FormLogin = ({ fields, setUserLogged }) => {
   const { addToast } = useToasts()
-  const [msg, setMsg] = useState([])
   const buttonStyle = {
     classes: classNames({
       'is-primary': true,
@@ -64,6 +62,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
             appearance: 'error',
             autoDismiss: true
           })
+          return
         } else {
           addToast('An error occured', {
             appearance: 'error',
@@ -75,14 +74,10 @@ const FormLogin = ({ fields, setUserLogged }) => {
 
   return (
     <div>
-      {Object.entries(msg).length !== 0 && (
-        <MatchaModal color={msg[1]} msg={msg[0]} setMsg={setMsg}></MatchaModal>
-      )}
       <FormConstructor
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
-        msg={msg}
       />
     </div>
   )
