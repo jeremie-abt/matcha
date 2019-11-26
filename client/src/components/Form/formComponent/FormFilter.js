@@ -1,10 +1,13 @@
+/* eslint-disable eqeqeq */
 import React, { useEffect, useState, useContext } from 'react'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
+import { useToasts } from 'react-toast-notifications'
 import Cookies from 'universal-cookie'
 
 import userContext from '../../../context/UserContext'
 import ProfilSearchable from '../../../components/Profil/ProfilSearchable'
+import ReportModal from '../../miscellaneous/ReportModal'
 
 const fields = [
   {
@@ -45,8 +48,12 @@ const fields = [
 function FormFilter() {
   const context = useContext(userContext)
   const [inputs, setInputs] = useState(fields)
+  const [showModal, setShowModal] = useState(false)
+  const [reportedId, setReportedId] = useState(false)
   const [profils, setProfils] = useState([])
   const [filters, setFilters] = useState({})
+
+  const { addToast } = useToasts()
 
   function _calculateScore(a, b) {
     let aScore
@@ -138,20 +145,30 @@ function FormFilter() {
     setFilters(state)
   }
 
-  function handleBlocked(e) {
-    const blockedId = e.target.getAttribute('id')
+  function updateProfils(id) {
+    const tmpArray = profils.filter(elem => elem.id != id)
+    setProfils(tmpArray)
+  }
+
+  function handleBlocked(blockedId) {
     axios
       .post('/blocked/add', { userId: context.store.user.id, blockedId })
       .then(result => {
-        if (result.status === 200) {
-          // eslint-disable-next-line eqeqeq
-          const tmpArray = profils.filter(elem => elem.id != blockedId)
-          setProfils(tmpArray)
-        }
+        if (result.status === 200) updateProfils(blockedId)
       })
       .catch(err => {
-        console.log(err)
+        addToast('Erreur pendant le report !', {
+          appearance: 'Error',
+          autoDismiss: true
+        })
+        throw err
       })
+  }
+
+  function handleReport(e) {
+    const id = parseInt(e.target.getAttribute('id'), 10)
+    setReportedId(id)
+    setShowModal(true)
   }
 
   return (
@@ -194,10 +211,21 @@ function FormFilter() {
             <ProfilSearchable
               userInfos={elem}
               handleBlocked={handleBlocked}
+              handleReport={handleReport}
               key={index}
             />
           )
         })}
+      {showModal && (
+        <ReportModal
+          userId={context.store.user.id}
+          reportedId={reportedId}
+          blockedFunction={handleBlocked}
+          show={showModal}
+          setShowModal={setShowModal}
+          updateProfils={updateProfils}
+        />
+      )}
     </div>
   )
 }

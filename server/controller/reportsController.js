@@ -17,7 +17,7 @@ const add = (req, res) => {
       const nbReports = parseInt(query.rows[0].count, 10)
       if (nbReports === 10) {
         // prevoir mail sayin 'you've been reported ad judge harmful for the community'
-        // 'so your account will be deleted'
+        // 'so your account has been be deleted'
         usersModel.deleteUser(reportedId)
       }
     })
