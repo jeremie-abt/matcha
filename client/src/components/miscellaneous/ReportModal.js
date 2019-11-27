@@ -50,7 +50,7 @@ function ReportModal({
   ]
 
   const handleChange = e => {
-    if (!msg) setMsg(e.target.value)
+    setMsg(e.target.value)
   }
 
   const handleSubmit = () => {

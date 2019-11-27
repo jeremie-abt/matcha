@@ -15,7 +15,7 @@ const add = (req, res) => {
     .then(async () => {
       const query = await reportsModel.countReports(reportedId)
       const nbReports = parseInt(query.rows[0].count, 10)
-      if (nbReports === 10) usersModel.banUser(reportedId)
+      if (nbReports >= 10) usersModel.banUser(reportedId)
     })
     .catch(err => {
       throw err
