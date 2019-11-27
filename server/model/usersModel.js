@@ -101,6 +101,12 @@ function deleteUser(userId) {
   return client.query(statement, [userId])
 }
 
+function banUser(userId) {
+  const statement = 'UPDATE users SET banned = true WHERE id = $1'
+
+  return client.query(statement, [userId])
+}
+
 module.exports = {
   getUserFromId,
   isUserAlreadyCreated,
@@ -109,5 +115,6 @@ module.exports = {
   updateUser,
   deleteUser,
   verifyMail,
-  getUserInfo
+  getUserInfo,
+  banUser
 }

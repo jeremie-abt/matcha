@@ -52,7 +52,7 @@ const add = async (req, res) => {
       throw [500, 'Request failed']
     })
     .then(result => {
-      likesModel.deleteLike(userId, blockedId) // first check si like
+      likesModel.deleteLike(userId, blockedId)
       if (result.rowCount) res.status(200)
       else throw [400, 'Error during add']
     })
