@@ -1,10 +1,22 @@
 const client = require('../database/connection')
 
-function displayUsersLiked(userId) {
+// get all the users that liked the userId
+function getUsersWhoLiked(userId) {
+  console.log('\n\nOUi : ', userId)
   const query =
     'SELECT users.id as id' +
     ' FROM users INNER JOIN likes ON likes.user_id = users.id' +
-    ' WHERE likes.liked_id = $1;'
+    ' WHERE likes.likes_id = $1;'
+
+  return client.query(query, [userId])
+}
+
+// get all the users that the userId liked
+function getLikedUsers(userId) {
+  const query =
+    'SELECT likes.likes_id as id' +
+    ' FROM likes INNER JOIN users ON likes.user_id = users.id' +
+    ' WHERE likes.user_id = $1;'
 
   return client.query(query, [userId])
 }
@@ -25,7 +37,8 @@ function deleteLike(userId, likesId) {
 }
 
 module.exports = {
-  displayUsersLiked,
+  getUsersWhoLiked,
+  getLikedUsers,
   addUserLiked,
   deleteLike
 }

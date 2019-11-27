@@ -69,6 +69,7 @@ apiRouter.get('/seen/:userId', seenController.index)
 
 // likes routes
 apiRouter.get('/like/:userId', likesController.index)
+apiRouter.get('/like/getLiked/:userId', likesController.getLiked)
 apiRouter.post('/like/add', likesController.add)
 apiRouter.delete('/like/delete', likesController.del)
 

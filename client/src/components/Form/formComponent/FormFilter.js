@@ -53,6 +53,11 @@ function FormFilter() {
   const [profils, setProfils] = useState([])
   const [filters, setFilters] = useState({})
 
+  const [liked, setLiked] = useState([])
+  // useeffect avec un state qui cree juste un tab avec tous les id liked
+  // -> ensuite mon profile searchable get une var false ou true pour savoir s'il
+  // le type est liked
+
   const { addToast } = useToasts()
 
   function _calculateScore(a, b) {
@@ -111,6 +116,18 @@ function FormFilter() {
         console.log('le catch : ', e)
       })
   }, [])
+
+  // set the state for liked
+  useEffect(() => {
+    axios
+      .get('/like/getLiked/' + context.store.user.id)
+      .then(resp => {
+        setLiked([...resp.data])
+      })
+      .catch(e => {
+        console.log('\n\nCannot get Liked : \n\n', e)
+      })
+  })
 
   // a vir si faut faire la memoization ca me semble bizarre tout de meme
   function fetchProfils(userInfos) {
@@ -172,6 +189,23 @@ function FormFilter() {
     setShowModal(true)
   }
 
+  function handleLike(likesId) {
+    // e -> recuperer l'id de lautre mec
+    // mon current id se trouve dans le context
+
+    axios
+      .post('/like/add', {
+        userId: context.store.user.id,
+        likesId: likesId // parseInt ??
+      })
+      .then(() => {
+        console.log('Coucou petit like des familles ajoute')
+      })
+      .catch(e => {
+        console.log('Voir comment manage les erreurs !', e)
+      })
+  }
+
   return (
     <div>
       <FormConstructor
@@ -210,9 +244,11 @@ function FormFilter() {
         .map((elem, index) => {
           return (
             <ProfilSearchable
+              isLiked={liked.includes(elem.id)}
               userInfos={elem}
               handleBlocked={handleBlocked}
               handleReport={handleReport}
+              handleLike={handleLike}
               key={index}
             />
           )
