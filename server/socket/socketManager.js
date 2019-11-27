@@ -2,7 +2,7 @@
 const app = require('../server')
 
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, { pingTimeout: 6000 })
 
 server.listen(8000, () => {
   // console.log('server is listening')
@@ -16,11 +16,9 @@ io.on('connection', socket => {
   socket.on('join', id => {
     socket.join(`room${id}`)
   })
-
   socket.on('disconnect', () => {
     console.log('user disconnected')
   })
-
   socket.on('notifSent', ({ userData, userId, receiverId, type }) => {
     notificationsModel
       .createNotification(userId, receiverId, type)

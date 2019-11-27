@@ -2,8 +2,8 @@ const client = require('../database/connection')
 
 function displayBlockedUsers(userId) {
   const query =
-    'SELECT users.firstname, users.lastname, users.email, users.username' +
-    ' FROM users INNER JOIN blocked ON blocked.user_id = users.id' +
+    'SELECT users.id, users.firstname, users.lastname, users.email, users.username' +
+    ' FROM users INNER JOIN blocked ON blocked.blocked_id = users.id' +
     ' WHERE blocked.user_id = $1;'
 
   return client.query(query, [userId])

@@ -1,4 +1,5 @@
 const blockedModel = require('../model/blockedModel')
+const likesModel = require('../model/likesModel')
 const usersModel = require('../model/usersModel')
 const userHelper = require('../helpers/userHelper')
 
@@ -51,6 +52,7 @@ const add = async (req, res) => {
       throw [500, 'Request failed']
     })
     .then(result => {
+      likesModel.deleteLike(userId, blockedId)
       if (result.rowCount) res.status(200)
       else throw [400, 'Error during add']
     })
