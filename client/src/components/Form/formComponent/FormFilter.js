@@ -138,6 +138,22 @@ function FormFilter() {
     setFilters(state)
   }
 
+  function handleBlocked(e) {
+    const blockedId = e.target.getAttribute('id')
+    axios
+      .post('/blocked/add', { userId: context.store.user.id, blockedId })
+      .then(result => {
+        if (result.status === 200) {
+          // eslint-disable-next-line eqeqeq
+          const tmpArray = profils.filter(elem => elem.id != blockedId)
+          setProfils(tmpArray)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   return (
     <div>
       <FormConstructor
@@ -174,7 +190,13 @@ function FormFilter() {
         })
         .sort(_sortProfil)
         .map((elem, index) => {
-          return <ProfilSearchable userInfos={elem} key={index} />
+          return (
+            <ProfilSearchable
+              userInfos={elem}
+              handleBlocked={handleBlocked}
+              key={index}
+            />
+          )
         })}
     </div>
   )
