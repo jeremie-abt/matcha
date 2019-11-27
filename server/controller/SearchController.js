@@ -6,7 +6,7 @@ function searchProfils(req, res) {
     .searchProfils(req.query)
     .then(async resp => {
       const userId = parseInt(req.query.id, 10)
-      await blockedModel.displayBlockedUsers(userId).then(blockedResult => {
+      blockedModel.displayBlockedUsers(userId).then(blockedResult => {
         const blockedUser = blockedResult.rows.map(elem => elem.id)
         let searchResult = resp.rows
         if (blockedUser.length) {
