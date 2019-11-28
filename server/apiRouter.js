@@ -104,6 +104,7 @@ apiRouter.put('/notifications/update', notificationsController.update)
 // match
 apiRouter.get('/match/:userId', matchsController.index)
 apiRouter.post('/match', matchsController.add)
+apiRouter.delete('/match', matchsController.del)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter

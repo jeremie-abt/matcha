@@ -17,6 +17,7 @@ import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
+import Match from '../components/layout/Match'
 
 import socket from '../index'
 
@@ -39,7 +40,8 @@ function UserPage({ userInfos }) {
     images: () => <Images userId={userInfos.id} />,
     like: () => <Histo type='like' />,
     seen: () => <Histo type='seen' />,
-    update: () => <UpdateForm />
+    update: () => <UpdateForm />,
+    match: () => <Match userId={userInfos.id} />
   }
 
   // temporary function to try notificatimns

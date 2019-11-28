@@ -5,6 +5,7 @@ const likesModel = require('../model/likesModel')
 /**
  * Params en get :
  *  userId : int
+ *  return : array of array : [room_id, the one that liked the current user]
  */
 const index = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
@@ -16,12 +17,15 @@ const index = (req, res) => {
       else {
         res.json(
           resp.rows.map(elem => {
-            return elem.user1_id !== userId ? elem.user1_id : elem.user2_id
+            return elem.user1_id !== userId
+              ? [elem.room_id, elem.user1_id]
+              : [elem.room_id, elem.user2_id]
           })
         )
       }
     })
-    .catch(() => {
+    .catch(e => {
+      console.log('oui : ', e)
       res.status(500).send('Something Went Wrong')
     })
 }
@@ -48,6 +52,7 @@ const add = (req, res) => {
     })
     .then(resp => {
       if (resp) {
+        // je laisse == car rowcount est une
         if (resp.rowCount == 1) {
           res.status(200).send()
         } else {
@@ -61,7 +66,21 @@ const add = (req, res) => {
   // verify que les deux ont bien des likes
 }
 
-const del = (req, res) => {}
+const del = (req, res) => {
+  // userId && likesId
+
+  const {userId} = req.body
+  const {likesId} = req.body
+
+  matchModel
+    .delMatch(userId, likesId)
+    .then(() => {
+      res.status(200).send()
+    })
+    .catch(() => {
+      res.status(500).send('something Went Wrong')
+    })
+}
 
 module.exports = {
   index,
