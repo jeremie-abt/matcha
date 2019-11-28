@@ -115,6 +115,7 @@ class FormUpdateProfil extends React.Component {
         'is-medium': true
       })
     }
+
     return (
       <div>
         {Object.entries(this.state.msg).length !== 0 && (

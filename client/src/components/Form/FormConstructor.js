@@ -20,8 +20,9 @@ function FormConstructor(props) {
     const stateObj = {}
     props.fields.forEach(elem => {
       if (elem.type === 'checkbox') {
-        if (context.store.user[elem.name] !== undefined)
+        if (context.store.user[elem.name] !== undefined) {
           checkboxObj[elem.name] = context.store.user[elem.name]
+        }
       } else if (elem.type === 'radio') {
         stateObj[elem.name] = context.store.user[elem.name]
       } else if (elem.type === 'range') {
@@ -32,7 +33,7 @@ function FormConstructor(props) {
     })
     setCheckbox(checkboxObj)
     setState(stateObj)
-  }, [context.store.user, props.fields])
+  }, [context, context.store.user, props.fields])
 
   const _renderSlider = elem => {
     if (state[elem.name]) {
@@ -152,7 +153,10 @@ function FormConstructor(props) {
       const categorie = e.target.getAttribute('categorie')
       const key = parseInt(e.target.getAttribute('data-key'))
 
-      let newCurCheckboxObj = checkbox[categorie]
+      // this fix issue of link between form
+      // checbkox was a ref to context, so this was pushing something directly in the context
+      // [... ] structure permit to have a copied object
+      let newCurCheckboxObj = [...checkbox[categorie]]
       if (newCurCheckboxObj.includes(key)) {
         const index = newCurCheckboxObj.indexOf(key)
         newCurCheckboxObj.splice(index, 1)

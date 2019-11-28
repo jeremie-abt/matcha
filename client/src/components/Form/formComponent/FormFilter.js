@@ -58,9 +58,10 @@ function FormFilter() {
   function _calculateScore(a, b) {
     let aScore
 
-    aScore = a.score - b.score
+    if (a.score && b.score) aScore = a.score - b.score
+    else aScore = 0
     context.store.user.tags.forEach(elem => {
-      if (a.tags.includes(elem)) {
+      if (a.tags && a.tags.includes(elem)) {
         aScore += 2
       }
     })
@@ -179,7 +180,7 @@ function FormFilter() {
         handleChange={handleChange}
       />
       {profils
-        .filter((elem, index) => {
+        .filter(elem => {
           let isFalse = false
           Object.keys(filters).forEach(filter => {
             // eslint-disable-next-line default-case

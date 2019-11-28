@@ -7,21 +7,12 @@ import ProfilSearchable from './Profil/ProfilSearchable'
 
 import FormFilter from './Form/formComponent/FormFilter'
 
+// est ce que c'est appelle
+// on est d'accord ce truc n'est jamais appele wtff ??
+/*
 function Search() {
   const context = useContext(userContext)
   const [profilsComponents, setProfilsComponents] = useState([])
-
-  /*useEffect(() => {
-    axios
-      .post('/users/search', { userInfos: context.store.user })
-      .then(resp => {
-        const newProfils = []
-        resp.data.forEach((element, key) => {
-          newProfils.push(<ProfilSearchable key={key} userInfos={element} />)
-        })
-        setProfilsComponents(newProfils)
-      })
-  }, [context.store.user])*/
 
   return (
     <div>
@@ -37,3 +28,4 @@ function Search() {
 }
 
 export default Search
+*/
