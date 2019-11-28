@@ -6,11 +6,17 @@ function ProfilSearchable({
   handleBlocked,
   handleReport,
   handleLike,
+  handleUnLike,
   isLiked
 }) {
   let likedButton
+
   if (isLiked) {
-    likedButton = <Button className='liked'>Like</Button>
+    likedButton = (
+      <Button onClick={() => handleUnLike(userInfos.id)} className='liked'>
+        Like
+      </Button>
+    )
   } else {
     likedButton = <Button onClick={() => handleLike(userInfos.id)}>Like</Button>
   }

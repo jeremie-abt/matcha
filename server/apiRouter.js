@@ -54,6 +54,13 @@ apiRouter.get(
   SearchController.searchProfils
 )
 
+/**
+ * Pourquoi on est des routes type
+ * .delete(/images/delete) ???
+ * -> le but c'etait pas plutot de faire
+ * .delete(/images) ???
+ */
+
 // Images routes
 apiRouter.get('/:userId/images', imagesController.index)
 apiRouter.put('/images/update', imagesController.update)

@@ -189,6 +189,16 @@ function FormFilter() {
     setShowModal(true)
   }
 
+  function handleUnLike(likesId) {
+    axios
+      .delete('/like/delete', {
+        data: { userId: context.store.user.id, likesId: likesId }
+      })
+      .catch(e => {
+        console.log("Voici l'erreur : ", e)
+      })
+  }
+
   function handleLike(likesId) {
     // e -> recuperer l'id de lautre mec
     // mon current id se trouve dans le context
@@ -196,10 +206,7 @@ function FormFilter() {
     axios
       .post('/like/add', {
         userId: context.store.user.id,
-        likesId: likesId // parseInt ??
-      })
-      .then(() => {
-        console.log('Coucou petit like des familles ajoute')
+        likesId: likesId
       })
       .catch(e => {
         console.log('Voir comment manage les erreurs !', e)
@@ -248,6 +255,7 @@ function FormFilter() {
               userInfos={elem}
               handleBlocked={handleBlocked}
               handleReport={handleReport}
+              handleUnLike={handleUnLike}
               handleLike={handleLike}
               key={index}
             />
