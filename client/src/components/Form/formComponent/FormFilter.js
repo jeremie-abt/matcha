@@ -58,6 +58,8 @@ function FormFilter() {
   // -> ensuite mon profile searchable get une var false ou true pour savoir s'il
   // le type est liked
 
+  const [userWhoLikedMe, setUserWhoLikedMe] = useState([])
+
   const { addToast } = useToasts()
 
   function _calculateScore(a, b) {
@@ -127,9 +129,18 @@ function FormFilter() {
       .catch(e => {
         console.log('\n\nCannot get Liked : \n\n', e)
       })
-  })
+    axios
+      .get('/like/' + context.store.user.id)
+      .then(resp => {
+        setUserWhoLikedMe(resp.data.map(elem => elem.id))
+      })
+      .catch(e => {
+        console.log('a touhs mes kheiiys')
+        console.log('error : ', e)
+      })
+  }, [context.store.user.id, userWhoLikedMe])
 
-  // a vir si faut faire la memoization ca me semble bizarre tout de meme
+  // a voir si faut faire la memoization ca me semble bizarre tout de meme
   function fetchProfils(userInfos) {
     const cookies = new Cookies()
     const token = cookies.get('token')
@@ -207,6 +218,19 @@ function FormFilter() {
       .post('/like/add', {
         userId: context.store.user.id,
         likesId: likesId
+      })
+      .then(() => {
+        if (userWhoLikedMe.includes(likesId)) {
+          return axios.post('/match', {
+            user1: context.store.user.id,
+            user2: likesId
+          })
+          // return une promesse pour add un match (qui celui ci s'occupera de bien)
+          // regarder si ya un like dans les deux sens
+        }
+      })
+      .then(resp => {
+        if (resp) console.log('matc created')
       })
       .catch(e => {
         console.log('Voir comment manage les erreurs !', e)

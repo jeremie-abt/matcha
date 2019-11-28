@@ -7,6 +7,7 @@ const tagsController = require('./controller/tagsController')
 const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
+const matchsController = require('./controller/matchController')
 const blockedController = require('./controller/blockedController')
 const reportsController = require('./controller/reportsController')
 const notificationsController = require('./controller/notificationsController')
@@ -99,6 +100,10 @@ apiRouter.post('/auth/sendTokenMail', usersController.sendTokenMail)
 apiRouter.get('/notifications/:receiverId', notificationsController.index)
 apiRouter.post('/notifications/add', notificationsController.add)
 apiRouter.put('/notifications/update', notificationsController.update)
+
+// match
+apiRouter.get('/match/:userId', matchsController.index)
+apiRouter.post('/match', matchsController.add)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter
