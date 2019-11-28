@@ -8,7 +8,6 @@ function Profil() {
 
   const context = useContext(userContext)
   const userInfos = context.store.user
-
   return (
     <Card className='card-fullwidth'>
       <Card.Content className='profil'>

@@ -24,13 +24,22 @@ function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('search')
 
+  /*const componentsMapping = {
+    search: () => <FormFilter />,
+    profil: () => <Profil userInfos={userInfos} />,
+    images: () => <Images userId={userInfos.id} />,
+    like: () => <Histo type='like' />,
+    seen: () => <Histo type='seen' />,
+    update: () => <UpdateForm />
+  }*/
+
   const componentsMapping = {
-    search: <FormFilter />,
-    profil: <Profil userInfos={userInfos} />,
-    images: <Images userId={userInfos.id} />,
-    like: <Histo type='like' />,
-    seen: <Histo type='seen' />,
-    update: <UpdateForm />
+    search: () => <FormFilter />,
+    profil: () => <Profil userInfos={userInfos} />,
+    images: () => <Images userId={userInfos.id} />,
+    like: () => <Histo type='like' />,
+    seen: () => <Histo type='seen' />,
+    update: () => <UpdateForm />
   }
 
   // temporary function to try notifications
@@ -100,7 +109,7 @@ function UserPage({ userInfos }) {
               setCurComponent={setCurComponent}
             />
           </Columns.Column>
-          <Columns.Column>{componentsMapping[curComponent]}</Columns.Column>
+          <Columns.Column>{componentsMapping[curComponent]()}</Columns.Column>
         </Columns>
       </Container>
     </PageSkeleton>
