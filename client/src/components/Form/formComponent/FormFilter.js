@@ -40,7 +40,7 @@ const fields = [
     name: 'sexual_orientation',
     title: 'sexual orientation',
     type: 'radio',
-    radioValues: ['male', 'female']
+    radioValues: ['female', 'male', 'bisexual']
   }
 ]
 

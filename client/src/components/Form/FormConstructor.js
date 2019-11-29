@@ -40,7 +40,6 @@ function FormConstructor(props) {
       return (
         <Slider
           name={elem.name}
-          label={elem.label}
           range={state[elem.name]}
           onChange={handleChange}
           defaultValue={elem.defaultValue}
