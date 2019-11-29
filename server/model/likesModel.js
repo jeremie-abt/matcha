@@ -30,7 +30,8 @@ function addUserLiked(userId, likesId) {
 }
 
 function deleteLike(userId, likesId) {
-  const query = 'DELETE FROM likes WHERE user_id = $1 AND likes_id = $2'
+  const query =
+    'DELETE FROM likes WHERE (user_id = $1 AND likes_id = $2) OR (user_id = $2 AND likes_id = $1);'
 
   return client.query(query, [userId, likesId])
 }

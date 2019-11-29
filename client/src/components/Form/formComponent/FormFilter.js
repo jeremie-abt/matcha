@@ -135,10 +135,9 @@ function FormFilter() {
         setUserWhoLikedMe(resp.data.map(elem => elem.id))
       })
       .catch(e => {
-        console.log('a touhs mes kheiiys')
         console.log('error : ', e)
       })
-  }, [context.store.user.id, userWhoLikedMe])
+  }, [context.store.user.id])
 
   // a voir si faut faire la memoization ca me semble bizarre tout de meme
   function fetchProfils(userInfos) {

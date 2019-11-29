@@ -8,6 +8,7 @@ const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
 const matchsController = require('./controller/matchController')
+const messagesController = require('./controller/messagesController')
 const blockedController = require('./controller/blockedController')
 const reportsController = require('./controller/reportsController')
 const notificationsController = require('./controller/notificationsController')
@@ -105,6 +106,10 @@ apiRouter.put('/notifications/update', notificationsController.update)
 apiRouter.get('/match/:userId', matchsController.index)
 apiRouter.post('/match', matchsController.add)
 apiRouter.delete('/match', matchsController.del)
+
+// messages
+apiRouter.get('/messages/:roomId', messagesController.index)
+apiRouter.post('/messages', messagesController.add)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter

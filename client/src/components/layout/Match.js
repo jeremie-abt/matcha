@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bulma-components'
 import axios from 'axios'
 
-function Match({ userId }) {
+function Match({ userId, setCurComponent }) {
   // get all the match for the user Id
 
   const [match, setMatch] = useState([])
@@ -25,6 +25,10 @@ function Match({ userId }) {
             })
           )
         })
+        .delete('/like/delete', { data: { userId: userId, likesId: likesId } })
+        .catch(() => {
+          // comment on gere ca ??
+        })
     }
   }
 
@@ -39,26 +43,40 @@ function Match({ userId }) {
       })
   }, [userId])
 
-  return (
-    <div>
-      {match.map((elem, index) => {
-        return (
-          <div key={index}>
-            Voici un match : {elem[1]} || Bon pour le moment ca ne renvoie qu'un
-            int mais bon, je ne sais pas trop de quoi on aura besoins, car la
-            c'est juste des liens vers leurs chats respectifs donc je verrai
-            plus tard
-            <Button data-liked_id={elem[1]} onClick={e => deleteMatch(e)}>
-              Supprimer matchs
-            </Button>
-            <br />
-            <br />
-            <br />
-          </div>
-        )
-      })}
-    </div>
-  )
+  if (match) {
+    return (
+      <div>
+        {match.map((elem, index) => {
+          return (
+            <div key={index}>
+              Voici un match : {elem[1]} || Bon pour le moment ca ne renvoie
+              qu'un int mais bon, je ne sais pas trop de quoi on aura besoins,
+              car la c'est juste des liens vers leurs chats respectifs donc je
+              verrai plus tard
+              <Button data-liked_id={elem[1]} onClick={e => deleteMatch(e)}>
+                Supprimer matchs
+              </Button>
+              <Button onClick={() => setCurComponent(elem[0])}>
+                Click for chat
+              </Button>
+              <br />
+              <br />
+              <br />
+            </div>
+          )
+        })}
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        Non tu n'as pas de match, pour augmenter ta visibilite tu peux me
+        contacter par mail abtjeremie@gmail.com et me faire un virement de 2500
+        euros pour avoir la version gold-premium++, et la tu auras pleins de
+        match, a toi de voir mon pote !
+      </div>
+    )
+  }
 }
 
 export default Match

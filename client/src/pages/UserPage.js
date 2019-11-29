@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Container, Columns } from 'react-bulma-components'
 import { Button, Content } from 'react-bulma-components'
 import axios from 'axios'
@@ -18,6 +18,7 @@ import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
 import Match from '../components/layout/Match'
+import MatchChat from '../components/layout/MatchChat'
 
 import socket from '../index'
 
@@ -25,14 +26,11 @@ function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('search')
 
-  /*const componentsMapping = {
-    search: () => <FormFilter />,
-    profil: () => <Profil userInfos={userInfos} />,
-    images: () => <Images userId={userInfos.id} />,
-    like: () => <Histo type='like' />,
-    seen: () => <Histo type='seen' />,
-    update: () => <UpdateForm />
-  }*/
+  let room_id = useRef(null)
+  const setChatComponent = roomId => {
+    room_id.current = roomId
+    setCurComponent('matchChat')
+  }
 
   const componentsMapping = {
     search: () => <FormFilter />,
@@ -41,8 +39,18 @@ function UserPage({ userInfos }) {
     like: () => <Histo type='like' />,
     seen: () => <Histo type='seen' />,
     update: () => <UpdateForm />,
-    match: () => <Match userId={userInfos.id} />
+    matchMenu: () => (
+      <Match userId={userInfos.id} setCurComponent={setChatComponent} />
+    ),
+    matchChat: () => (
+      <MatchChat roomId={room_id.current} userId={userInfos.id} />
+    )
   }
+
+  // Traitement un peu special ici car il faut recup la room_id
+  // je pense quon passera par une refacto mais bon vu quon
+  // a pas trop didee encore pour le front je prefere faire un truc
+  // un peu crade qui marche en front pour le refacto apres
 
   // temporary function to try notificatimns
   // firing multiple times for nothing
@@ -57,7 +65,7 @@ function UserPage({ userInfos }) {
     })
   }
 
-  // ca ok de mettre ca la tu penses ?
+  // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
     const cookies = new Cookies()
     cookies.remove('mailToken')
