@@ -8,13 +8,19 @@ function searchProfils(userInfos) {
     and: {
       ne: {
         id: userInfos.id
-      },
-      eq: {
-        gender: userInfos.sexual_orientation
       }
     }
   })
 
+  if (userInfos.sexual_orientation !== 'bisexual') {
+    ReqFormatter.where({
+      and: {
+        eq: {
+          gender: userInfos.sexual_orientation
+        }
+      }
+    })
+  }
   const ret = ReqFormatter.generateQuery('select')
   return client.query(...ret)
 }
