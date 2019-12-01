@@ -12,7 +12,6 @@ const addMessages = (roomId, senderId, message) => {
   // surtout le created_at ??
   const statement = 'insert into messages VALUES($1, $2, $3, NOW()) RETURNING *'
 
-  console.log("roomID : ", roomId, " sendeId : ", senderId, " message : ", message);
   return client.query(statement, [roomId, message, senderId])
 }
 

@@ -20,15 +20,15 @@ import FormFilter from '../components/Form/formComponent/FormFilter'
 import Match from '../components/layout/Match'
 import MatchChat from '../components/layout/MatchChat'
 
-import socket from '../index'
+//import socket from '../index'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('search')
 
-  let room_id = useRef(null)
-  const setChatComponent = roomId => {
-    room_id.current = roomId
+  let chatMsgInfos = useRef(null)
+  const setChatComponent = msgInfos => {
+    chatMsgInfos.current = msgInfos
     setCurComponent('matchChat')
   }
 
@@ -43,7 +43,7 @@ function UserPage({ userInfos }) {
       <Match userId={userInfos.id} setCurComponent={setChatComponent} />
     ),
     matchChat: () => (
-      <MatchChat roomId={room_id.current} userId={userInfos.id} />
+      <MatchChat roomId={chatMsgInfos.current[0]} idToSend={chatMsgInfos.current[1]} />
     )
   }
 
@@ -52,9 +52,8 @@ function UserPage({ userInfos }) {
   // a pas trop didee encore pour le front je prefere faire un truc
   // un peu crade qui marche en front pour le refacto apres
 
-  // temporary function to try notificatimns
-  // firing multiple times for nothing
-  const prout = () => {
+  // je le garde comme example mais remove ce truc apres
+  /*const prout = () => {
     const type = 'view'
     socket.emit('notifSent', {
       userData: { firstname: 'David', lastname: 'Laurent' },
@@ -63,7 +62,7 @@ function UserPage({ userInfos }) {
       type,
       socketId: socket.id
     })
-  }
+  }*/
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
@@ -110,7 +109,8 @@ function UserPage({ userInfos }) {
     <PageSkeleton>
       <Title name='User Information' />
       {/* temporary button to try notifications */}
-      <button onClick={prout}>yolo</button>
+      { //<button onClick={prout}>yolo</button> 
+      }
       <Container className='user-container'>
         <Columns>
           <Columns.Column size='one-third'>

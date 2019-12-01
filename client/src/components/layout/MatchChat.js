@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import MessageBubble from '../miscellaneous/MessageBubble'
 import ChatBar from '../miscellaneous/ChatBar'
+import UserContext from '../../context/UserContext'
 
 const funSentences = [
   'ne fait pas patienter ton match ...',
@@ -13,8 +14,10 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
 }
 
-function MatchChat({ roomId, userId }) {
-  // get all the match for the user Id
+function MatchChat({ roomId, idToSend }) {
+
+  const context = useContext(UserContext)
+  const userId = context.store.user.id
 
   const [message, setMessage] = useState([])
   const [noMessages, setNoMessages] = useState(false)
@@ -27,11 +30,13 @@ function MatchChat({ roomId, userId }) {
       message: currentMessage
     })
     .then((resp) => {
+      const io = context.socketIo
+      console.log("yep : ", io)
+      io.emit('test')
       let newMessageArray = [...message]
       newMessageArray.push(resp.data)
       setMessage(newMessageArray)
     })
-    console.log("message : ", message)
   }
 
   // recuperer les messages, je me doute bien quon va changer ca

@@ -10,6 +10,7 @@ function MyProvider(props) {
   const [isAuth, setIsAuth] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
+  const [socketIo, setSocketIo] = useState(null)
 
   useEffect(() => {
     const verifyIfAuth = async () => {
@@ -35,7 +36,7 @@ function MyProvider(props) {
           if (resp.data.verified_mail === true) setIsVerified(true)
           setUser(resp.data)
           //updateUser(resp.data)
-          setSocket(resp.data.id)
+          setSocketIo(setSocket(resp.data.id))
           return resp.data
         })
         .catch(e => {
@@ -78,7 +79,8 @@ function MyProvider(props) {
             },
             updateState: updateUser,
             setUserLogged: setUserLogged,
-            HandleDisconnection: HandleDisconnection
+            HandleDisconnection: HandleDisconnection,
+            socketIo: socketIo
           }}
         >
           {props.children}

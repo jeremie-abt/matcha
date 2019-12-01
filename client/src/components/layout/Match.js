@@ -56,7 +56,7 @@ function Match({ userId, setCurComponent }) {
               <Button data-liked_id={elem[1]} onClick={e => deleteMatch(e)}>
                 Supprimer matchs
               </Button>
-              <Button onClick={() => setCurComponent(elem[0])}>
+              <Button onClick={() => setCurComponent(elem)}>
                 Click for chat
               </Button>
               <br />

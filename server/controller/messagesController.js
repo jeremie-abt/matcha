@@ -21,7 +21,6 @@ const add = async (req, res) => {
   messageModel
     .addMessages(roomId, senderId, message)
     .then((resp) => {
-      console.log("resp : ", resp.rows)
       res.json(resp.rows[0])
     })
     .catch(e => {
