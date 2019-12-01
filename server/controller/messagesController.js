@@ -18,11 +18,11 @@ const add = async (req, res) => {
   const senderId = parseInt(req.body.senderId, 10)
   const { message } = req.body
 
-  console.log('\n\nTTsalut a tous message : ', message)
   messageModel
     .addMessages(roomId, senderId, message)
-    .then(() => {
-      res.status(200).send()
+    .then((resp) => {
+      console.log("resp : ", resp.rows)
+      res.json(resp.rows[0])
     })
     .catch(e => {
       console.log('error : ', e)

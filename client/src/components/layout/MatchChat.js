@@ -26,6 +26,12 @@ function MatchChat({ roomId, userId }) {
       senderId: userId,
       message: currentMessage
     })
+    .then((resp) => {
+      let newMessageArray = [...message]
+      newMessageArray.push(resp.data)
+      setMessage(newMessageArray)
+    })
+    console.log("message : ", message)
   }
 
   // recuperer les messages, je me doute bien quon va changer ca

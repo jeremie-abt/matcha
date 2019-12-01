@@ -7,8 +7,12 @@ const getMessages = roomId => {
 }
 
 const addMessages = (roomId, senderId, message) => {
-  const statement = 'insert into messages VALUES($1, $2, $3, NOW())'
+  // je suis pas sur du returning mais comme c'est un message ca me semble
+  // un peu logque d'avoir les infos en rep pour le client
+  // surtout le created_at ??
+  const statement = 'insert into messages VALUES($1, $2, $3, NOW()) RETURNING *'
 
+  console.log("roomID : ", roomId, " sendeId : ", senderId, " message : ", message);
   return client.query(statement, [roomId, message, senderId])
 }
 

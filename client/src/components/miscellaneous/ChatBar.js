@@ -5,6 +5,12 @@ import { Form, Button } from 'react-bulma-components'
 // It's assuming that setMessage is a function returned
 // by useState
 function ChatBar({ setCurrentMessage, currentMessage, handleSubmit }) {
+  
+  function sendMessage() {
+    handleSubmit()
+    setCurrentMessage('')
+  }
+
   return (
     <div>
       <Form.Field>
@@ -16,7 +22,7 @@ function ChatBar({ setCurrentMessage, currentMessage, handleSubmit }) {
           />
         </Form.Control>
       </Form.Field>
-      <Button onClick={handleSubmit}>Envoyer</Button>
+      <Button onClick={sendMessage}>Envoyer</Button>
     </div>
   )
 }
