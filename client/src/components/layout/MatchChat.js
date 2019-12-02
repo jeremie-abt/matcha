@@ -30,13 +30,23 @@ function MatchChat({ roomId, idToSend }) {
         message: currentMessage
       })
       .then(resp => {
+        console.log('resp data : ', resp.data)
         const io = context.socketIo
-        io.emit('test', idToSend)
+        io.emit('messageSent', idToSend, resp.data)
         let newMessageArray = [...message]
         newMessageArray.push(resp.data)
         setMessage(newMessageArray)
       })
   }
+
+  useEffect(() => {
+    const socket = context.socketIo
+    socket.on('messageReceived', msgMetadata => {
+      let newMessageArray = [...message]
+      newMessageArray.push(msgMetadata)
+      setMessage(newMessageArray)
+    })
+  }, [context.socketIo, message])
 
   // recuperer les messages, je me doute bien quon va changer ca
   // mais autant faire au plus simple et rapide et faire les modifs

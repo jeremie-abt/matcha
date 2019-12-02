@@ -24,10 +24,15 @@ function Match({ userId, setCurComponent }) {
               return elem[1] != likesId
             })
           )
+          return axios.delete('/like/delete', {
+            data: { userId: userId, likesId: likesId }
+          })
         })
-        .delete('/like/delete', { data: { userId: userId, likesId: likesId } })
-        .catch(() => {
-          // comment on gere ca ??
+        .then(resp => {
+          return axios.del
+        })
+        .catch(e => {
+          console.log('there has been an error : ', e)
         })
     }
   }

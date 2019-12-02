@@ -13,7 +13,6 @@ function Histo({ type }) {
     axios
       .get('/' + type + '/' + id)
       .then(resp => {
-        console.log('resp : ', resp)
         setData(resp.data)
       })
       .catch(e => console.log('ceci est un beug : ', e))

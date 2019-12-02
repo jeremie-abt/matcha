@@ -8,19 +8,18 @@ const setSocket = id => {
   // only one emit used here cause I didn't find how to send args in connection event
   socket.emit('join', id)
 
-  socket.on('message received', msg => {
-    alert('Hop vous avez un nouveaux message : ', msg)
+  // il faudra peut etre revoir ca, tous mettre dans une fonction, ou faire une
+  // fonction pour chaques type de notif
+  // bref j'ai pas voulu trop avancer la dessus car en fonction des modifs qu'on va faire niveau front ca peut etre chaud
+  socket.on('messageReceived', msgMetadata => {
+    alert(`Hop vous avez un nouveaux message : ${msgMetadata.message}`)
   })
 
   socket.on('notifReceived', msg => {
     alert(msg)
+    // ca marche visuellement, maintenan faut le coder pour de vraie !
   })
 
-  // example que je garde sous la main, mais on s'en fou un peu
-  /*socket.on('notifReceived', msg => {
-    console.log('msg: ', msg)
-    // edit later for real notifications
-  })*/
   return socket
 }
 

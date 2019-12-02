@@ -40,15 +40,14 @@ io.on('connection', socket => {
   }) */
   // faut faire un truc pour la deco ??
 
-  socket.on('notifSent', ({ userData, userId, receiverId, type }) => {
+  socket.on('notifSent', ({ userId, receiverId, type }) => {
     notificationsModel
       .createNotification(userId, receiverId, type)
       .then(result => {
         if (result.rowCount) {
-          console.log('Notification created')
           io.to(`room${receiverId}`).emit(
             'notifReceived',
-            notifContent.msg(userData, type)
+            notifContent.msg(type)
           )
         } else {
           console.log('Error during creation')
@@ -59,10 +58,8 @@ io.on('connection', socket => {
       })
   })
 
-  socket.on('test', idToSend => {
-    console.log('coucou')
-    console.log('vous avez recu un message, quelqun veut vous sucer', idToSend)
-    socket.to(`room${idToSend}`).emit('message received', 'jena')
+  socket.on('messageSent', (idToSend, msgMetadata) => {
+    socket.to(`room${idToSend}`).emit('messageReceived', msgMetadata)
   })
 })
 

@@ -219,6 +219,11 @@ function FormFilter() {
         likesId: likesId
       })
       .then(() => {
+        context.socketIo.emit('notifSent', {
+          userId: context.store.user.id,
+          receiverId: likesId,
+          type: 'like'
+        })
         if (userWhoLikedMe.includes(likesId)) {
           return axios.post('/match', {
             user1: context.store.user.id,
@@ -229,7 +234,17 @@ function FormFilter() {
         }
       })
       .then(resp => {
-        if (resp) console.log('matc created')
+        if (resp) {
+          // send notif for match
+          context.socketIo.emit('notifSent', {
+            userId: context.store.user.id,
+            receiverId: likesId,
+            type: 'match'
+          })
+          alert(
+            'vous avez un nouveau match, comment on materialise ca pour le liker, le liked recoit une notif et le liker ??'
+          )
+        }
       })
       .catch(e => {
         console.log('Voir comment manage les erreurs !', e)

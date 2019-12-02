@@ -1,14 +1,14 @@
-const msg = ({ firstname, lastname }, type) => {
+const msg = type => {
   let content
   switch (type) {
     case 'view':
-      content = `${firstname} ${lastname} visited your profil`
+      content = `Someone visited your profil`
       break
     case 'like':
-      content = `${firstname} ${lastname} liked your profil`
+      content = `someone liked your profil`
       break
     case 'match':
-      content = `${firstname} ${lastname} and you are a MATCH!`
+      content = `You get a new Match`
       break
     default:
       content = "don't know what the fuck i'm doing"
