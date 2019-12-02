@@ -15,7 +15,6 @@ function getRandomInt(max) {
 }
 
 function MatchChat({ roomId, idToSend }) {
-
   const context = useContext(UserContext)
   const userId = context.store.user.id
 
@@ -24,19 +23,19 @@ function MatchChat({ roomId, idToSend }) {
   const [currentMessage, setCurrentMessage] = useState('')
 
   function handlePostingMessage() {
-    axios.post('/messages', {
-      roomId: roomId,
-      senderId: userId,
-      message: currentMessage
-    })
-    .then((resp) => {
-      const io = context.socketIo
-      console.log("yep : ", io)
-      io.emit('test')
-      let newMessageArray = [...message]
-      newMessageArray.push(resp.data)
-      setMessage(newMessageArray)
-    })
+    axios
+      .post('/messages', {
+        roomId: roomId,
+        senderId: userId,
+        message: currentMessage
+      })
+      .then(resp => {
+        const io = context.socketIo
+        io.emit('test', idToSend)
+        let newMessageArray = [...message]
+        newMessageArray.push(resp.data)
+        setMessage(newMessageArray)
+      })
   }
 
   // recuperer les messages, je me doute bien quon va changer ca

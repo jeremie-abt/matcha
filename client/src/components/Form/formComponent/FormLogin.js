@@ -57,7 +57,6 @@ const FormLogin = ({ fields, setUserLogged }) => {
         }
       })
       .catch(e => {
-        console.log("ta mere : ", e)
         if (e.response.status === 401) {
           addToast('Les données ne sont pas valide', {
             appearance: 'error',
