@@ -67,7 +67,8 @@ function create(req, res) {
     .isUserAlreadyCreated(userAccountInfos)
     .then(response => {
       if (response.rowCount === 1) {
-        res.status(500).send('This user already exists')
+        // 409 -> conflict
+        res.status(409).send('This user already exists')
         return false
       }
       return userModel.createUser(userAccountInfos)
