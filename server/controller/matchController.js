@@ -42,7 +42,6 @@ const add = (req, res) => {
   likesModel
     .verifyMatch(user1, user2)
     .then(resp => {
-      console.log('resp : ', typeof resp.rows[0].count)
       if (parseInt(resp.rows[0].count, 10) !== 2) {
         res.status(204).send('impossible to add match')
         return null
@@ -69,8 +68,8 @@ const add = (req, res) => {
 const del = (req, res) => {
   // userId && likesId
 
-  const {userId} = req.body
-  const {likesId} = req.body
+  const { userId } = req.body
+  const { likesId } = req.body
 
   matchModel
     .delMatch(userId, likesId)

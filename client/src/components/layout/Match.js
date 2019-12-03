@@ -21,7 +21,7 @@ function Match({ userId, setCurComponent }) {
           // mettre un toast ??
           setMatch(
             match.filter(elem => {
-              return elem[1] != likesId
+              return elem[1] !== parseInt(likesId, 10)
             })
           )
           return axios.delete('/like/delete', {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Content, Button, Media } from 'react-bulma-components'
 
 function ProfilSearchable({
@@ -9,15 +9,13 @@ function ProfilSearchable({
   handleUnLike,
   isLiked
 }) {
-  const [stateIsLiked, setStateIsLiked] = useState(isLiked)
   let likedButton
 
-  if (stateIsLiked) {
+  if (isLiked) {
     likedButton = (
       <Button
         onClick={() => {
           handleUnLike(userInfos.id)
-          setStateIsLiked(stateIsLiked ? false : true)
         }}
         className='liked'
       >
@@ -29,7 +27,6 @@ function ProfilSearchable({
       <Button
         onClick={() => {
           handleLike(userInfos.id)
-          setStateIsLiked(stateIsLiked ? false : true)
         }}
       >
         Like

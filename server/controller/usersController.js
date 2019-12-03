@@ -27,9 +27,7 @@ function show(req, res) {
 function ManageAuthentification(req, res) {
   const { username, password } = req.body
 
-  console.log('Yoyoyoyo')
   if (!username || !password) {
-    console.log('icic : ')
     res.status(500).send('somenthing went wrong')
   }
   userModel.isUserExisting(['username', username]).then(response => {
@@ -102,7 +100,6 @@ function updatePassword(req, res) {
       req.tokenInfo.id
     )
     .then(() => {
-      console.log('It has worked')
       res.status(200).send()
     })
     .catch(e => {

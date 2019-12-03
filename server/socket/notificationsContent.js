@@ -1,20 +1,25 @@
-const msg = type => {
+const manageNotif = (io, infos) => {
   let content
-  switch (type) {
+  switch (infos.type) {
     case 'view':
-      content = `Someone visited your profil`
+      // content = `Someone visited your profil`
       break
     case 'like':
-      content = `someone liked your profil`
+      io.to(`room${infos.receiverId}`).emit('likesEmit', infos.userId)
+      io.to(`room${infos.receiverId}`).emit('notifPrinting', 'like')
+      break
+    case 'unlike':
+      io.to(`room${infos.receiverId}`).emit('unlikesEmit', infos.userId)
       break
     case 'match':
-      content = `You get a new Match`
+      io.to(`room${infos.receiverId}`).emit('matchEmit', infos.userId)
+      io.to(`room${infos.receiverId}`).emit('notifPrinting', 'match')
       break
     default:
-      content = "don't know what the fuck i'm doing"
+      //content = "don't know what the fuck i'm doing"
       break
   }
   return content
 }
 
-module.exports.msg = msg
+module.exports = manageNotif

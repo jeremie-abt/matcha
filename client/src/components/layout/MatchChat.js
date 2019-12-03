@@ -30,7 +30,6 @@ function MatchChat({ roomId, idToSend }) {
         message: currentMessage
       })
       .then(resp => {
-        console.log('resp data : ', resp.data)
         const io = context.socketIo
         io.emit('messageSent', idToSend, resp.data)
         let newMessageArray = [...message]

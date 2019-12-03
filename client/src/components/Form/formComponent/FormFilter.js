@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
 import { useToasts } from 'react-toast-notifications'
@@ -58,7 +58,9 @@ function FormFilter() {
   // -> ensuite mon profile searchable get une var false ou true pour savoir s'il
   // le type est liked
 
-  const [userWhoLikedMe, setUserWhoLikedMe] = useState([])
+  // modif -> utilisation de useRef, car ce truc la ne doit jamais update ma
+  // page visuellement
+  const userWhoLikedMe = useRef([])
 
   const { addToast } = useToasts()
 
@@ -119,6 +121,20 @@ function FormFilter() {
       })
   }, [])
 
+  // enfaite c'est pour capter l'event ou on me like et mettre a jour mon state
+  // de gens qui m'ont like sinon ca fait beug les likes
+  useEffect(() => {
+    // faudra faire une refonte de ca pour avoir un event pour chaque type
+    // (like / seen etc ..), et pour l'event like du coup il faudra
+    // envoyer lid du mec qui a like comme ca pas besoins de refaire une full requette sql
+    context.socketIo.on('likesEmit', likerId => {
+      userWhoLikedMe.current.push(likerId)
+    })
+    context.socketIo.on('unlikesEmit', likerId => {
+      userWhoLikedMe.current.splice(userWhoLikedMe.current.indexOf(likerId), 1)
+    })
+  }, [context.socketIo, context.store.user.id])
+
   // set the state for liked
   useEffect(() => {
     axios
@@ -132,7 +148,7 @@ function FormFilter() {
     axios
       .get('/like/' + context.store.user.id)
       .then(resp => {
-        setUserWhoLikedMe(resp.data.map(elem => elem.id))
+        userWhoLikedMe.current = resp.data.map(elem => elem.id)
       })
       .catch(e => {
         console.log('error : ', e)
@@ -204,6 +220,16 @@ function FormFilter() {
       .delete('/like/delete', {
         data: { userId: context.store.user.id, likesId: likesId }
       })
+      .then(() => {
+        context.socketIo.emit('notifSent', {
+          userId: context.store.user.id,
+          receiverId: likesId,
+          type: 'unlike'
+        })
+        let newLikedProfils = [...liked]
+        newLikedProfils = newLikedProfils.filter(elem => elem !== likesId)
+        setLiked(newLikedProfils)
+      })
       .catch(e => {
         console.log("Voici l'erreur : ", e)
       })
@@ -218,19 +244,23 @@ function FormFilter() {
         userId: context.store.user.id,
         likesId: likesId
       })
-      .then(() => {
-        context.socketIo.emit('notifSent', {
-          userId: context.store.user.id,
-          receiverId: likesId,
-          type: 'like'
-        })
-        if (userWhoLikedMe.includes(likesId)) {
-          return axios.post('/match', {
-            user1: context.store.user.id,
-            user2: likesId
+      .then(resp => {
+        if (resp) {
+          // faire en sorte de set un state
+          let newLikedProfils = [...liked]
+          newLikedProfils.push(likesId)
+          setLiked(newLikedProfils)
+          context.socketIo.emit('notifSent', {
+            userId: context.store.user.id,
+            receiverId: likesId,
+            type: 'like'
           })
-          // return une promesse pour add un match (qui celui ci s'occupera de bien)
-          // regarder si ya un like dans les deux sens
+          if (userWhoLikedMe.current.includes(likesId)) {
+            return axios.post('/match', {
+              user1: context.store.user.id,
+              user2: likesId
+            })
+          }
         }
       })
       .then(resp => {

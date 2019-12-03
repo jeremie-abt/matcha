@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser')
 const apiRouter = require('./apiRouter')
 
 const notificationsModel = require('./model/notificationsModel')
-const notifContent = require('./socket/notificationsContent')
+const manageNotif = require('./socket/notificationsContent')
 
 app.use(cookieParser())
 app.use(express.static('./img'))
@@ -25,6 +25,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/api', apiRouter)
 
+function createNotifDb({ userId, receiverId, type }) {
+  notificationsModel.createNotification(userId, receiverId, type).catch(err => {
+    throw err
+  })
+}
+
 // require('./socket/socketManager')
 server.listen(8081)
 
@@ -34,28 +40,39 @@ io.on('connection', socket => {
   socket.on('join', id => {
     socket.join(`room${id}`)
   })
+  /*
+  socket.on('like', async infos => {
+    try {
+      await createNotifDb(infos)
+      manageNotif(socket, infos)
+    } catch {
+      // comment on gere cette erreur ???
+    }
+  })
 
-  /*  socket.on('disconnect', () => {
-    console.log('user disconnected')
-  }) */
-  // faut faire un truc pour la deco ??
-
+  socket.on('unlike', async infos => {
+    conosle
+    manageNotif(socket, infos)
+  })
+*/
   socket.on('notifSent', ({ userId, receiverId, type }) => {
-    notificationsModel
-      .createNotification(userId, receiverId, type)
-      .then(result => {
-        if (result.rowCount) {
-          io.to(`room${receiverId}`).emit(
-            'notifReceived',
-            notifContent.msg(type)
-          )
-        } else {
-          console.log('Error during creation')
-        }
-      })
-      .catch(err => {
-        throw err
-      })
+    // bon ca c'est tres clairement shlag
+    if (type === 'unlike') {
+      manageNotif(io, { userId, receiverId, type })
+    } else {
+      notificationsModel
+        .createNotification(userId, receiverId, type)
+        .then(result => {
+          if (result.rowCount) {
+            manageNotif(io, { userId, receiverId, type })
+          } else {
+            console.log('Error during creation')
+          }
+        })
+        .catch(err => {
+          throw err
+        })
+    }
   })
 
   socket.on('messageSent', (idToSend, msgMetadata) => {

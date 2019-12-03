@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import { Container, Columns } from 'react-bulma-components'
 import { Button, Content } from 'react-bulma-components'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import userContext from '../context/UserContext'
+import { useToasts } from 'react-toast-notifications'
 
 import SideBar from '../components/layout/SideBar'
 import PageSkeleton from '../components/layout/PageSkeleton'
@@ -25,6 +27,8 @@ import MatchChat from '../components/layout/MatchChat'
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('search')
+  const context = useContext(userContext)
+  const { addToast } = useToasts()
 
   let chatMsgInfos = useRef(null)
   const setChatComponent = msgInfos => {
@@ -43,26 +47,22 @@ function UserPage({ userInfos }) {
       <Match userId={userInfos.id} setCurComponent={setChatComponent} />
     ),
     matchChat: () => (
-      <MatchChat roomId={chatMsgInfos.current[0]} idToSend={chatMsgInfos.current[1]} />
+      <MatchChat
+        roomId={chatMsgInfos.current[0]}
+        idToSend={chatMsgInfos.current[1]}
+      />
     )
   }
 
-  // Traitement un peu special ici car il faut recup la room_id
-  // je pense quon passera par une refacto mais bon vu quon
-  // a pas trop didee encore pour le front je prefere faire un truc
-  // un peu crade qui marche en front pour le refacto apres
-
-  // je le garde comme example mais remove ce truc apres
-  /*const prout = () => {
-    const type = 'view'
-    socket.emit('notifSent', {
-      userData: { firstname: 'David', lastname: 'Laurent' },
-      userId: 3,
-      receiverId: 7,
-      type,
-      socketId: socket.id
+  // Voir ca demain !!!!
+  /*useEffect(() => {
+    context.socketIo.on('notifPrinting', type => {
+      addToast(`vous avez un nouveau : ${type}`, {
+        appearance: 'succes',
+        autoDismiss: true
+      })
     })
-  }*/
+  }, [addToast, context.socketIo])*/
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
@@ -109,7 +109,8 @@ function UserPage({ userInfos }) {
     <PageSkeleton>
       <Title name='User Information' />
       {/* temporary button to try notifications */}
-      { //<button onClick={prout}>yolo</button> 
+      {
+        //<button onClick={prout}>yolo</button>
       }
       <Container className='user-container'>
         <Columns>

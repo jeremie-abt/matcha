@@ -39,6 +39,7 @@ function FormConstructor(props) {
     if (state[elem.name]) {
       return (
         <Slider
+          label={elem.name}
           name={elem.name}
           range={state[elem.name]}
           onChange={handleChange}

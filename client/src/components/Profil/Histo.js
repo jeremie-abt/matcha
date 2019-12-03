@@ -9,7 +9,6 @@ function Histo({ type }) {
   const id = context.store.user.id
 
   useEffect(() => {
-    console.log('type : ', type)
     axios
       .get('/' + type + '/' + id)
       .then(resp => {

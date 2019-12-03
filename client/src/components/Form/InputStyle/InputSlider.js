@@ -8,7 +8,7 @@ const SliderWithTooltip = Slider.createSliderWithTooltip(Slider)
 
 const controlledRange = [10, 200]
 
-function DoubleRange(props) {
+function InputSlider(props) {
   return (
     <Columns.Column size={4}>
       <div className='slider'>
@@ -34,4 +34,4 @@ function DoubleRange(props) {
   )
 }
 
-export default DoubleRange
+export default InputSlider
