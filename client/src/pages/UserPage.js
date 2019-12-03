@@ -72,7 +72,7 @@ function UserPage({ userInfos }) {
     update: () => <UpdateForm />
   }
 
-  // temporary function to try notifications
+  // temporary function to try notificatimns
   // firing multiple times for nothing
   const prout = () => {
     const type = 'view'

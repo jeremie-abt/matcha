@@ -41,7 +41,7 @@ const fields = [
     name: 'sexual_orientation',
     title: 'sexual orientation',
     type: 'radio',
-    radioValues: ['male', 'female']
+    radioValues: ['female', 'male', 'bisexual']
   }
 ]
 
@@ -53,6 +53,11 @@ function FormFilter() {
   const [reportedId, setReportedId] = useState(false)
   const [profils, setProfils] = useState([])
   const [filters, setFilters] = useState({})
+
+  const [liked, setLiked] = useState([])
+  // useeffect avec un state qui cree juste un tab avec tous les id liked
+  // -> ensuite mon profile searchable get une var false ou true pour savoir s'il
+  // le type est liked
 
   const { addToast } = useToasts()
 
@@ -112,6 +117,18 @@ function FormFilter() {
         console.log('le catch : ', e)
       })
   }, [])
+
+  // set the state for liked
+  useEffect(() => {
+    axios
+      .get('/like/getLiked/' + context.store.user.id)
+      .then(resp => {
+        setLiked([...resp.data])
+      })
+      .catch(e => {
+        console.log('\n\nCannot get Liked : \n\n', e)
+      })
+  }, [context.store.user.id])
 
   // a vir si faut faire la memoization ca me semble bizarre tout de meme
   function fetchProfils(userInfos) {
@@ -181,6 +198,30 @@ function FormFilter() {
     setShowModal(true)
   }
 
+  function handleUnLike(likesId) {
+    axios
+      .delete('/like/delete', {
+        data: { userId: context.store.user.id, likesId: likesId }
+      })
+      .catch(e => {
+        console.log("Voici l'erreur : ", e)
+      })
+  }
+
+  function handleLike(likesId) {
+    // e -> recuperer l'id de lautre mec
+    // mon current id se trouve dans le context
+
+    axios
+      .post('/like/add', {
+        userId: context.store.user.id,
+        likesId
+      })
+      .catch(e => {
+        console.log('Voir comment manage les erreurs !', e)
+      })
+  }
+
   return (
     <div>
       <FormConstructor
@@ -219,9 +260,12 @@ function FormFilter() {
         .map((elem, index) => {
           return (
             <ProfilSearchable
+              isLiked={liked.includes(elem.id)}
               userInfos={elem}
               handleBlocked={handleBlocked}
               handleReport={handleReport}
+              handleUnLike={handleUnLike}
+              handleLike={handleLike}
               key={index}
             />
           )
