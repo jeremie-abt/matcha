@@ -54,6 +54,13 @@ apiRouter.get(
   SearchController.searchProfils
 )
 
+/**
+ * Pourquoi on est des routes type
+ * .delete(/images/delete) ???
+ * -> le but c'etait pas plutot de faire
+ * .delete(/images) ???
+ */
+
 // Images routes
 apiRouter.get('/:userId/images', imagesController.index)
 apiRouter.put('/images/update', imagesController.update)
@@ -69,6 +76,7 @@ apiRouter.get('/seen/:userId', seenController.index)
 
 // likes routes
 apiRouter.get('/like/:userId', likesController.index)
+apiRouter.get('/like/getLiked/:userId', likesController.getLiked)
 apiRouter.post('/like/add', likesController.add)
 apiRouter.delete('/like/delete', likesController.del)
 

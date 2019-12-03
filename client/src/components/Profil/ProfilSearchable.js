@@ -1,7 +1,25 @@
 import React from 'react'
 import { Content, Button, Media } from 'react-bulma-components'
 
-function ProfilSearchable({ userInfos, handleBlocked, handleReport }) {
+function ProfilSearchable({
+  userInfos,
+  handleBlocked,
+  handleReport,
+  handleLike,
+  handleUnLike,
+  isLiked
+}) {
+  let likedButton
+
+  if (isLiked) {
+    likedButton = (
+      <Button onClick={() => handleUnLike(userInfos.id)} className='liked'>
+        Like
+      </Button>
+    )
+  } else {
+    likedButton = <Button onClick={() => handleLike(userInfos.id)}>Like</Button>
+  }
   return (
     <Media>
       <Content>
@@ -10,7 +28,7 @@ function ProfilSearchable({ userInfos, handleBlocked, handleReport }) {
           <p>{userInfos.username}</p>
         </div>
         <div>
-          <Button>Like</Button>
+          {likedButton}
           <Button onClick={() => handleBlocked(userInfos.id)}>block</Button>
           <Button id={userInfos.id} onClick={handleReport}>
             report
