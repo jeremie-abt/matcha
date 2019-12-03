@@ -7,13 +7,13 @@ const getGeoloc = userId => {
   return client.query(query, [userId])
 }
 
-const addGeoloc = (userId, long, lat) => {
+const addGeoloc = (userId, lat, long) => {
   const query =
     'INSERT INTO geoloc' +
     '(user_id, lat, long, created_at)' +
     'VALUES ($1, $2, $3, now())'
 
-  return client.query(query, [userId, long, lat])
+  return client.query(query, [userId, lat, long])
 }
 
 const deleteGeoloc = userId => {

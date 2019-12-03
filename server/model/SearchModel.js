@@ -1,22 +1,13 @@
 const client = require('../database/connection')
-const reqFormatter = require('../database/matchaRequestFormatter')
 
 function searchProfils(userInfos) {
-  const ReqFormatter = new reqFormatter()
-  ReqFormatter.table = 'users'
-  ReqFormatter.where({
-    and: {
-      ne: {
-        id: userInfos.id
-      },
-      eq: {
-        gender: userInfos.sexual_orientation
-      }
-    }
-  })
+  const query =
+    'SELECT DISTINCT ON(users.id) users.*, geoloc.lat, geoloc.long FROM users ' +
+    'INNER JOIN geoloc ON users.id = geoloc.user_id ' +
+    ' WHERE users.gender = $1 ' +
+    'ORDER BY users.id, geoloc.created_at DESC '
 
-  const ret = ReqFormatter.generateQuery('select')
-  return client.query(...ret)
+  return client.query(query, [userInfos.sexual_orientation])
 }
 
 module.exports = {

@@ -17,7 +17,8 @@ function searchProfils(req, res) {
         res.json(searchResult)
       })
     })
-    .catch(() => {
+    .catch(err => {
+      console.log(err)
       res.status(500).send('something went wrong')
     })
 }

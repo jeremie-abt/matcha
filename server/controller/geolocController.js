@@ -23,11 +23,11 @@ const show = async (req, res) => {
 }
 
 const add = (req, res) => {
-  const { long, lat } = req.body
+  const { lat, long } = req.body
   const userId = parseInt(req.body.userId, 10)
 
   geolocModel
-    .addGeoloc(userId, long, lat)
+    .addGeoloc(userId, lat, long)
     .catch(err => {
       throw err
     })

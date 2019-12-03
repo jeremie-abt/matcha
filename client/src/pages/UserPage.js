@@ -51,6 +51,12 @@ function UserPage({ userInfos }) {
     if (!error && lat && long) {
       axios
         .post('/geoloc/add', { userId: userInfos.id, lat, long })
+        .then(result => {
+          if (result.status === 200) {
+            userInfos.lat = lat
+            userInfos.long = long
+          }
+        })
         .catch(err => {
           throw err
         })
