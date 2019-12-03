@@ -2,7 +2,6 @@ const client = require('../database/connection')
 
 // get all the users that liked the userId
 function getUsersWhoLiked(userId) {
-  console.log('\n\nOUi : ', userId)
   const query =
     'SELECT users.id as id' +
     ' FROM users INNER JOIN likes ON likes.user_id = users.id' +

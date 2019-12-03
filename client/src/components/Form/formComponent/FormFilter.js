@@ -127,7 +127,7 @@ function FormFilter() {
       .catch(e => {
         console.log('\n\nCannot get Liked : \n\n', e)
       })
-  })
+  }, [context.store.user.id])
 
   // a vir si faut faire la memoization ca me semble bizarre tout de meme
   function fetchProfils(userInfos) {
@@ -206,7 +206,7 @@ function FormFilter() {
     axios
       .post('/like/add', {
         userId: context.store.user.id,
-        likesId: likesId
+        likesId
       })
       .catch(e => {
         console.log('Voir comment manage les erreurs !', e)
