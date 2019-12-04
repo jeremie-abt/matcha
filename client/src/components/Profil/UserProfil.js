@@ -12,9 +12,11 @@ import {
 const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
   return (
     <Card>
-      <div className='slide'>
-        {images.length ? <Slide images={images} /> : <span />}
-      </div>
+      {images.length > 0 && (
+        <div className='slide'>
+          <Slide images={images} />
+        </div>
+      )}
       <Card.Content>
         <Media>
           <Media.Item renderAs='figure' position='left'>
@@ -36,13 +38,15 @@ const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
         <Content>
           {userInfos.bio}
           <a href='#2'>#responsive</a>
-          <br />
-          <time dateTime='2016-1-1'>11:09 PM - 1 Jan 2016</time>
+          <div className='profil-last-online' dateTime='2016-1-1'>
+            11:09 PM - 1 Jan 2016
+            {/* need last time online or online */}
+          </div>
         </Content>
         <Tag.Group>
           {tags.map(tag => {
             return (
-              <Tag key={tag.id} color='primary'>
+              <Tag size='medium' key={tag.id} color='primary'>
                 #{tag.name}
               </Tag>
             )
