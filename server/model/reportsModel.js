@@ -1,7 +1,7 @@
 const client = require('../database/connection')
 
 function countReports(userId) {
-  const query = 'SELECT COUNT(*) FROM REPORTS WHERE reported_id = $1'
+  const query = 'SELECT COUNT(*) FROM reports WHERE reported_id = $1'
 
   return client.query(query, [userId])
 }

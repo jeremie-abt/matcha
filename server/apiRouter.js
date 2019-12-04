@@ -10,6 +10,7 @@ const likesController = require('./controller/likesController')
 const matchsController = require('./controller/matchController')
 const messagesController = require('./controller/messagesController')
 const blockedController = require('./controller/blockedController')
+const geolocController = require('./controller/geolocController')
 const reportsController = require('./controller/reportsController')
 const notificationsController = require('./controller/notificationsController')
 const SearchController = require('./controller/SearchController')
@@ -110,6 +111,9 @@ apiRouter.delete('/match', matchsController.del)
 // messages
 apiRouter.get('/messages/:roomId', messagesController.index)
 apiRouter.post('/messages', messagesController.add)
+// Geoloc routes
+apiRouter.get('/geoloc/:userId', geolocController.show)
+apiRouter.post('/geoloc/add', geolocController.add)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter

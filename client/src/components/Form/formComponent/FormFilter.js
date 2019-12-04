@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
 import { useToasts } from 'react-toast-notifications'
+import { getDistance } from 'geolib'
 import Cookies from 'universal-cookie'
 
 import userContext from '../../../context/UserContext'
@@ -168,7 +169,15 @@ function FormFilter() {
         }
       })
       .then(resp => {
-        setProfils(resp.data)
+        const profils = resp.data
+        profils.forEach(profil => {
+          const distance = getDistance(
+            { lat: userInfos.lat, lng: userInfos.long },
+            { lat: profil.lat, lng: profil.long }
+          )
+          profil.localisation = distance / 1000
+        })
+        setProfils(profils)
       })
       .catch(e => {
         console.log('aie ', e)
@@ -245,7 +254,7 @@ function FormFilter() {
     axios
       .post('/like/add', {
         userId: context.store.user.id,
-        likesId: likesId
+        likesId
       })
       .then(resp => {
         if (resp) {
