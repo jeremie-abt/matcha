@@ -13,6 +13,7 @@ const funSentences = [
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
 }
+const sentence = funSentences[getRandomInt(funSentences.length - 1)]
 
 function MatchChat({ roomId, idToSend }) {
   const context = useContext(UserContext)
@@ -63,9 +64,7 @@ function MatchChat({ roomId, idToSend }) {
   // recuperer tous les 100 dernieres messages ?
   return (
     <div>
-      {noMessages && (
-        <div>{funSentences[getRandomInt(funSentences.length - 1)]}</div>
-      )}
+      {noMessages && <div>{sentence}</div>}
       {message.length > 0 &&
         message.map((elem, index) => {
           return (
@@ -79,7 +78,10 @@ function MatchChat({ roomId, idToSend }) {
       <ChatBar
         setCurrentMessage={setCurrentMessage}
         currentMessage={currentMessage}
-        handleSubmit={handlePostingMessage}
+        handleSubmit={e => {
+          if (!noMessages) setNoMessages(true)
+          handlePostingMessage(e)
+        }}
       />
     </div>
   )

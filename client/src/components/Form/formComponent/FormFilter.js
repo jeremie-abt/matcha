@@ -46,13 +46,13 @@ const fields = [
 
 // function used for the sorting
 function FormFilter() {
+  const { addToast } = useToasts()
   const context = useContext(userContext)
   const [inputs, setInputs] = useState(fields)
   const [showModal, setShowModal] = useState(false)
   const [reportedId, setReportedId] = useState(false)
   const [profils, setProfils] = useState([])
   const [filters, setFilters] = useState({})
-
   const [liked, setLiked] = useState([])
   // useeffect avec un state qui cree juste un tab avec tous les id liked
   // -> ensuite mon profile searchable get une var false ou true pour savoir s'il
@@ -61,8 +61,6 @@ function FormFilter() {
   // modif -> utilisation de useRef, car ce truc la ne doit jamais update ma
   // page visuellement
   const userWhoLikedMe = useRef([])
-
-  const { addToast } = useToasts()
 
   function _calculateScore(a, b) {
     let aScore
@@ -131,7 +129,10 @@ function FormFilter() {
       userWhoLikedMe.current.push(likerId)
     })
     context.socketIo.on('unlikesEmit', likerId => {
-      userWhoLikedMe.current.splice(userWhoLikedMe.current.indexOf(likerId), 1)
+      let index = userWhoLikedMe.current.indexOf(likerId)
+      if (index != -1) {
+        userWhoLikedMe.current.splice(index, 1)
+      }
     })
   }, [context.socketIo, context.store.user.id])
 
@@ -170,7 +171,6 @@ function FormFilter() {
         setProfils(resp.data)
       })
       .catch(e => {
-        // utiliser les messages
         console.log('aie ', e)
       })
   }
@@ -233,6 +233,9 @@ function FormFilter() {
       .catch(e => {
         console.log("Voici l'erreur : ", e)
       })
+    // unmatch, en vraie
+    // attention ca peut poser des problemes quand tu clic sur un chat !
+    axios.delete('/match', { data: { userId: context.store.user.id, likesId } })
   }
 
   function handleLike(likesId) {
@@ -271,9 +274,10 @@ function FormFilter() {
             receiverId: likesId,
             type: 'match'
           })
-          alert(
-            'vous avez un nouveau match, comment on materialise ca pour le liker, le liked recoit une notif et le liker ??'
-          )
+          addToast(`c'est un match, peut etre que tu vas trouver l'amour !`, {
+            appearance: 'success',
+            autoDismiss: true
+          })
         }
       })
       .catch(e => {

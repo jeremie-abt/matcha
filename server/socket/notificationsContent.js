@@ -1,5 +1,7 @@
 const manageNotif = (io, infos) => {
   let content
+
+  console.log(`voici le type : ${infos.type}`)
   switch (infos.type) {
     case 'view':
       // content = `Someone visited your profil`
@@ -15,6 +17,8 @@ const manageNotif = (io, infos) => {
       io.to(`room${infos.receiverId}`).emit('matchEmit', infos.userId)
       io.to(`room${infos.receiverId}`).emit('notifPrinting', 'match')
       break
+    case 'unmatch':
+      io.to(`room${infos.receiverId}`).emit('unmatchEmit', infos.userId)
     default:
       //content = "don't know what the fuck i'm doing"
       break

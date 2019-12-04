@@ -57,7 +57,7 @@ io.on('connection', socket => {
 */
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
-    if (type === 'unlike') {
+    if (type === 'unlike' || type === 'unmatch') {
       manageNotif(io, { userId, receiverId, type })
     } else {
       notificationsModel

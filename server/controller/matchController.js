@@ -47,6 +47,10 @@ const add = (req, res) => {
         return null
       }
       // je fais pas de verif si ya deja un match car en there ce ne peut pas arriver
+      return matchModel.isExistingMatch(user1, user2)
+    })
+    .then(resp => {
+      if (resp.rowCount != 0) return null
       return matchModel.addMatch(user1, user2)
     })
     .then(resp => {

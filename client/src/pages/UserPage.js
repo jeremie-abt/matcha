@@ -55,14 +55,14 @@ function UserPage({ userInfos }) {
   }
 
   // Voir ca demain !!!!
-  /*useEffect(() => {
+  useEffect(() => {
     context.socketIo.on('notifPrinting', type => {
-      addToast(`vous avez un nouveau : ${type}`, {
-        appearance: 'succes',
+      addToast(`vous avez un nouveau ${type}`, {
+        appearance: 'success',
         autoDismiss: true
       })
     })
-  }, [addToast, context.socketIo])*/
+  }, [addToast, context.socketIo])
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {

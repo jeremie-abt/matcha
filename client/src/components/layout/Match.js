@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import userContext from '../../context/UserContext'
 import { Button } from 'react-bulma-components'
 import axios from 'axios'
 
@@ -6,6 +7,7 @@ function Match({ userId, setCurComponent }) {
   // get all the match for the user Id
 
   const [match, setMatch] = useState([])
+  const context = useContext(userContext)
 
   // c'est ok de mettre ca la comme ca ???
   function deleteMatch(e) {
@@ -15,6 +17,12 @@ function Match({ userId, setCurComponent }) {
       )
     ) {
       const likesId = e.target.getAttribute('data-liked_id')
+      console.log('liikes Id : ', likesId)
+      context.socketIo.emit('notifSent', {
+        userId: context.store.user.id,
+        receiverId: likesId,
+        type: 'unmatch'
+      })
       axios
         .delete('/match', { data: { userId: userId, likesId: likesId } })
         .then(() => {
@@ -48,7 +56,15 @@ function Match({ userId, setCurComponent }) {
       })
   }, [userId])
 
+  useEffect(() => {
+    context.socketIo.on('unmatchEmit', id => {
+      const newMatch = match.filter(elem => elem[1] !== id)
+      setMatch(newMatch)
+    })
+  }, [context.socketIo, match])
+
   if (match) {
+    console.log('match : ', match)
     return (
       <div>
         {match.map((elem, index) => {

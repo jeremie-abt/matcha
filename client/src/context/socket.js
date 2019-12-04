@@ -15,14 +15,14 @@ const setSocket = id => {
     alert(`Hop vous avez un nouveaux message : ${msgMetadata.message}`)
   })*/
 
-  socket.on('matchEmit', () => {
-    alert('match : fait un toaster')
-  })
+  /*  socket.on('matchEmit', () => {
 
-  socket.on('likesEmit', () => {
+  })*/
+
+  /*  socket.on('likesEmit', () => {
     alert('like : fait un toster boloss')
     // ca marche visuellement, maintenan faut le coder pour de vraie !
-  })
+  })*/
 
   return socket
 }
