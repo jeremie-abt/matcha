@@ -20,7 +20,7 @@ function MatchChat({ roomId, idToSend }) {
   const userId = context.store.user.id
 
   const [message, setMessage] = useState([])
-  const [noMessages, setNoMessages] = useState(false)
+  const [noMessages, setNoMessages] = useState(true)
   const [currentMessage, setCurrentMessage] = useState('')
 
   function handlePostingMessage() {
@@ -37,6 +37,9 @@ function MatchChat({ roomId, idToSend }) {
         newMessageArray.push(resp.data)
         setMessage(newMessageArray)
       })
+    if (noMessages === true) {
+      setNoMessages(false)
+    }
   }
 
   useEffect(() => {
@@ -55,8 +58,7 @@ function MatchChat({ roomId, idToSend }) {
     axios.get('/messages/' + roomId).then(resp => {
       if (resp.data.length > 0) {
         setMessage(resp.data)
-      } else {
-        setNoMessages(true)
+        setNoMessages(false)
       }
     })
     // on fait quoi pour la gestion derreurs ??
@@ -79,7 +81,6 @@ function MatchChat({ roomId, idToSend }) {
         setCurrentMessage={setCurrentMessage}
         currentMessage={currentMessage}
         handleSubmit={e => {
-          if (!noMessages) setNoMessages(true)
           handlePostingMessage(e)
         }}
       />
