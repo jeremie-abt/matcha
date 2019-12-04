@@ -8,6 +8,7 @@ const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
 const blockedController = require('./controller/blockedController')
+const geolocController = require('./controller/geolocController')
 const reportsController = require('./controller/reportsController')
 const notificationsController = require('./controller/notificationsController')
 const SearchController = require('./controller/SearchController')
@@ -99,6 +100,10 @@ apiRouter.post('/auth/sendTokenMail', usersController.sendTokenMail)
 apiRouter.get('/notifications/:receiverId', notificationsController.index)
 apiRouter.post('/notifications/add', notificationsController.add)
 apiRouter.put('/notifications/update', notificationsController.update)
+
+// Geoloc routes
+apiRouter.get('/geoloc/:userId', geolocController.show)
+apiRouter.post('/geoloc/add', geolocController.add)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter
