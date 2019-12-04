@@ -35,7 +35,7 @@ apiRouter.post('/upload', upload.single('file'), uploadFile.add)
 
 // user routes
 apiRouter.get(
-  '/users/getUser',
+  '/users/getUser/:userId?',
   dataVerifToken.verifyToken,
   usersController.show
 )

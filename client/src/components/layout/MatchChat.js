@@ -3,6 +3,8 @@ import axios from 'axios'
 import MessageBubble from '../miscellaneous/MessageBubble'
 import ChatBar from '../miscellaneous/ChatBar'
 import UserContext from '../../context/UserContext'
+import Cookies from 'universal-cookie'
+import { useToasts } from 'react-toast-notifications'
 
 const funSentences = [
   'ne fait pas patienter ton match ...',
@@ -16,12 +18,33 @@ function getRandomInt(max) {
 const sentence = funSentences[getRandomInt(funSentences.length - 1)]
 
 function MatchChat({ roomId, idToSend }) {
+  const { addToast } = useToasts()
   const context = useContext(UserContext)
   const userId = context.store.user.id
 
   const [message, setMessage] = useState([])
   const [noMessages, setNoMessages] = useState(false)
   const [currentMessage, setCurrentMessage] = useState('')
+  const [chattingWithUser, setChattingWithUser] = useState({})
+
+  useEffect(() => {
+    const cookies = new Cookies()
+    axios
+      .get('/users/getUser/' + idToSend, {
+        headers: {
+          authorization: 'Bearer ' + cookies.get('token')
+        }
+      })
+      .then(resp => {
+        setChattingWithUser(resp.data)
+      })
+      .catch(e => {
+        addToast('Impossible to load messages', {
+          appearance: 'error',
+          autoDismiss: true
+        })
+      })
+  }, [addToast, idToSend])
 
   function handlePostingMessage() {
     axios
@@ -34,7 +57,7 @@ function MatchChat({ roomId, idToSend }) {
         const io = context.socketIo
         io.emit('messageSent', idToSend, resp.data)
         let newMessageArray = [...message]
-        newMessageArray.push(resp.data)
+        newMessageArray.unshift(resp.data)
         setMessage(newMessageArray)
       })
   }
@@ -70,7 +93,12 @@ function MatchChat({ roomId, idToSend }) {
           return (
             <MessageBubble
               MessageInfo={elem}
-              currentUserId={userId}
+              userInfos={
+                elem.sender_id === context.store.user.id
+                  ? context.store.user
+                  : chattingWithUser
+              }
+              isCurrentUser={elem.sender_id === context.store.user.id}
               key={index}
             />
           )
