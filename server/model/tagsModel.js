@@ -41,8 +41,16 @@ const idFromName = names => {
   return client.query(...query.generateQuery('select'))
 }
 
+const getUserTags = userId => {
+  const query =
+    'select tags.* from users, tags where users.id = $1 AND tags.id = ANY(users.tags)'
+
+  return client.query(query, [userId])
+}
+
 module.exports = {
   showAllTags,
   displayTag,
-  idFromName
+  idFromName,
+  getUserTags
 }

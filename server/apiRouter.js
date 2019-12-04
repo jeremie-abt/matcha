@@ -70,6 +70,7 @@ apiRouter.delete('/images/delete', imagesController.del)
 // Tags routes
 apiRouter.get('/tags/all', tagsController.index)
 apiRouter.get('/tags/:tagId', tagsController.show)
+apiRouter.get('/tags/user/:userId', tagsController.userTags)
 
 // Seen routes
 apiRouter.get('/seen/:userId', seenController.index)

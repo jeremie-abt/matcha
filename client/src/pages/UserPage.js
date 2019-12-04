@@ -24,15 +24,6 @@ function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('search')
 
-  /*const componentsMapping = {
-    search: () => <FormFilter />,
-    profil: () => <Profil userInfos={userInfos} />,
-    images: () => <Images userId={userInfos.id} />,
-    like: () => <Histo type='like' />,
-    seen: () => <Histo type='seen' />,
-    update: () => <UpdateForm />
-  }*/
-
   const componentsMapping = {
     search: () => <FormFilter />,
     profil: () => <Profil userInfos={userInfos} />,

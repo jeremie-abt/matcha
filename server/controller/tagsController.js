@@ -24,6 +24,22 @@ function show(req, res) {
     .finally(() => res.end())
 }
 
+const userTags = (req, res) => {
+  const userId = parseInt(req.params.userId, 10)
+
+  tagsModel
+    .getUserTags(userId)
+    .then(result => {
+      if (!result.rows.length) {
+        throw [204, 'No tags']
+      }
+      res.json(result.rows)
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
 const index = (req, res) => {
   tagsModel
     .showAllTags()
@@ -43,8 +59,8 @@ const index = (req, res) => {
     .finally(() => res.end())
 }
 
-
 module.exports = {
   show,
-  index
+  index,
+  userTags
 }
