@@ -1,9 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import { Container, Columns } from 'react-bulma-components'
 import { Button, Content } from 'react-bulma-components'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import userContext from '../context/UserContext'
+import { useToasts } from 'react-toast-notifications'
 
 import SideBar from '../components/layout/SideBar'
 import PageSkeleton from '../components/layout/PageSkeleton'
@@ -15,9 +16,11 @@ import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
+import Match from '../components/layout/Match'
+import MatchChat from '../components/layout/MatchChat'
 import { usePosition } from 'use-position'
 
-import socket from '../index'
+//import socket from '../index'
 
 // Si on veut mettre le projet sur github, ne pas oublier de mettre
 // cete key dans un ./env
@@ -26,6 +29,15 @@ const API_KEY = 'AIzaSyBYgNn_j0zaXwMWFAdAGP3VMDKxcPRcNjI'
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
   const [curComponent, setCurComponent] = useState('search')
+  const context = useContext(userContext)
+  const { addToast } = useToasts()
+
+  let chatMsgInfos = useRef(null)
+  const setChatComponent = msgInfos => {
+    chatMsgInfos.current = msgInfos
+    setCurComponent('matchChat')
+  }
+
   const { latitude, longitude, error } = usePosition()
 
   useEffect(() => {
@@ -45,6 +57,7 @@ function UserPage({ userInfos }) {
           throw err
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latitude, longitude, error])
 
   const geolocData = (lat, long, error = null) => {
@@ -69,23 +82,29 @@ function UserPage({ userInfos }) {
     images: () => <Images userId={userInfos.id} />,
     like: () => <Histo type='like' />,
     seen: () => <Histo type='seen' />,
-    update: () => <UpdateForm />
+    update: () => <UpdateForm />,
+    matchMenu: () => (
+      <Match userId={userInfos.id} setCurComponent={setChatComponent} />
+    ),
+    matchChat: () => (
+      <MatchChat
+        roomId={chatMsgInfos.current[0]}
+        idToSend={chatMsgInfos.current[1]}
+      />
+    )
   }
 
-  // temporary function to try notificatimns
-  // firing multiple times for nothing
-  const prout = () => {
-    const type = 'view'
-    socket.emit('notifSent', {
-      userData: { firstname: 'David', lastname: 'Laurent' },
-      userId: 3,
-      receiverId: 7,
-      type,
-      socketId: socket.id
+  // Voir ca demain !!!!
+  useEffect(() => {
+    context.socketIo.on('notifPrinting', type => {
+      addToast(`vous avez un nouveau ${type}`, {
+        appearance: 'success',
+        autoDismiss: true
+      })
     })
-  }
+  }, [addToast, context.socketIo])
 
-  // ca ok de mettre ca la tu penses ?
+  // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
     const cookies = new Cookies()
     cookies.remove('mailToken')
@@ -130,7 +149,9 @@ function UserPage({ userInfos }) {
     <PageSkeleton>
       <Title name='User Information' />
       {/* temporary button to try notifications */}
-      <button onClick={prout}>yolo</button>
+      {
+        //<button onClick={prout}>yolo</button>
+      }
       <Container className='user-container'>
         <Columns>
           <Columns.Column size='one-third'>

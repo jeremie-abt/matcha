@@ -48,7 +48,10 @@ function SideBar({ curComponent, setCurComponent }) {
         >
           Like
         </Menu.List.Item>
-        <Menu.List.Item onClick={() => alert('not implemented')}>
+        <Menu.List.Item
+          className={isActive('matchMenu')}
+          onClick={() => setCurComponent('matchMenu')}
+        >
           Matchs
         </Menu.List.Item>
       </Menu.List>

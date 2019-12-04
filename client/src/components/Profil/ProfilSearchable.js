@@ -13,12 +13,25 @@ function ProfilSearchable({
 
   if (isLiked) {
     likedButton = (
-      <Button onClick={() => handleUnLike(userInfos.id)} className='liked'>
+      <Button
+        onClick={() => {
+          handleUnLike(userInfos.id)
+        }}
+        className='liked'
+      >
         Like
       </Button>
     )
   } else {
-    likedButton = <Button onClick={() => handleLike(userInfos.id)}>Like</Button>
+    likedButton = (
+      <Button
+        onClick={() => {
+          handleLike(userInfos.id)
+        }}
+      >
+        Like
+      </Button>
+    )
   }
   return (
     <Media>

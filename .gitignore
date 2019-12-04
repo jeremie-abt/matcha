@@ -1,4 +1,5 @@
 .DS_store
+match_table.txt
 node_modules
 api/database/connection.js
 .vscode

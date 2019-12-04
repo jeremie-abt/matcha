@@ -7,6 +7,8 @@ const tagsController = require('./controller/tagsController')
 const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
 const likesController = require('./controller/likesController')
+const matchsController = require('./controller/matchController')
+const messagesController = require('./controller/messagesController')
 const blockedController = require('./controller/blockedController')
 const geolocController = require('./controller/geolocController')
 const reportsController = require('./controller/reportsController')
@@ -101,6 +103,14 @@ apiRouter.get('/notifications/:receiverId', notificationsController.index)
 apiRouter.post('/notifications/add', notificationsController.add)
 apiRouter.put('/notifications/update', notificationsController.update)
 
+// match
+apiRouter.get('/match/:userId', matchsController.index)
+apiRouter.post('/match', matchsController.add)
+apiRouter.delete('/match', matchsController.del)
+
+// messages
+apiRouter.get('/messages/:roomId', messagesController.index)
+apiRouter.post('/messages', messagesController.add)
 // Geoloc routes
 apiRouter.get('/geoloc/:userId', geolocController.show)
 apiRouter.post('/geoloc/add', geolocController.add)

@@ -100,7 +100,6 @@ function updatePassword(req, res) {
       req.tokenInfo.id
     )
     .then(() => {
-      console.log('It has worked')
       res.status(200).send()
     })
     .catch(e => {

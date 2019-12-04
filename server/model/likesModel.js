@@ -30,14 +30,24 @@ function addUserLiked(userId, likesId) {
 }
 
 function deleteLike(userId, likesId) {
-  const query = 'DELETE FROM likes WHERE user_id = $1 AND likes_id = $2'
+  const query = 'DELETE FROM likes WHERE (user_id = $1 AND likes_id = $2);'
 
   return client.query(query, [userId, likesId])
+}
+
+// verify if user1 has liked user2 and user 2 has liked user 1
+// this function is made to be called before inserting a match
+function verifyMatch(user1, user2) {
+  const query =
+    'SELECT COUNT(*) FROM likes where (user_id=$1 AND likes_id=$2) or (user_id = $2 AND likes_id=$1)'
+  // if this return a count equal to 2, then there is a match
+  return client.query(query, [user1, user2])
 }
 
 module.exports = {
   getUsersWhoLiked,
   getLikedUsers,
   addUserLiked,
-  deleteLike
+  deleteLike,
+  verifyMatch
 }
