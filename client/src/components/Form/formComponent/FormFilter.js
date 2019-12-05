@@ -7,7 +7,7 @@ import { getDistance } from 'geolib'
 import Cookies from 'universal-cookie'
 
 import userContext from '../../../context/UserContext'
-import ProfilSearchable from '../../../components/Profil/ProfilSearchable'
+import Profil from '../../../components/Profil/Profil'
 import ReportModal from '../../miscellaneous/ReportModal'
 
 const fields = [
@@ -220,6 +220,7 @@ function FormFilter() {
 
   function handleReport(e) {
     const id = parseInt(e.target.getAttribute('id'), 10)
+    handleBlocked(id)
     setReportedId(id)
     setShowModal(true)
   }
@@ -331,13 +332,11 @@ function FormFilter() {
         .sort(_sortProfil)
         .map((elem, index) => {
           return (
-            <ProfilSearchable
+            <Profil
+              fullProfil={false}
               isLiked={liked.includes(elem.id)}
               userInfos={elem}
-              handleBlocked={handleBlocked}
-              handleReport={handleReport}
-              handleUnLike={handleUnLike}
-              handleLike={handleLike}
+              event={{ handleBlocked, handleReport, handleUnLike, handleLike }}
               key={index}
             />
           )

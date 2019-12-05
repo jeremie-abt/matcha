@@ -2,9 +2,15 @@
 import React, { useEffect, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import UserProfil from './UserProfil'
+import SearchableProfil from './ProfilSearchable'
 import axios from 'axios'
 
-function Profil({ userInfos, ...other }) {
+function Profil({
+  userInfos,
+  event = null,
+  fullProfil = true,
+  isLiked = null
+}) {
   const { addToast } = useToasts()
   const [images, setImages] = useState([])
   const [tags, setTags] = useState([])
@@ -18,11 +24,6 @@ function Profil({ userInfos, ...other }) {
           const pImage = result.data.find(elem => elem.is_profil)
           pImage ? setProfilPicture(pImage) : setProfilPicture(result.data[0])
           setImages(result.data)
-        } else {
-          addToast('Aucune images disponibles', {
-            appearance: 'info',
-            autoDismiss: true
-          })
         }
       })
       .catch(() => {
@@ -31,21 +32,18 @@ function Profil({ userInfos, ...other }) {
   }, [addToast, userInfos])
 
   useEffect(() => {
-    axios
-      .get(`/tags/user/${userInfos.id}`)
-      .then(result => {
-        if (result.data.length) setTags(result.data)
-        else {
-          addToast('Auncun Tags sélectionnés', {
-            appearance: 'info',
-            autoDismiss: true
-          })
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        errorDuringLoading()
-      })
+    if (userInfos.tags.length)
+      axios
+        .get(`/tags/user/${userInfos.id}`)
+        .then(result => {
+          if (result.data.length) {
+            setTags(result.data)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          errorDuringLoading()
+        })
   }, [addToast, userInfos])
 
   function errorDuringLoading() {
@@ -57,15 +55,26 @@ function Profil({ userInfos, ...other }) {
       }
     )
   }
-  return (
-    <UserProfil
-      userInfos={userInfos}
-      profilPicture={profilPicture}
-      images={images}
-      tags={tags}
-      {...other}
-    />
-  )
+  if (fullProfil) {
+    return (
+      <UserProfil
+        userInfos={userInfos}
+        profilPicture={profilPicture}
+        images={images}
+        tags={tags}
+      />
+    )
+  } else {
+    return (
+      <SearchableProfil
+        isLiked={isLiked}
+        userInfos={userInfos}
+        profilPicture={profilPicture}
+        event={event}
+        tags={tags}
+      />
+    )
+  }
 }
 
 export default Profil

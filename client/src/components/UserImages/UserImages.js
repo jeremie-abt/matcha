@@ -75,7 +75,7 @@ const UserImages = ({ userId }) => {
     return (
       <div>
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
-          <input type='file' onChange={handleChange} />
+          <input type='file' accept='image/*' onChange={handleChange} />
           <input type='submit' value='Upload Photo' />
         </form>
       </div>

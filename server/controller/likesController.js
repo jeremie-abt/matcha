@@ -41,7 +41,6 @@ const index = async (req, res) => {
 // Its almost the same function as index, but in reverse
 // and it return only id => see if any changement is needed here !
 const getLiked = async (req, res) => {
-  console.log("salut a tous les copains !")
   const userId = parseInt(req.params.userId, 10)
 
   const isExisting = userId

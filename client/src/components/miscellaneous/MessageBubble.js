@@ -10,7 +10,7 @@ function MessageBubble({ MessageInfo, userInfos, isCurrentUser }) {
   return (
     <Columns.Column
       size={'two-thirds'}
-      offset={isCurrentUser ? 'one-quarter' : ''}
+      offset={isCurrentUser ? 'one-quarter' : null}
     >
       <Box className={className}>
         <h1>{userInfos.username} </h1>

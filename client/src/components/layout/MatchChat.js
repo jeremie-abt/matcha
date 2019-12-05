@@ -71,6 +71,7 @@ function MatchChat({ roomId, idToSend }) {
       let newMessageArray = [...message]
       newMessageArray.unshift(msgMetadata)
       setMessage(newMessageArray)
+      setNoMessages(false)
     })
   }, [context.socketIo, message])
 
@@ -109,7 +110,7 @@ function MatchChat({ roomId, idToSend }) {
         setCurrentMessage={setCurrentMessage}
         currentMessage={currentMessage}
         handleSubmit={e => {
-          handlePostingMessage(e)
+          if (currentMessage.trim() !== '') handlePostingMessage(e)
         }}
       />
     </div>

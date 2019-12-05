@@ -16,7 +16,7 @@ const index = (req, res) => {
   matchModel
     .getMatch(userId)
     .then(resp => {
-      if (resp.rowCount === 0) res.status(204).send()
+      if (resp.rowCount === 0) return
       else {
         let matchIds = resp.rows.map(elem => {
           /*return elem.user1_id !== userId
@@ -35,8 +35,13 @@ const index = (req, res) => {
       }
     })
     .then(resp => {
-      const ret = resp.map((elem, index) => [elem.rows[0], roomIds[index]])
-      res.json(ret)
+      if (resp) {
+        const ret = resp.map((elem, index) => [elem.rows[0], roomIds[index]])
+        res.json(ret)
+      } else {
+        res.json([])
+      }
+      return
     })
     .catch(e => {
       console.log('oui : ', e)

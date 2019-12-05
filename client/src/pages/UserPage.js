@@ -150,7 +150,7 @@ function UserPage({ userInfos }) {
       <Title name='User Information' />
       <Container className='user-container'>
         <Columns>
-          <Columns.Column size='one-third'>
+          <Columns.Column size={2}>
             <SideBar
               curComponent={curComponent}
               setCurComponent={setCurComponent}
