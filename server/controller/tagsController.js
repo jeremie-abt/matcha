@@ -26,7 +26,6 @@ function show(req, res) {
 
 const userTags = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
-
   tagsModel
     .getUserTags(userId)
     .then(result => {
@@ -38,6 +37,7 @@ const userTags = (req, res) => {
     .catch(err => {
       throw err
     })
+    .finally(() => res.end())
 }
 
 const index = (req, res) => {

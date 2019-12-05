@@ -215,7 +215,7 @@ function FormConstructor(props) {
           }
         })}
       </Columns>
-      <Button onClick={handleSubmit}> Valider </Button>
+      <Button onClick={handleSubmit}> Rechercher </Button>
       <Content size={'small'} style={{ color: 'red' }}>
         {props.msg &&
           props.msg.length === 2 &&
