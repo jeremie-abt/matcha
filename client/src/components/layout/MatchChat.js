@@ -69,7 +69,7 @@ function MatchChat({ roomId, idToSend }) {
     const socket = context.socketIo
     socket.on('messageReceived', msgMetadata => {
       let newMessageArray = [...message]
-      newMessageArray.push(msgMetadata)
+      newMessageArray.unshift(msgMetadata)
       setMessage(newMessageArray)
     })
   }, [context.socketIo, message])
