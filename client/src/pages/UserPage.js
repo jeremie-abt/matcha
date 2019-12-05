@@ -148,10 +148,6 @@ function UserPage({ userInfos }) {
   return (
     <PageSkeleton>
       <Title name='User Information' />
-      {/* temporary button to try notifications */}
-      {
-        //<button onClick={prout}>yolo</button>
-      }
       <Container className='user-container'>
         <Columns>
           <Columns.Column size='one-third'>

@@ -1,24 +1,28 @@
 import React from 'react'
-import { Content, Button, Media } from 'react-bulma-components'
+import {
+  Content,
+  Card,
+  Button,
+  Media,
+  Image,
+  Tag,
+  Heading
+} from 'react-bulma-components'
 
-function ProfilSearchable({
-  userInfos,
-  handleBlocked,
-  handleReport,
-  handleLike,
-  handleUnLike,
-  isLiked
-}) {
+function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked }) {
   let likedButton
 
   if (isLiked) {
     likedButton = (
       <Button
         onClick={() => {
-          handleUnLike(userInfos.id)
+          event.handleUnLike(userInfos.id)
         }}
         className='liked'
       >
+        <span className='icon'>
+          <i class='fas fa-heart'></i>
+        </span>
         Like
       </Button>
     )
@@ -26,29 +30,67 @@ function ProfilSearchable({
     likedButton = (
       <Button
         onClick={() => {
-          handleLike(userInfos.id)
+          event.handleLike(userInfos.id)
         }}
       >
+        <span className='icon myicon'>
+          <i className='far fa-heart'></i>
+        </span>
         Like
       </Button>
     )
   }
   return (
-    <Media>
-      <Content>
-        <div>
-          <h4>username</h4>
-          <p>{userInfos.username}</p>
-        </div>
-        <div>
-          {likedButton}
-          <Button onClick={() => handleBlocked(userInfos.id)}>block</Button>
-          <Button id={userInfos.id} onClick={handleReport}>
-            report
-          </Button>
-        </div>
-      </Content>
-    </Media>
+    <Card className='profil-card'>
+      <Card.Content className='profil-content'>
+        <Media>
+          <Media.Item renderAs='figure' position='left'>
+            {profilPicture ? (
+              <Image size={64} alt='64x64' src={profilPicture.url} />
+            ) : (
+              <span />
+            )}
+          </Media.Item>
+          <Media.Item>
+            <Heading size={4}>
+              {userInfos.firstname} {userInfos.lastname}
+            </Heading>
+            <Heading subtitle size={6}>
+              @{userInfos.username}
+            </Heading>
+          </Media.Item>
+          <Media.Item>
+            <Button.Group position='right'>
+              {likedButton}
+              <Button color='primary'>Voir le profil</Button>
+            </Button.Group>
+          </Media.Item>
+        </Media>
+        <Tag.Group>
+          {tags.map(tag => {
+            return (
+              <Tag key={tag.id} className='primary-light'>
+                #{tag.name}
+              </Tag>
+            )
+          })}
+        </Tag.Group>
+        <Content className='profil-last-online is-size-7'>
+          <div className='profil-last-line' dateTime='2016-1-1'>
+            Last connection: 11:09 PM - 1 Jan 2016
+            {/* need last time online or online */}
+            <Button
+              id={userInfos.id}
+              size='small'
+              text={true}
+              onClick={event.handleReport}
+            >
+              report
+            </Button>
+          </div>
+        </Content>
+      </Card.Content>
+    </Card>
   )
 }
 

@@ -46,7 +46,7 @@ const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
         <Tag.Group>
           {tags.map(tag => {
             return (
-              <Tag size='medium' key={tag.id} color='primary'>
+              <Tag key={tag.id} className='primary-light'>
                 #{tag.name}
               </Tag>
             )
