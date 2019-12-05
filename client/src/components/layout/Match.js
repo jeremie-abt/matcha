@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react'
 import userContext from '../../context/UserContext'
-import { Button } from 'react-bulma-components'
 import axios from 'axios'
+import { Button } from 'react-bulma-components'
+//import Profil from '../../components/Profil/Profil'
 
 function Match({ userId, setCurComponent }) {
   // get all the match for the user Id
@@ -29,16 +30,16 @@ function Match({ userId, setCurComponent }) {
           // mettre un toast ??
           setMatch(
             match.filter(elem => {
-              return elem[1] !== parseInt(likesId, 10)
+              return elem[0].id !== parseInt(likesId, 10)
             })
           )
           return axios.delete('/like/delete', {
             data: { userId: userId, likesId: likesId }
           })
         })
-        .then(resp => {
-          return axios.del
-        })
+        /*.then(resp => {
+          
+        })*/
         .catch(e => {
           console.log('there has been an error : ', e)
         })
@@ -64,20 +65,30 @@ function Match({ userId, setCurComponent }) {
   }, [context.socketIo, match])
 
   if (match) {
-    console.log('match : ', match)
     return (
       <div>
         {match.map((elem, index) => {
           return (
+           /* <Profil
+              roomId={elem[1]}
+              Matched={elem[0].id}
+              isMatch={true}
+              setCurComponent={setCurComponent}
+              deleteMatch={deleteMatch}
+              userInfos={elem[0]}
+              key={index}
+            />
+*/
             <div key={index}>
-              Voici un match : {elem[1]} || Bon pour le moment ca ne renvoie
+              Voici un match : {elem[0].id} || Bon pour le moment ca ne renvoie
               qu'un int mais bon, je ne sais pas trop de quoi on aura besoins,
               car la c'est juste des liens vers leurs chats respectifs donc je
               verrai plus tard
-              <Button data-liked_id={elem[1]} onClick={e => deleteMatch(e)}>
+              <Button data-liked_id={elem[0].id} onClick={e => deleteMatch(e)}>
                 Supprimer matchs
               </Button>
-              <Button onClick={() => setCurComponent(elem)}>
+              
+              <Button onClick={() => setCurComponent([elem[1], elem[0].id])}>
                 Click for chat
               </Button>
               <br />

@@ -9,10 +9,7 @@ import { useToasts } from 'react-toast-notifications'
 import SideBar from '../components/layout/SideBar'
 import PageSkeleton from '../components/layout/PageSkeleton'
 import Title from '../components/layout/PageTitle'
-
-// component
 import MatchaModal from '../components/miscellaneous/Modal'
-
 // dynamic components
 import Profil from '../components/Profil/Profil'
 import Images from '../components/UserImages/UserImages'
@@ -21,8 +18,13 @@ import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
 import Match from '../components/layout/Match'
 import MatchChat from '../components/layout/MatchChat'
+import { usePosition } from 'use-position'
 
 //import socket from '../index'
+
+// Si on veut mettre le projet sur github, ne pas oublier de mettre
+// cete key dans un ./env
+const API_KEY = 'AIzaSyBYgNn_j0zaXwMWFAdAGP3VMDKxcPRcNjI'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
@@ -36,6 +38,44 @@ function UserPage({ userInfos }) {
     setCurComponent('matchChat')
   }
 
+  const { latitude, longitude, error } = usePosition()
+
+  useEffect(() => {
+    if (latitude && longitude && !error) {
+      geolocData(latitude, longitude, error)
+    }
+    if (error) {
+      axios
+        .post(
+          `https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`
+        )
+        .then(result => {
+          const { lat, lng } = result.data.location
+          geolocData(lat, lng)
+        })
+        .catch(err => {
+          throw err
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latitude, longitude, error])
+
+  const geolocData = (lat, long, error = null) => {
+    if (!error && lat && long) {
+      axios
+        .post('/geoloc/add', { userId: userInfos.id, lat, long })
+        .then(() => {
+          userInfos.lat = lat
+          userInfos.long = long
+        })
+        .catch(err => {
+          throw err
+        })
+    }
+    if (error) {
+    }
+  }
+
   const componentsMapping = {
     search: () => <FormFilter />,
     profil: () => <Profil userInfos={userInfos} />,
@@ -46,12 +86,12 @@ function UserPage({ userInfos }) {
     matchMenu: () => (
       <Match userId={userInfos.id} setCurComponent={setChatComponent} />
     ),
-    matchChat: () => (
-      <MatchChat
+    matchChat: () => {
+      return <MatchChat
         roomId={chatMsgInfos.current[0]}
         idToSend={chatMsgInfos.current[1]}
       />
-    )
+    }
   }
 
   // Voir ca demain !!!!
@@ -108,10 +148,6 @@ function UserPage({ userInfos }) {
   return (
     <PageSkeleton>
       <Title name='User Information' />
-      {/* temporary button to try notifications */}
-      {
-        //<button onClick={prout}>yolo</button>
-      }
       <Container className='user-container'>
         <Columns>
           <Columns.Column size='one-third'>

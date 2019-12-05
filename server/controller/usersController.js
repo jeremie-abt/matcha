@@ -7,7 +7,6 @@ const { sendMail } = require('../helpers/MailSender')
 const { createToken } = require('../helpers/ManageToken')
 
 function show(req, res) {
-  console.log('on rentre  s')
   let id = req.params.userId ? req.params.userId : req.tokenInfo.id
   userModel
     .getUserInfo({ id })
