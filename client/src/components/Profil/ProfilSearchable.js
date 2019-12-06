@@ -1,4 +1,5 @@
 import React from 'react'
+import Moment from 'react-moment'
 import {
   Content,
   Card,
@@ -9,7 +10,7 @@ import {
   Heading
 } from 'react-bulma-components'
 
-function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked }) {
+function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onlineInfos }) {
   let likedButton
 
   if (isLiked) {
@@ -77,7 +78,10 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked }) {
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
-            Last connection: 11:09 PM - 1 Jan 2016
+          {
+            (onlineInfos.is_online && <p>online</p>)
+            || <Moment fromNow date={onlineInfos.lastConnection} />
+          }
             {/* need last time online or online */}
             <Button
               id={userInfos.id}

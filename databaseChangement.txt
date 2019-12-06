@@ -1,0 +1,4 @@
+create table online(
+user_id integer NOT NULL UNIQUE,
+last_connection timestamp with time zone,
+is_online boolean);
