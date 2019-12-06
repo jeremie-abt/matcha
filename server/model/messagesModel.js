@@ -2,7 +2,7 @@ const client = require('../database/connection')
 
 const getMessages = roomId => {
   const statement =
-    'select * from messages where room_id = $1 order by send_at DESC'
+    'select * from messages where room_id = $1 order by send_at ASC'
 
   return client.query(statement, [roomId])
 }

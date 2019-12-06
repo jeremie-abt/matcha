@@ -57,7 +57,7 @@ function MatchChat({ roomId, idToSend }) {
         const io = context.socketIo
         io.emit('messageSent', idToSend, resp.data)
         let newMessageArray = [...message]
-        newMessageArray.unshift(resp.data)
+        newMessageArray.push(resp.data)
         setMessage(newMessageArray)
       })
     if (noMessages === true) {
@@ -69,7 +69,7 @@ function MatchChat({ roomId, idToSend }) {
     const socket = context.socketIo
     socket.on('messageReceived', msgMetadata => {
       let newMessageArray = [...message]
-      newMessageArray.unshift(msgMetadata)
+      newMessageArray.push(msgMetadata)
       setMessage(newMessageArray)
       setNoMessages(false)
     })
