@@ -10,9 +10,9 @@ function searchProfils(userInfos) {
   
   let query =
     'SELECT DISTINCT ON(users.id) users.*, geoloc.lat, geoloc.long FROM users ' +
-    'INNER JOIN geoloc ON users.id = geoloc.user_id '
+    `INNER JOIN geoloc ON users.id = geoloc.user_id WHERE users.id != ${userInfos.id} `
   if (userInfos.sexual_orientation !== 'bisexual'){
-    query += ' WHERE users.gender = $1 ' 
+    query += ' AND users.gender = $1 ' 
   }
   query += ' ORDER BY users.id, geoloc.created_at DESC '
   if (userInfos.sexual_orientation !== 'bisexual')
