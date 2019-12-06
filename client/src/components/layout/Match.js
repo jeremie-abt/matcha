@@ -18,7 +18,6 @@ function Match({ userId, setCurComponent }) {
       )
     ) {
       const likesId = e.target.getAttribute('data-liked_id')
-      console.log('liikes Id : ', likesId)
       context.socketIo.emit('notifSent', {
         userId: context.store.user.id,
         receiverId: likesId,
@@ -69,7 +68,7 @@ function Match({ userId, setCurComponent }) {
       <div>
         {match.map((elem, index) => {
           return (
-           /* <Profil
+            /* <Profil
               roomId={elem[1]}
               Matched={elem[0].id}
               isMatch={true}
@@ -87,7 +86,6 @@ function Match({ userId, setCurComponent }) {
               <Button data-liked_id={elem[0].id} onClick={e => deleteMatch(e)}>
                 Supprimer matchs
               </Button>
-              
               <Button onClick={() => setCurComponent([elem[1], elem[0].id])}>
                 Click for chat
               </Button>

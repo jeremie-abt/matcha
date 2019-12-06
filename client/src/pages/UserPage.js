@@ -28,7 +28,7 @@ const API_KEY = 'AIzaSyBYgNn_j0zaXwMWFAdAGP3VMDKxcPRcNjI'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
-  const [curComponent, setCurComponent] = useState('matchMenu')
+  const [curComponent, setCurComponent] = useState('search')
   const context = useContext(userContext)
   const { addToast } = useToasts()
 
