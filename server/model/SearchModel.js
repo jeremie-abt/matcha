@@ -1,13 +1,23 @@
 const client = require('../database/connection')
 
-function searchProfils(userInfos) {
-  const query =
-    'SELECT DISTINCT ON(users.id) users.*, geoloc.lat, geoloc.long FROM users ' +
-    'INNER JOIN geoloc ON users.id = geoloc.user_id ' +
-    ' WHERE users.gender = $1 ' +
-    'ORDER BY users.id, geoloc.created_at DESC '
 
-  return client.query(query, [userInfos.sexual_orientation])
+// peut-etre tenter de faire une requette un peu plus complexe pour 
+// preselectionner un peu mieux ?
+// de base ce quon voulait faire c'est selectionner assez large
+// pour avoir pleins de profils et faire le tri en front
+// le truc c'est que la on ne selectionne pas large on selectionne tous
+function searchProfils(userInfos) {
+  
+  let query =
+    'SELECT DISTINCT ON(users.id) users.*, geoloc.lat, geoloc.long FROM users ' +
+    'INNER JOIN geoloc ON users.id = geoloc.user_id '
+  if (userInfos.sexual_orientation !== 'bisexual'){
+    query += ' WHERE users.gender = $1 ' 
+  }
+  query += ' ORDER BY users.id, geoloc.created_at DESC '
+  if (userInfos.sexual_orientation !== 'bisexual')
+    return client.query(query, [userInfos.sexual_orientation])
+  return client.query(query)
 }
 
 module.exports = {

@@ -35,6 +35,12 @@ const fields = [
     name: 'confirmpassword',
     label: 'confirmpassword',
     type: 'password'
+  },
+  {
+    name: 'gender',
+    title: 'gender',
+    type: 'radio',
+    radioValues: ['female', 'male']
   }
 ]
 
@@ -64,13 +70,15 @@ function FormCreateProfil() {
   const [msg, setMsg] = useState([])
 
   const handleSubmit = ({ state }) => {
+    console.log("state : ", state)
     const dataObligated = [
       'firstname',
       'lastname',
       'username',
       'email',
       'password',
-      'confirmpassword'
+      'confirmpassword',
+      'gender'
     ]
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {
