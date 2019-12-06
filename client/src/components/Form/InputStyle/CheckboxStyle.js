@@ -1,11 +1,15 @@
 import React from 'react'
-import { Form } from 'react-bulma-components'
+import { Tag } from 'react-bulma-components'
 
 function CheckboxStyle({ handleChange, label, ...props }) {
   return (
-    <Form.Checkbox onChange={handleChange} {...props}>
-      {label}
-    </Form.Checkbox>
+    <Tag
+      className={'search-tags' + (props.checked ? ' is-checked' : '')}
+      onClick={handleChange}
+      {...props}
+    >
+      #{label}
+    </Tag>
   )
 }
 

@@ -21,7 +21,7 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked }) {
         className='liked'
       >
         <span className='icon'>
-          <i class='fas fa-heart'></i>
+          <i className='fas fa-heart'></i>
         </span>
         Like
       </Button>

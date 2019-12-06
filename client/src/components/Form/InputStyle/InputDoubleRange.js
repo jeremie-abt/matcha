@@ -12,7 +12,7 @@ function DoubleRange(props) {
     <Columns.Column size={4}>
       <div className='slider'>
         <Content>
-          <p>{props.label}</p>
+          <p className='is-capitalized subtitle is-size-6'>{props.label}</p>
           <RangeWithTooltip
             min={props.min}
             max={props.max}
