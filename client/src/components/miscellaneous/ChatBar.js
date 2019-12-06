@@ -1,18 +1,17 @@
 import React from 'react'
-import { Form, Button } from 'react-bulma-components'
+import { Form, Button, Columns } from 'react-bulma-components'
 
 // function made for hook
 // It's assuming that setMessage is a function returned
 // by useState
 function ChatBar({ setCurrentMessage, currentMessage, handleSubmit }) {
-  
   function sendMessage() {
     handleSubmit()
     setCurrentMessage('')
   }
 
   return (
-    <div>
+    <div style={{ marginTop: '20px' }}>
       <Form.Field>
         <Form.Label>MESSAGE</Form.Label>
         <Form.Control>
@@ -22,7 +21,9 @@ function ChatBar({ setCurrentMessage, currentMessage, handleSubmit }) {
           />
         </Form.Control>
       </Form.Field>
-      <Button onClick={sendMessage}>Envoyer</Button>
+      <Button onClick={sendMessage} className='is-primary'>
+        Envoyer
+      </Button>
     </div>
   )
 }

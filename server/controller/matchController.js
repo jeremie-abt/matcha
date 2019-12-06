@@ -1,5 +1,6 @@
 const matchModel = require('../model/matchModel')
 const likesModel = require('../model/likesModel')
+const usersModel = require('../model/usersModel')
 
 // get all the match of someone
 /**
@@ -10,19 +11,37 @@ const likesModel = require('../model/likesModel')
 const index = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
 
+  let roomIds = []
+
   matchModel
     .getMatch(userId)
     .then(resp => {
-      if (resp.rowCount === 0) res.status(204).send()
+      if (resp.rowCount === 0) return
       else {
-        res.json(
-          resp.rows.map(elem => {
-            return elem.user1_id !== userId
-              ? [elem.room_id, elem.user1_id]
-              : [elem.room_id, elem.user2_id]
-          })
-        )
+        let matchIds = resp.rows.map(elem => {
+          /*return elem.user1_id !== userId
+            ? [elem.room_id, elem.user1_id]
+            : [elem.room_id, elem.user2_id]*/
+          return elem.user1_id !== userId
+            ? elem.user1_id
+            : elem.user2_id
+        })
+        roomIds = resp.rows.map(elem => elem.room_id)
+        const promises = []
+          matchIds.forEach(elem => {
+          promises.push(usersModel.getUserInfo({ id: elem }))
+        })
+        return Promise.all(promises)
       }
+    })
+    .then(resp => {
+      if (resp) {
+        const ret = resp.map((elem, index) => [elem.rows[0], roomIds[index]])
+        res.json(ret)
+      } else {
+        res.json([])
+      }
+      return
     })
     .catch(e => {
       console.log('oui : ', e)

@@ -6,7 +6,8 @@ import {
   Image,
   Heading,
   Content,
-  Tag
+  Tag,
+  Button
 } from 'react-bulma-components'
 
 const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
