@@ -10,7 +10,7 @@ import {
   Button
 } from 'react-bulma-components'
 
-const UserProfil = ({ userInfos, profilPicture, images, tags, ...other }) => {
+const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
   return (
     <Card>
       {images.length > 0 && (
@@ -53,22 +53,6 @@ const UserProfil = ({ userInfos, profilPicture, images, tags, ...other }) => {
             )
           })}
         </Tag.Group>
-        {
-          other.isMatch &&
-          <Button
-            onClick={() => other.setCurComponent([other.roomId, userInfos.id])}>
-              Bouton chat
-          </Button>
-        }
-        {
-          other.isMatch && 
-          <Button
-            data-liked_id={userInfos.id}
-            onClick={e => other.deleteMatch(e)}>
-            Supprimer matchs
-          </Button>
-        }
-
       </Card.Content>
     </Card>
   )
