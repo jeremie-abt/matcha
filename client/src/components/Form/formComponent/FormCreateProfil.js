@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
-
 import MatchaModal from '../../miscellaneous/Modal'
 
 const fields = [
@@ -35,6 +34,12 @@ const fields = [
     name: 'confirmpassword',
     label: 'confirmpassword',
     type: 'password'
+  },
+  {
+    name: 'gender',
+    title: 'gender',
+    type: 'radio',
+    radioValues: ['female', 'male']
   }
 ]
 
@@ -70,7 +75,8 @@ function FormCreateProfil() {
       'username',
       'email',
       'password',
-      'confirmpassword'
+      'confirmpassword',
+      'gender'
     ]
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {

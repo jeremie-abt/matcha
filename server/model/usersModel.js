@@ -42,16 +42,18 @@ function isUserExisting(requiredData) {
 }
 
 function createUser(userInfo) {
+  console.log("userInfos : ", userInfo)
   const statement =
     `INSERT INTO users` +
-    `(firstname, lastname, password, username, email) ` +
-    `VALUES ($1, $2, $3, $4, $5) RETURNING id`
+    `(firstname, lastname, password, username, email, gender) ` +
+    `VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
   const values = [
     userInfo.firstname,
     userInfo.lastname,
     userInfo.password,
     userInfo.username,
-    userInfo.email
+    userInfo.email,
+    userInfo.gender
   ]
   return client.query(statement, values)
 }
