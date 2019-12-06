@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
-
 import MatchaModal from '../../miscellaneous/Modal'
 
 const fields = [
@@ -70,7 +69,6 @@ function FormCreateProfil() {
   const [msg, setMsg] = useState([])
 
   const handleSubmit = ({ state }) => {
-    console.log("state : ", state)
     const dataObligated = [
       'firstname',
       'lastname',
