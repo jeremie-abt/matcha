@@ -13,7 +13,9 @@ function InputSlider(props) {
     <Columns.Column size={4}>
       <div className='slider'>
         <Content>
-          <p>{props.label}</p>
+          <p className='subtitle is-capitalized subtitle is-size-6'>
+            {props.label}
+          </p>
           <SliderWithTooltip
             min={controlledRange[0]}
             max={controlledRange[1]}

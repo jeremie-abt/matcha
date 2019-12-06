@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 
-import { Button, Form, Content, Columns } from 'react-bulma-components'
+import { Button, Form, Content, Columns, Tag } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
@@ -111,25 +111,26 @@ function FormConstructor(props) {
           <Form.Field key={elem.name + elem.type}>
             <Form.Control>
               <Form.Label>{elem.title}</Form.Label>
-
               {
                 // le data-key est la car je n'arrive pas a
                 // access l'attribute key dans handlechange
               }
-              {elem.checkboxValues.map(checkboxElem => {
-                checkboxComponent = (
-                  <Checkbox
-                    categorie={elem.name}
-                    name={checkboxElem.name}
-                    label={checkboxElem.name}
-                    handleChange={handleChange}
-                    checked={checkbox[elem.name].includes(checkboxElem.id)}
-                    key={checkboxElem.id}
-                    data-key={checkboxElem.id}
-                  />
-                )
-                return checkboxComponent
-              })}
+              <Tag.Group>
+                {elem.checkboxValues.map(checkboxElem => {
+                  checkboxComponent = (
+                    <Checkbox
+                      categorie={elem.name}
+                      name={checkboxElem.name}
+                      label={checkboxElem.name}
+                      handleChange={handleChange}
+                      checked={checkbox[elem.name].includes(checkboxElem.id)}
+                      key={checkboxElem.id}
+                      data-key={checkboxElem.id}
+                    />
+                  )
+                  return checkboxComponent
+                })}
+              </Tag.Group>
             </Form.Control>
           </Form.Field>
         </Columns.Column>
@@ -145,11 +146,11 @@ function FormConstructor(props) {
   const handleChange = e => {
     let newState = { ...state }
     newState = { ...state }
-
     if (e.type && (e.type === 'range' || e.type === 'slider')) {
       newState[e.name] = e.value
       setState(newState)
-    } else if (e.target.type === 'checkbox') {
+    } else if (e.target.type === 'checkbox' || !e.target.type) {
+      // !e.target.type is for style tags in search
       const categorie = e.target.getAttribute('categorie')
       const key = parseInt(e.target.getAttribute('data-key'))
 
@@ -215,7 +216,9 @@ function FormConstructor(props) {
           }
         })}
       </Columns>
-      <Button onClick={handleSubmit}> Rechercher </Button>
+      <Button className='is-primary' onClick={handleSubmit}>
+        Rechercher
+      </Button>
       <Content size={'small'} style={{ color: 'red' }}>
         {props.msg &&
           props.msg.length === 2 &&
