@@ -28,7 +28,7 @@ const API_KEY = 'AIzaSyBYgNn_j0zaXwMWFAdAGP3VMDKxcPRcNjI'
 
 function UserPage({ userInfos }) {
   const [msg, setMsg] = useState([])
-  const [curComponent, setCurComponent] = useState('search')
+  const [curComponent, setCurComponent] = useState('matchMenu')
   const context = useContext(userContext)
   const { addToast } = useToasts()
 
@@ -87,10 +87,12 @@ function UserPage({ userInfos }) {
       <Match userId={userInfos.id} setCurComponent={setChatComponent} />
     ),
     matchChat: () => {
-      return <MatchChat
-        roomId={chatMsgInfos.current[0]}
-        idToSend={chatMsgInfos.current[1]}
-      />
+      return (
+        <MatchChat
+          roomId={chatMsgInfos.current[0]}
+          idToSend={chatMsgInfos.current[1]}
+        />
+      )
     }
   }
 

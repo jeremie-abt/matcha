@@ -4,6 +4,7 @@ import MessageBubble from '../miscellaneous/MessageBubble'
 import ChatBar from '../miscellaneous/ChatBar'
 import UserContext from '../../context/UserContext'
 import Cookies from 'universal-cookie'
+import { Columns, Card } from 'react-bulma-components'
 import { useToasts } from 'react-toast-notifications'
 
 const funSentences = [
@@ -69,7 +70,7 @@ function MatchChat({ roomId, idToSend }) {
     const socket = context.socketIo
     socket.on('messageReceived', msgMetadata => {
       let newMessageArray = [...message]
-      newMessageArray.push(msgMetadata)
+      newMessageArray.unshift(msgMetadata)
       setMessage(newMessageArray)
       setNoMessages(false)
     })
@@ -78,7 +79,7 @@ function MatchChat({ roomId, idToSend }) {
   // recuperer les messages, je me doute bien quon va changer ca
   // mais autant faire au plus simple et rapide et faire les modifs
   // quils faudra quand on fera du front
-  useEffect(() => { 
+  useEffect(() => {
     axios.get('/messages/' + roomId).then(resp => {
       if (resp.data.length > 0) {
         setMessage(resp.data)
@@ -91,21 +92,27 @@ function MatchChat({ roomId, idToSend }) {
   return (
     <div>
       {noMessages && <div>{sentence}</div>}
-      {message.length > 0 &&
-        message.map((elem, index) => {
-          return (
-            <MessageBubble
-              MessageInfo={elem}
-              userInfos={
-                elem.sender_id === context.store.user.id
-                  ? context.store.user
-                  : chattingWithUser
-              }
-              isCurrentUser={elem.sender_id === context.store.user.id}
-              key={index}
-            />
-          )
-        })}
+      <Card className='card-fullwidth'>
+        <Card.Content>
+          <Columns.Column className='chat'>
+            {message.length > 0 &&
+              message.map((elem, index) => {
+                return (
+                  <MessageBubble
+                    MessageInfo={elem}
+                    userInfos={
+                      elem.sender_id === context.store.user.id
+                        ? context.store.user
+                        : chattingWithUser
+                    }
+                    isCurrentUser={elem.sender_id === context.store.user.id}
+                    key={index}
+                  />
+                )
+              })}
+          </Columns.Column>
+        </Card.Content>
+      </Card>
       <ChatBar
         setCurrentMessage={setCurrentMessage}
         currentMessage={currentMessage}
