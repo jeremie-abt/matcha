@@ -309,7 +309,9 @@ function FormFilter() {
             // eslint-disable-next-line default-case
             if (filter.startsWith('max')) {
               const filterName = filter.split('max')[1].toLowerCase()
-
+              if (filterName === 'distance') {
+                if (elem['localisation'] > filters['maxDistance']) isFalse = true
+              }
               if (elem[filterName]) {
                 if (Array.isArray(filters[filter])) {
                   const boundaries = filters[filter]

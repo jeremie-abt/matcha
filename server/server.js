@@ -12,6 +12,8 @@ const apiRouter = require('./apiRouter')
 const notificationsModel = require('./model/notificationsModel')
 const manageNotif = require('./socket/notificationsContent')
 
+const onlineModel = require('./model/onlineModel')
+
 app.use(cookieParser())
 app.use(express.static('./img'))
 
@@ -34,12 +36,37 @@ function createNotifDb({ userId, receiverId, type }) {
 // require('./socket/socketManager')
 server.listen(8081)
 
-io.on('connection', socket => {
-  // ya pas moyen de passer un arg en params de l'event connection ??
+const userDeconnection = (userId) => {
+  if (userId) {
+    onlineModel.userDisconnection(userId)
+    .catch(e => {
+      console.log("err : ", e)
+    })
+  }
+  
+}
 
+io.on('connection', socket => {
   socket.on('join', id => {
+    // insertion 
+    onlineModel.userConnection(id)
+    .then(() => {
+      socket.userId = id
+    })
+    .catch((e) => {
+      console.log("fail : ", e)
+    })
     socket.join(`room${id}`)
   })
+
+  socket.on('handleDisconnection', (userId) => {
+    userDeconnection(userId)
+  })
+
+  socket.on('disconnect', () => {
+    userDeconnection(socket.userId)
+  })
+  
   /*
   socket.on('like', async infos => {
     try {
@@ -55,6 +82,7 @@ io.on('connection', socket => {
     manageNotif(socket, infos)
   })
 */
+
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
     if (type === 'unlike' || type === 'unmatch') {

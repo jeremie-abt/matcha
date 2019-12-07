@@ -23,7 +23,6 @@ const setSocket = id => {
     alert('like : fait un toster boloss')
     // ca marche visuellement, maintenan faut le coder pour de vraie !
   })*/
-
   return socket
 }
 

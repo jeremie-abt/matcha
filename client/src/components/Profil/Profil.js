@@ -15,6 +15,7 @@ function Profil({
   const [images, setImages] = useState([])
   const [tags, setTags] = useState([])
   const [profilPicture, setProfilPicture] = useState(false)
+  const [onlineInfos, setOnlineInfos] = useState({})
 
   useEffect(() => {
     axios
@@ -46,6 +47,15 @@ function Profil({
         })
   }, [addToast, userInfos])
 
+  // fetch isOnline
+  useEffect(() => {
+    axios.get('/online/' + userInfos.id)
+    .then((resp) => {
+      setOnlineInfos(resp.data)
+    })
+  }, [])
+
+
   function errorDuringLoading() {
     return addToast(
       "Une erreur s'est produite durant le chargement des images",
@@ -62,16 +72,17 @@ function Profil({
         profilPicture={profilPicture}
         images={images}
         tags={tags}
-      />
-    )
-  } else {
-    return (
-      <SearchableProfil
-        isLiked={isLiked}
-        userInfos={userInfos}
-        profilPicture={profilPicture}
-        event={event}
-        tags={tags}
+        />
+        )
+      } else {
+        return (
+          <SearchableProfil
+          isLiked={isLiked}
+          userInfos={userInfos}
+          profilPicture={profilPicture}
+          event={event}
+          tags={tags}
+          onlineInfos={onlineInfos}
       />
     )
   }
