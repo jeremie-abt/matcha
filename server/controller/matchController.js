@@ -36,7 +36,10 @@ const index = (req, res) => {
     })
     .then(resp => {
       if (resp) {
-        const ret = resp.map((elem, index) => [elem.rows[0], roomIds[index]])
+        const ret = resp.filter(elem => {
+          return elem.rowCount > 0
+        })
+          .map((elem, index) => [elem.rows[0], roomIds[index]])
         res.json(ret)
       } else {
         res.json([])
