@@ -4,7 +4,7 @@ function createNotification(userId, receiverId, type) {
   const query =
     'INSERT INTO notifications' +
     '(user_id, receiver_id, type, created_at)' +
-    'VALUES ($1, $2, $3, now()) ON CONFLICT(user_id, receiver_id) DO NOTHING'
+    'VALUES ($1, $2, $3, now()) ON CONFLICT(user_id, receiver_id, type) DO NOTHING'
 
   return client.query(query, [userId, receiverId, type])
 }
