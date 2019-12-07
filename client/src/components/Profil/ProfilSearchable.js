@@ -67,7 +67,6 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
   const disPlayProfil = () => {
     axios.post('/seen', {userId: context.store.user.id, seenId: userInfos.id})
     .then((resp) => {
-      console.log("resp : ", resp)
       context.socketIo.emit('notifSent', {
         userId: context.store.user.id,
         receiverId: userInfos.id,

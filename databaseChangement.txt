@@ -1,4 +1,2 @@
-create table online(
-user_id integer NOT NULL UNIQUE,
-last_connection timestamp with time zone,
-is_online boolean);
+ALTER TABLE users ADD CONSTRAINT valid_score CHECK (users.popularity_score < 10);
+ALTER TABLE seen add constraint unique_seen UNIQUE(watcher_id, watched_id);

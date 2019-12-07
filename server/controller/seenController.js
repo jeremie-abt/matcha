@@ -1,6 +1,7 @@
 /* eslint-disable radix */
 const seenModel = require('../model/seenModel')
 const usersModel = require('../model/usersModel')
+const scoreModel = require('../model/scoreModel')
 
 const index = async (req, res) => {
 
@@ -44,10 +45,14 @@ const add = (req, res) => {
   const seenId = parseInt(req.body.seenId, 10)
 
   seenModel.addSeen(userId, seenId)
+  .then((resp) => {
+    scoreModel.updateScore('seen', seenId)
+  })
   .then(() => {
     res.status(200).send()
   })
-  .catch(() => {
+  .catch((e) => {
+    console.log("e : ", e)
     res.status(500).send('something went wrong')
   })
 }

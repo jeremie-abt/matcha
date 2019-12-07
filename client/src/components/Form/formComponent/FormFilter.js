@@ -73,6 +73,7 @@ function FormFilter() {
         aScore += 2
       }
     })
+    aScore += Math.round(a.popularity_score / 15)
     return aScore
   }
 

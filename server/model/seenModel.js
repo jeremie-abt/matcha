@@ -11,7 +11,10 @@ function displayUserSeen(userId) {
 }
 
 function addSeen(userId, seenId) {
-  const statement = "INSERT INTO seen VALUES ($1, $2, NOW());"
+  const statement =
+      'INSERT INTO seen (watcher_id, watched_id, timestamp)' +
+      ' VALUES ($1, $2, NOW()) ' +
+      'ON CONFLICT(watcher_id, watched_id) DO NOTHING;'
 
   return client.query(statement, [userId, seenId])
 }

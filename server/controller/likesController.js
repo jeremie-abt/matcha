@@ -1,5 +1,6 @@
 const usersModel = require('../model/usersModel')
 const likesModel = require('../model/likesModel')
+const scoreModel = require('../model/scoreModel')
 const userHelper = require('../helpers/userHelper')
 
 // get full profil of users that liked userId
@@ -90,14 +91,17 @@ const add = async (req, res) => {
       throw [500, 'Request failed']
     })
     .then(result => {
-      if (result.rowCount) res.status(200)
-      else throw [400, 'Error during add']
+      if (result.rowCount) {
+        scoreModel.updateScore('like', likesId)
+      }
+    })
+    .then(() => {
+      res.status(200).send()
     })
     .catch(err => {
-      res.status(err[0])
-      res.write(err[1])
+      console.log("error : ", err)
+      res.status(500).send('something went wrong')
     })
-    .finally(() => res.end())
 }
 
 const del = async (req, res) => {
