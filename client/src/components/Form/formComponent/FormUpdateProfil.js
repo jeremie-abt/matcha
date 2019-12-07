@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import axios from 'axios'
 import UserContext from '../../../context/UserContext'
 import ChangePasswordModal from '../../miscellaneous/ChangePasswordModal'
-import { Button } from 'react-bulma-components'
+import { Button, Card } from 'react-bulma-components'
 
 import MatchaModal from '../../../components/miscellaneous/Modal'
 
@@ -102,27 +102,31 @@ class FormUpdateProfil extends React.Component {
             {this.state.msg}
           </MatchaModal>
         )}
-        <div className='is-right'>
-          <Button
-            className='is-light changePassword'
-            rounded
-            onClick={this.handleModalPassword}
-          >
-            Modifier votre mot de passe
-          </Button>
-        </div>
-        <FormConstructor
-          buttonStyle={buttonStyle}
-          fields={this.state.data}
-          handleForm={this.handleSubmit}
-          msg={this.state.msg}
-        />
-        {this.state.showModal && (
-          <ChangePasswordModal
-            setShowModal={this.handleModalPassword}
-            show={this.state.showModal}
-          />
-        )}
+        <Card className='card-fullwidth'>
+          <Card.Content>
+            <div className='is-right'>
+              <Button
+                className='is-light changePassword'
+                rounded
+                onClick={this.handleModalPassword}
+              >
+                Modifier votre mot de passe
+              </Button>
+            </div>
+            <FormConstructor
+              buttonStyle={buttonStyle}
+              fields={this.state.data}
+              handleForm={this.handleSubmit}
+              msg={this.state.msg}
+            />
+            {this.state.showModal && (
+              <ChangePasswordModal
+                setShowModal={this.handleModalPassword}
+                show={this.state.showModal}
+              />
+            )}
+          </Card.Content>
+        </Card>
       </div>
     )
   }

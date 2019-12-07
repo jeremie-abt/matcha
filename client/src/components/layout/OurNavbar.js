@@ -1,38 +1,81 @@
 import React from 'react'
-import { Navbar, Level, Content, Button } from 'react-bulma-components'
+import { Button } from 'react-bulma-components'
 
 import HeaderLinks from './HeaderLinks'
 import UserContext from '../../context/UserContext'
+import { Link } from 'react-router-dom'
 
-// un peu degueux pour l'image je suis d'accord
-// mais je pense qu'on verra plus tard pour passer
-// en props etc ...
 function OurNavbar() {
   return (
-    <Content>
-      <Level>
-        <Level.Side align='left'>
-          <Navbar.Item href='/'>
-            <figure>
-              <img src={require('../../assets/img/OUI.png')} alt='logo' />
-            </figure>
-          </Navbar.Item>
-        </Level.Side>
-        <Level.Side align='right'>
-          <UserContext.Consumer>
-            {context => {
-              if (!context.store.isAuth) return <HeaderLinks />
-              else
-                return (
-                  <Button onClick={context.HandleDisconnection}>
-                    Deconnect
-                  </Button>
-                )
-            }}
-          </UserContext.Consumer>
-        </Level.Side>
-      </Level>
-    </Content>
+    <nav
+      className='navbar layout-color'
+      role='navigation'
+      aria-label='main navigation'
+    >
+      <div className='navbar-brand'>
+        <a className='navbar-item' href='/'>
+          <img src={require('../../assets/img/OUI.png')} alt='logo' />
+        </a>
+
+        <a
+          role='button'
+          href='/'
+          className='navbar-burger burger'
+          aria-label='menu'
+          aria-expanded='false'
+          data-target='navbarBasicExample'
+        >
+          <span aria-hidden='true'></span>
+          <span aria-hidden='true'></span>
+          <span aria-hidden='true'></span>
+        </a>
+      </div>
+
+      <div id='navbarBasic' className='navbar-menu'>
+        <div className='navbar-start'>
+          <Link to='/search' className='navbar-item'>
+            Search
+          </Link>
+          <div className='navbar-item has-dropdown is-hoverable'>
+            <div className='navbar-link'>Mes informations</div>
+
+            <div className='navbar-dropdown'>
+              <Link to='/myProfil' className='navbar-item'>
+                Mon profil
+              </Link>
+              <Link to='/account' className='navbar-item'>
+                Mon compte
+              </Link>
+              <Link to='/images' className='navbar-item'>
+                Mes images
+              </Link>
+              <Link to='/like' className='navbar-item'>
+                Likes
+              </Link>
+              <Link to='/seen' className='navbar-item'>
+                Vues
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className='navbar-end'>
+          <div className='navbar-item'>
+            <UserContext.Consumer>
+              {context => {
+                if (!context.store.isAuth) return <HeaderLinks />
+                else
+                  return (
+                    <Button onClick={context.HandleDisconnection}>
+                      Deconnect
+                    </Button>
+                  )
+              }}
+            </UserContext.Consumer>
+          </div>
+        </div>
+      </div>
+    </nav>
   )
 }
 

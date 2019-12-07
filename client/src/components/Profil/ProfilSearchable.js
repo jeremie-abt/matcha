@@ -83,7 +83,10 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked }) {
               id={userInfos.id}
               size='small'
               text={true}
-              onClick={event.handleReport}
+              onClick={() => {
+                event.setShowModal(true)
+                event.setReportedId(userInfos.id)
+              }}
             >
               report
             </Button>
