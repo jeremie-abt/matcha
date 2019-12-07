@@ -39,6 +39,20 @@ const index = async (req, res) => {
     })
 }
 
+const add = (req, res) => {
+  const userId = parseInt(req.body.userId, 10)
+  const seenId = parseInt(req.body.seenId, 10)
+
+  seenModel.addSeen(userId, seenId)
+  .then(() => {
+    res.status(200).send()
+  })
+  .catch(() => {
+    res.status(500).send('something went wrong')
+  })
+}
+
 module.exports = {
-  index
+  index,
+  add
 }

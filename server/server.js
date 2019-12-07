@@ -89,12 +89,10 @@ io.on('connection', socket => {
       manageNotif(io, { userId, receiverId, type })
     } else {
       notificationsModel
-        .createNotification(userId, receiverId, type)
+        .createNotification(userId, receiverId, type === "seen" ? "view" : type)
         .then(result => {
           if (result.rowCount) {
             manageNotif(io, { userId, receiverId, type })
-          } else {
-            console.log('Error during creation')
           }
         })
         .catch(err => {
@@ -102,6 +100,10 @@ io.on('connection', socket => {
         })
     }
   })
+
+  /*socket.on('seen', (idToSend) => {
+    socket.to(`room${idToSend}`).emit('seenReceived')
+  })*/
 
   socket.on('messageSent', (idToSend, msgMetadata) => {
     socket.to(`room${idToSend}`).emit('messageReceived', msgMetadata)
