@@ -80,7 +80,7 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
           <div className='profil-last-line' dateTime='2016-1-1'>
           {
             (onlineInfos.is_online && <p>online</p>)
-            || <Moment fromNow date={onlineInfos.lastConnection} />
+            || <Moment fromNow date={onlineInfos.last_connection} />
           }
             {/* need last time online or online */}
             <Button
