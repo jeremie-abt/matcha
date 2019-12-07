@@ -1,7 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react'
 import axios from 'axios'
 import userContext from '../../context/UserContext'
-import { Card, Media, Heading, Content } from 'react-bulma-components'
+import Profil from './Profil'
+import { Content } from 'react-bulma-components'
 
 function Histo({ type }) {
   const context = useContext(userContext)
@@ -25,9 +26,14 @@ function Histo({ type }) {
       </Content>
     )
   } else {
-    return data.map(elem => {
+    return data.map((elem, index) => {
       return (
-        <Card key={elem.username}>
+      <Profil
+        fullProfil={false}
+        userInfos={elem}
+        key={index}
+            />
+      /*  <Card key={elem.username}>
           <Card.Content>
             <Media>
               <Media.Item>Put jolie image here</Media.Item>
@@ -38,7 +44,7 @@ function Histo({ type }) {
             </Media>
             <Content>{elem.bio}</Content>
           </Card.Content>
-        </Card>
+        </Card>*/
       )
     })
   }

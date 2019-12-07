@@ -10,6 +10,13 @@ function displayUserSeen(userId) {
   return client.query(query, [userId])
 }
 
+function addSeen(userId, seenId) {
+  const statement = "INSERT INTO seen VALUES ($1, $2, NOW());"
+
+  return client.query(statement, [userId, seenId])
+}
+
 module.exports = {
-  displayUserSeen
+  displayUserSeen,
+  addSeen
 }

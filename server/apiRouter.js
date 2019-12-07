@@ -78,6 +78,7 @@ apiRouter.get('/tags/user/:userId', tagsController.userTags)
 
 // Seen routes
 apiRouter.get('/seen/:userId', seenController.index)
+apiRouter.post('/seen', seenController.add)
 
 // likes routes
 apiRouter.get('/like/:userId', likesController.index)

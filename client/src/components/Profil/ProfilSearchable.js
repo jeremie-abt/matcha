@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import userContext from '../../context/UserContext'
 import Moment from 'react-moment'
 import {
   Content,
@@ -9,15 +10,24 @@ import {
   Tag,
   Heading
 } from 'react-bulma-components'
+import axios from 'axios'
 
 function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onlineInfos }) {
-  let likedButton
+  const context = useContext(userContext)
+  let likedButton = null
+  let printAllButton = false
   let onlineDisplay
-  
-  if (onlineInfos) {
-    onlineDisplay = onlineInfos.is_online ? <p>online</p> :
-      <Moment fromNow date={onlineInfos.last_connection} />
-  } else onlineDisplay = null
+
+  if (!event) {
+    event = {
+      handleLike: Function.prototype,
+      handleReport: Function.prototype,
+      handleUnlike: Function.prototype,
+      handleBlocked: Function.prototype
+    }
+  } else {
+    printAllButton = true 
+  }
 
   if (isLiked) {
     likedButton = (
@@ -47,6 +57,28 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
       </Button>
     )
   }
+  
+  if (onlineInfos) {
+    onlineDisplay = onlineInfos.is_online ? <p>online</p> :
+      <Moment fromNow date={onlineInfos.last_connection} />
+  } else onlineDisplay = null
+
+
+  const disPlayProfil = () => {
+    axios.post('/seen', {userId: context.store.user.id, seenId: userInfos.id})
+    .then((resp) => {
+      console.log("resp : ", resp)
+      context.socketIo.emit('notifSent', {
+        userId: context.store.user.id,
+        receiverId: userInfos.id,
+        type: 'seen'
+      })
+    })
+    .catch((e) => {
+      console.log("Beug du seen : ", e)
+    })
+  }
+
   return (
     <Card className='profil-card'>
       <Card.Content className='profil-content'>
@@ -68,8 +100,8 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
           </Media.Item>
           <Media.Item>
             <Button.Group position='right'>
-              {likedButton}
-              <Button color='primary'>Voir le profil</Button>
+              {printAllButton && likedButton}
+              <Button color='primary' onClick={disPlayProfil}>Voir le profil</Button>
             </Button.Group>
           </Media.Item>
         </Media>
@@ -85,15 +117,15 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
             { onlineDisplay }
-            {/* need last time online or online */}
+            
+            { printAllButton &&
             <Button
               id={userInfos.id}
               size='small'
               text={true}
-              onClick={event.handleReport}
-            >
+              onClick={event.handleReport}>
               report
-            </Button>
+            </Button> }
           </div>
         </Content>
       </Card.Content>
