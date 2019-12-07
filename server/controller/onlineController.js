@@ -8,6 +8,7 @@ const index = (req, res) => {
         res.json(resp.rows[0])
     })
     .catch(e => {
+        res.status(500).send('something went Wrong')
         console.log("ERROR : ", e)
     })
 }
