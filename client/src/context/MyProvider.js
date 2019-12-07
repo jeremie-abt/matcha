@@ -33,10 +33,10 @@ function MyProvider(props) {
         })
         .then(resp => {
           if (resp.data.verified_mail === true) setIsVerified(true)
+          setSocketIo(setSocket(resp.data.id))
           setUser(resp.data)
           setIsAuth(true)
           //updateUser(resp.data)
-          setSocketIo(setSocket(resp.data.id))
           return resp.data
         })
         .catch(e => {

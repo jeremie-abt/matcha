@@ -8,6 +8,7 @@ const index = async (req, res) => {
       res.json(resp.rows)
     })
     .catch(e => {
+      console.log('ouai : ', e)
       res.status(500).send('something went wrong')
     })
 }
@@ -20,7 +21,7 @@ const add = async (req, res) => {
 
   messageModel
     .addMessages(roomId, senderId, message)
-    .then((resp) => {
+    .then(resp => {
       res.json(resp.rows[0])
     })
     .catch(e => {

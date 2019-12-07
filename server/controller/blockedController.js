@@ -1,5 +1,6 @@
 const blockedModel = require('../model/blockedModel')
 const likesModel = require('../model/likesModel')
+const matchModel = require('../model/matchModel')
 const usersModel = require('../model/usersModel')
 const userHelper = require('../helpers/userHelper')
 
@@ -50,6 +51,9 @@ const add = async (req, res) => {
     .addUserBlocked(userId, blockedId)
     .catch(() => {
       throw [500, 'Request failed']
+    })
+    .then(result => {
+      if (result) return matchModel.delMatch(userId, blockedId)
     })
     .then(result => {
       likesModel.deleteLike(userId, blockedId)

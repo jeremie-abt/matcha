@@ -32,7 +32,8 @@ function getUserInfo(requiredData) {
       }
     }
   })
-  return client.query(...Query.generateQuery('select'))
+  const ret = Query.generateQuery('select')
+  return client.query(...ret)
 }
 
 function isUserExisting(requiredData) {

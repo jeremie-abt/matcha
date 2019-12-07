@@ -86,12 +86,14 @@ function UserPage({ userInfos }) {
     matchMenu: () => (
       <Match userId={userInfos.id} setCurComponent={setChatComponent} />
     ),
-    matchChat: () => (
-      <MatchChat
-        roomId={chatMsgInfos.current[0]}
-        idToSend={chatMsgInfos.current[1]}
-      />
-    )
+    matchChat: () => {
+      return (
+        <MatchChat
+          roomId={chatMsgInfos.current[0]}
+          idToSend={chatMsgInfos.current[1]}
+        />
+      )
+    }
   }
 
   // Voir ca demain !!!!
@@ -150,7 +152,7 @@ function UserPage({ userInfos }) {
       <Title name='User Information' />
       <Container className='user-container'>
         <Columns>
-          <Columns.Column size='one-third'>
+          <Columns.Column size={2}>
             <SideBar
               curComponent={curComponent}
               setCurComponent={setCurComponent}

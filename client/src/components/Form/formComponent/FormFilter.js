@@ -220,6 +220,7 @@ function FormFilter() {
 
   function handleReport(e) {
     const id = parseInt(e.target.getAttribute('id'), 10)
+    handleBlocked(id)
     setReportedId(id)
     setShowModal(true)
   }

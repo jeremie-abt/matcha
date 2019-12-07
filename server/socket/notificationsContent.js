@@ -1,7 +1,6 @@
 const manageNotif = (io, infos) => {
   let content
 
-  console.log(`voici le type : ${infos.type}`)
   switch (infos.type) {
     case 'view':
       // content = `Someone visited your profil`

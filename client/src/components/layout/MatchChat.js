@@ -3,6 +3,9 @@ import axios from 'axios'
 import MessageBubble from '../miscellaneous/MessageBubble'
 import ChatBar from '../miscellaneous/ChatBar'
 import UserContext from '../../context/UserContext'
+import Cookies from 'universal-cookie'
+import { Columns, Card } from 'react-bulma-components'
+import { useToasts } from 'react-toast-notifications'
 
 const funSentences = [
   'ne fait pas patienter ton match ...',
@@ -16,12 +19,33 @@ function getRandomInt(max) {
 const sentence = funSentences[getRandomInt(funSentences.length - 1)]
 
 function MatchChat({ roomId, idToSend }) {
+  const { addToast } = useToasts()
   const context = useContext(UserContext)
   const userId = context.store.user.id
 
   const [message, setMessage] = useState([])
   const [noMessages, setNoMessages] = useState(true)
   const [currentMessage, setCurrentMessage] = useState('')
+  const [chattingWithUser, setChattingWithUser] = useState({})
+
+  useEffect(() => {
+    const cookies = new Cookies()
+    axios
+      .get('/users/getUser/' + idToSend, {
+        headers: {
+          authorization: 'Bearer ' + cookies.get('token')
+        }
+      })
+      .then(resp => {
+        setChattingWithUser(resp.data)
+      })
+      .catch(e => {
+        addToast(`Impossible to load messages : ${e}`, {
+          appearance: 'error',
+          autoDismiss: true
+        })
+      })
+  }, [addToast, idToSend])
 
   function handlePostingMessage() {
     axios
@@ -46,8 +70,9 @@ function MatchChat({ roomId, idToSend }) {
     const socket = context.socketIo
     socket.on('messageReceived', msgMetadata => {
       let newMessageArray = [...message]
-      newMessageArray.push(msgMetadata)
+      newMessageArray.unshift(msgMetadata)
       setMessage(newMessageArray)
+      setNoMessages(false)
     })
   }, [context.socketIo, message])
 
@@ -67,21 +92,32 @@ function MatchChat({ roomId, idToSend }) {
   return (
     <div>
       {noMessages && <div>{sentence}</div>}
-      {message.length > 0 &&
-        message.map((elem, index) => {
-          return (
-            <MessageBubble
-              MessageInfo={elem}
-              currentUserId={userId}
-              key={index}
-            />
-          )
-        })}
+      <Card className='card-fullwidth'>
+        <Card.Content>
+          <Columns.Column className='chat'>
+            {message.length > 0 &&
+              message.map((elem, index) => {
+                return (
+                  <MessageBubble
+                    MessageInfo={elem}
+                    userInfos={
+                      elem.sender_id === context.store.user.id
+                        ? context.store.user
+                        : chattingWithUser
+                    }
+                    isCurrentUser={elem.sender_id === context.store.user.id}
+                    key={index}
+                  />
+                )
+              })}
+          </Columns.Column>
+        </Card.Content>
+      </Card>
       <ChatBar
         setCurrentMessage={setCurrentMessage}
         currentMessage={currentMessage}
         handleSubmit={e => {
-          handlePostingMessage(e)
+          if (currentMessage.trim() !== '') handlePostingMessage(e)
         }}
       />
     </div>

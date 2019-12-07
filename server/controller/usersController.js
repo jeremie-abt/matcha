@@ -7,8 +7,9 @@ const { sendMail } = require('../helpers/MailSender')
 const { createToken } = require('../helpers/ManageToken')
 
 function show(req, res) {
+  let id = req.params.userId ? req.params.userId : req.tokenInfo.id
   userModel
-    .getUserInfo({ id: req.tokenInfo.id })
+    .getUserInfo({ id })
     .then(resp => {
       if (resp.rowCount !== 1) res.status(500).send('something got Wrong')
       res.json(resp.rows[0])
