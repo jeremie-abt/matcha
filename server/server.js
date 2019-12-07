@@ -39,20 +39,14 @@ server.listen(8081)
 const userDeconnection = (userId) => {
   if (userId) {
     onlineModel.userDisconnection(userId)
-    .then(() => {
-      console.log("user disco a prio")
-    })
     .catch(e => {
-      console.log("voici lerror : ", e)
+      console.log("err : ", e)
     })
   }
   
 }
 
 io.on('connection', socket => {
-  // ya pas moyen de passer un arg en params de l'event connection ??
-
-  
   socket.on('join', id => {
     // insertion 
     onlineModel.userConnection(id)

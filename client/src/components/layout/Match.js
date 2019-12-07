@@ -64,7 +64,6 @@ function Match({ userId, setCurComponent }) {
   }, [context.socketIo, match])
 
   if (match) {
-    console.log('match : ', match)
     return (
       <div>
         {match.map((elem, index) => {

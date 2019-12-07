@@ -11,6 +11,13 @@ import {
 } from 'react-bulma-components'
 
 const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => {
+  let onlineDisplay
+
+  if (onlineInfos) {
+    onlineDisplay = onlineInfos.is_online ? <p>online</p> :
+      <Moment fromNow date={onlineInfos.last_connection} />
+  } else onlineDisplay = null
+
   return (
     <Card>
       {images.length > 0 && (
@@ -40,11 +47,7 @@ const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => 
           {userInfos.bio}
           <a href='#2'>#responsive</a>
           <div className='profil-last-online' dateTime='2016-1-1'>
-            {
-              (onlineInfos.is_online && <p>online</p>)
-              || <Moment fromNow date={onlineInfos.lastConnection} />
-            }
-            {/* need last time online or online */}
+            { onlineDisplay }
           </div>
         </Content>
         <Tag.Group>

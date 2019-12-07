@@ -51,7 +51,6 @@ function Profil({
   useEffect(() => {
     axios.get('/online/' + userInfos.id)
     .then((resp) => {
-      console.log("setOnlineInfos : ", resp.data)
       setOnlineInfos(resp.data)
     })
   }, [])
