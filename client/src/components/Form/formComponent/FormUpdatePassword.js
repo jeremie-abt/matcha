@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
-import { Redirect } from 'react-router-dom'
-
-import MatchaModal from '../../miscellaneous/Modal'
+import { useToasts } from 'react-toast-notifications'
 import Cookies from 'universal-cookie'
 
 const fields = [
@@ -34,20 +32,22 @@ function parseFormData(formData) {
   const { password, confirmpassword } = formData
 
   if (confirmpassword !== password)
-    return 'Password and confirmpassword are not the same ...'
+    return 'Les deux mots de passes doivent être identiques'
   return true
 }
 
-function FormUpdatePassword() {
-  const [redirection, setRedirection] = useState(false)
-  const [msg, setMsg] = useState([])
+function FormUpdatePassword({ setShowModal }) {
+  const { addToast } = useToasts()
 
   const cookies = new Cookies()
   const handleSubmit = ({ state }) => {
     const dataObligated = ['password', 'confirmpassword']
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {
-        setMsg(['pls fill all input', 'danger'])
+        addToast('Merci de changer remplir tous les champs', {
+          appearance: 'error',
+          autoDismiss: true
+        })
         return false
       }
       return true
@@ -68,36 +68,28 @@ function FormUpdatePassword() {
               withCredentials: true
             }
           )
-          .then(resp => {
-            setMsg(['password changed', 'success'])
+          .then(() => {
+            addToast('Modification du mot de passe réussi', {
+              appearance: 'error',
+              autoDismiss: true
+            })
           })
       } else {
-        setMsg([ret, 'danger'])
+        addToast(ret, {
+          appearance: 'error',
+          autoDismiss: true
+        })
       }
     }
   }
 
-  const handleClose = () => {
-    setRedirection(true)
-  }
-
   return (
     <div>
-      {redirection && <Redirect to='/' />}
-      {Object.entries(msg).length !== 0 && (
-        <MatchaModal
-          color={msg[1]}
-          msg={msg[0]}
-          onClose={handleClose}
-        ></MatchaModal>
-      )}
-      {
-        <FormConstructor
-          buttonStyle={buttonStyle}
-          fields={fields}
-          handleForm={handleSubmit}
-        />
-      }
+      <FormConstructor
+        buttonStyle={buttonStyle}
+        fields={fields}
+        handleForm={handleSubmit}
+      />
     </div>
   )
 }

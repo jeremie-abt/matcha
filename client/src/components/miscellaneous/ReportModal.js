@@ -113,4 +113,5 @@ function ReportModal({
   )
 }
 
+export { OpenModal }
 export default ReportModal

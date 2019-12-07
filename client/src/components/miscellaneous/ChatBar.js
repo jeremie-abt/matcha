@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Columns } from 'react-bulma-components'
+import { Form, Button } from 'react-bulma-components'
 
 // function made for hook
 // It's assuming that setMessage is a function returned

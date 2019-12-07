@@ -6,13 +6,12 @@ import {
   Image,
   Heading,
   Content,
-  Tag,
-  Button
+  Tag
 } from 'react-bulma-components'
 
 const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
   return (
-    <Card>
+    <Card className='card-fullwidth'>
       {images.length > 0 && (
         <div className='slide'>
           <Slide images={images} />

@@ -4,6 +4,7 @@ import FormConstructor from '../FormConstructor'
 import classNames from 'classnames'
 import axios from 'axios'
 import UserContext from '../../../context/UserContext'
+import ChangePasswordModal from '../../miscellaneous/ChangePasswordModal'
 import { Button } from 'react-bulma-components'
 
 import MatchaModal from '../../../components/miscellaneous/Modal'
@@ -11,17 +12,17 @@ import MatchaModal from '../../../components/miscellaneous/Modal'
 let fields = [
   {
     name: 'firstname',
-    label: 'firstname',
+    label: 'Firstname',
     type: 'text'
   },
   {
     name: 'lastname',
-    label: 'lastname',
+    label: 'Lastname',
     type: 'text'
   },
   {
     name: 'username',
-    label: 'username',
+    label: 'Username',
     type: 'text'
   },
   {
@@ -30,20 +31,10 @@ let fields = [
     type: 'email'
   },
   {
-    name: 'password',
-    label: 'password',
-    type: 'password'
-  },
-  {
     name: 'gender',
     title: 'Gender',
     type: 'radio',
     radioValues: ['male', 'female']
-  },
-  {
-    name: 'goelocalisation',
-    label: 'geolocalisation',
-    type: 'text'
   },
   {
     name: 'tags',
@@ -79,29 +70,13 @@ class FormUpdateProfil extends React.Component {
     super(props)
     this.state = {
       data: fields,
-      msg: []
+      msg: [],
+      showModal: false
     }
   }
 
-  handleNewPassword = e => {
-    axios
-      .post(
-        '/auth/sendTokenMail',
-        {
-          redirectionLink: 'http://localhost:3000/changePassword/',
-          id: this.context.store.user.id,
-          email: this.context.store.user.email
-        },
-        { withCredentials: true }
-      )
-      .then(resp => {
-        // affichage
-        console.log('not implemeted ...')
-      })
-      .catch(e => {
-        // afficahge
-        console.log('not implemeted ...')
-      })
+  handleModalPassword = () => {
+    this.setState({ showModal: !this.state.showModal })
   }
 
   setMsg = val => {
@@ -127,13 +102,27 @@ class FormUpdateProfil extends React.Component {
             {this.state.msg}
           </MatchaModal>
         )}
+        <div className='is-right'>
+          <Button
+            className='is-light changePassword'
+            rounded
+            onClick={this.handleModalPassword}
+          >
+            Modifier votre mot de passe
+          </Button>
+        </div>
         <FormConstructor
           buttonStyle={buttonStyle}
           fields={this.state.data}
           handleForm={this.handleSubmit}
           msg={this.state.msg}
         />
-        <Button onClick={this.handleNewPassword}> Change your password</Button>
+        {this.state.showModal && (
+          <ChangePasswordModal
+            setShowModal={this.handleModalPassword}
+            show={this.state.showModal}
+          />
+        )}
       </div>
     )
   }
