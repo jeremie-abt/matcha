@@ -94,12 +94,15 @@ function PageSkeleton({ location, children }) {
 
   // Voir ca demain !!!!
   useEffect(() => {
-    context.socketIo.on('notifPrinting', type => {
-      addToast(`vous avez un nouveau ${type}`, {
-        appearance: 'success',
-        autoDismiss: true
+    if (context.socketIo) {
+
+      context.socketIo.on('notifPrinting', type => {
+        addToast(`vous avez un nouveau ${type}`, {
+          appearance: 'success',
+          autoDismiss: true
+        })
       })
-    })
+    }
   }, [addToast, context.socketIo])
 
   // ~! Bouger ce truc ailleur
