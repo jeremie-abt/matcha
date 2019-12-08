@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-
+import { withRouter } from 'react-router-dom'
 import { Button, Form, Content, Columns, Tag } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
@@ -10,7 +10,7 @@ import Slider from './InputStyle/InputSlider'
 
 import UserContext from '../../context/UserContext'
 
-function FormConstructor(props) {
+function FormConstructor({ location, ...props }) {
   const context = useContext(UserContext)
   const [state, setState] = useState({})
   const [checkbox, setCheckbox] = useState({})
@@ -38,14 +38,16 @@ function FormConstructor(props) {
   const _renderSlider = elem => {
     if (state[elem.name]) {
       return (
-        <Slider
-          label={elem.name}
-          name={elem.name}
-          range={state[elem.name]}
-          onChange={handleChange}
-          defaultValue={elem.defaultValue}
-          key={elem.name + 'slider'}
-        />
+        <Columns.Column>
+          <Slider
+            label={elem.name}
+            name={elem.name}
+            range={state[elem.name]}
+            onChange={handleChange}
+            defaultValue={elem.defaultValue}
+            key={elem.name + 'slider'}
+          />
+        </Columns.Column>
       )
     } else {
       return null
@@ -55,16 +57,18 @@ function FormConstructor(props) {
   const _renderRange = elem => {
     if (state[elem.name]) {
       return (
-        <Range
-          name={elem.name}
-          label={elem.label}
-          range={state[elem.name]}
-          onChange={handleChange}
-          defaultValues={elem.defaultValues}
-          min={elem.range[0]}
-          max={elem.range[1]}
-          key={elem.name + 'range'}
-        />
+        <Columns.Column>
+          <Range
+            name={elem.name}
+            label={elem.label}
+            range={state[elem.name]}
+            onChange={handleChange}
+            defaultValues={elem.defaultValues}
+            min={elem.range[0]}
+            max={elem.range[1]}
+            key={elem.name + 'range'}
+          />
+        </Columns.Column>
       )
     } else {
       return null
@@ -217,7 +221,7 @@ function FormConstructor(props) {
         })}
       </Columns>
       <Button className='is-primary' onClick={handleSubmit}>
-        Rechercher
+        {location.pathname === '/account' ? 'Valider' : 'Rechercher'}
       </Button>
       <Content size={'small'} style={{ color: 'red' }}>
         {props.msg &&
@@ -229,4 +233,4 @@ function FormConstructor(props) {
   )
 }
 
-export default FormConstructor
+export default withRouter(FormConstructor)

@@ -56,7 +56,6 @@ const add = async (req, res) => {
       if (result) return matchModel.delMatch(userId, blockedId)
     })
     .then(result => {
-      likesModel.deleteLike(userId, blockedId)
       if (result.rowCount) res.status(200)
       else throw [400, 'Error during add']
     })

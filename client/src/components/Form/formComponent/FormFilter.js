@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
+import { Card } from 'react-bulma-components'
 import { useToasts } from 'react-toast-notifications'
 import { getDistance } from 'geolib'
 import Cookies from 'universal-cookie'
@@ -204,28 +205,6 @@ function FormFilter() {
     setProfils(tmpArray)
   }
 
-  function handleBlocked(blockedId) {
-    axios
-      .post('/blocked/add', { userId: context.store.user.id, blockedId })
-      .then(result => {
-        if (result.status === 200) updateProfils(blockedId)
-      })
-      .catch(err => {
-        addToast('Erreur pendant le report !', {
-          appearance: 'Error',
-          autoDismiss: true
-        })
-        throw err
-      })
-  }
-
-  function handleReport(e) {
-    const id = parseInt(e.target.getAttribute('id'), 10)
-    handleBlocked(id)
-    setReportedId(id)
-    setShowModal(true)
-  }
-
   function handleUnLike(likesId) {
     axios
       .delete('/like/delete', {
@@ -305,64 +284,68 @@ function FormFilter() {
   }
 
   return (
-    <div>
-      <FormConstructor
-        fields={inputs}
-        handleForm={handleSubmit}
-        handleChange={handleChange}
-      />
-      {profils
-        .filter(elem => {
-          let isFalse = false
-          Object.keys(filters).forEach(filter => {
-            // eslint-disable-next-line default-case
-            if (filter.startsWith('max')) {
-              const filterName = filter.split('max')[1].toLowerCase()
-              if (filterName === 'distance') {
-                if (elem['localisation'] > filters['maxDistance']) isFalse = true
-              }
-              if (elem[filterName]) {
-                if (Array.isArray(filters[filter])) {
-                  const boundaries = filters[filter]
-                  if (
-                    elem[filterName] < boundaries[0] ||
-                    elem[filterName] > boundaries[1]
-                  ) {
-                    isFalse = true
-                  }
-                } else {
-                  if (elem[filterName] > filters[filter]) {
-                    isFalse = true
+    <Card className='card-fullwidth'>
+      <Card.Content>
+        <FormConstructor
+          fields={inputs}
+          handleForm={handleSubmit}
+          handleChange={handleChange}
+        />
+        {profils
+          .filter(elem => {
+            let isFalse = false
+            Object.keys(filters).forEach(filter => {
+              // eslint-disable-next-line default-case
+              if (filter.startsWith('max')) {
+                const filterName = filter.split('max')[1].toLowerCase()
+
+                if (elem[filterName]) {
+                  if (Array.isArray(filters[filter])) {
+                    const boundaries = filters[filter]
+                    if (
+                      elem[filterName] < boundaries[0] ||
+                      elem[filterName] > boundaries[1]
+                    ) {
+                      isFalse = true
+                    }
+                  } else {
+                    if (elem[filterName] > filters[filter]) {
+                      isFalse = true
+                    }
                   }
                 }
               }
-            }
+            })
+            return !isFalse
           })
-          return !isFalse
-        })
-        .sort(_sortProfil)
-        .map((elem, index) => {
-          return (
-            <Profil
-              fullProfil={false}
-              isLiked={liked.includes(elem.id)}
-              userInfos={elem}
-              event={{ handleBlocked, handleReport, handleUnLike, handleLike }}
-              key={index}
-            />
-          )
-        })}
-      {showModal && (
-        <ReportModal
-          userId={context.store.user.id}
-          reportedId={reportedId}
-          blockedFunction={handleBlocked}
-          show={showModal}
-          setShowModal={setShowModal}
-          updateProfils={updateProfils}
-        />
-      )}
-    </div>
+          .sort(_sortProfil)
+          .map((elem, index) => {
+            return (
+              <Profil
+                fullProfil={false}
+                isLiked={liked.includes(elem.id)}
+                userInfos={elem}
+                event={{
+                  setShowModal,
+                  setReportedId,
+                  handleUnLike,
+                  handleLike
+                }}
+                key={index}
+              />
+            )
+          })}
+        {showModal && (
+          <ReportModal
+            userId={context.store.user.id}
+            reportedId={reportedId}
+            show={showModal}
+            setShowModal={setShowModal}
+            updateProfils={updateProfils}
+          />
+        )}
+      </Card.Content>
+    </Card>
   )
 }
 

@@ -7,7 +7,7 @@ import {
   Image,
   Heading,
   Content,
-  Tag,
+  Tag
 } from 'react-bulma-components'
 
 const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => {
@@ -19,7 +19,7 @@ const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => 
   } else onlineDisplay = null
 
   return (
-    <Card>
+    <Card className='card-fullwidth'>
       {images.length > 0 && (
         <div className='slide'>
           <Slide images={images} />
