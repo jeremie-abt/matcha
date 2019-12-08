@@ -73,6 +73,7 @@ function FormFilter() {
         aScore += 2
       }
     })
+    aScore += Math.round(a.popularity_score / 15)
     return aScore
   }
 
@@ -231,11 +232,19 @@ function FormFilter() {
         data: { userId: context.store.user.id, likesId: likesId }
       })
       .then(() => {
-        context.socketIo.emit('notifSent', {
-          userId: context.store.user.id,
-          receiverId: likesId,
-          type: 'unlike'
-        })
+        if (userWhoLikedMe.current.includes(likesId)) {
+          context.socketIo.emit('notifSent', {
+            userId: context.store.user.id,
+            receiverId: likesId,
+            type: 'unmatch'
+          })
+        } else {
+          context.socketIo.emit('notifSent', {
+            userId: context.store.user.id,
+            receiverId: likesId,
+            type: 'unlike'
+          })
+        }
         let newLikedProfils = [...liked]
         newLikedProfils = newLikedProfils.filter(elem => elem !== likesId)
         setLiked(newLikedProfils)

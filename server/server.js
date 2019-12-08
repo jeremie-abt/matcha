@@ -83,10 +83,31 @@ io.on('connection', socket => {
   })
 */
 
+// quand tu unlike quelqun -> enlever la notif like
+// quand tu unmatch quelqun enlever la notif match
+
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
+    if (type === 'unmatch') {
+      notificationsModel
+        .deleteNotification(userId, receiverId, 'match')
+        .then(() => {
+          return notificationsModel
+            .deleteNotification(receiverId, userId, 'match')
+          })
+        .then(() => {
+            manageNotif(io, {userId, receiverId, type: 'unmatch'})
+        })
+    }
     if (type === 'unlike' || type === 'unmatch') {
-      manageNotif(io, { userId, receiverId, type })
+      notificationsModel.
+        deleteNotification(userId, receiverId, 'like')
+        .then(() => {
+          manageNotif(io, { userId, receiverId, type: 'unlike' })
+        })
+        .catch((e) => {
+          console.log("error, can't suppress notif : e", e)
+        })
     } else {
       notificationsModel
         .createNotification(userId, receiverId, type === "seen" ? "view" : type)
