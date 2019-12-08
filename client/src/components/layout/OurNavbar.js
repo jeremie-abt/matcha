@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'react-bulma-components'
 
 import HeaderLinks from './HeaderLinks'
@@ -6,6 +6,12 @@ import UserContext from '../../context/UserContext'
 import { Link } from 'react-router-dom'
 
 function OurNavbar() {
+  const [isActive, setIsActive] = useState(false)
+
+  const handleClick = () => {
+    setIsActive(!isActive)
+  }
+
   return (
     <nav
       className='navbar layout-color'
@@ -19,11 +25,11 @@ function OurNavbar() {
 
         <a
           role='button'
-          href='/'
-          className='navbar-burger burger'
+          onClick={handleClick}
+          className={'navbar-burger burger ' + (isActive ? 'is-active' : '')}
           aria-label='menu'
           aria-expanded='false'
-          data-target='navbarBasicExample'
+          data-target='navbarBasic'
         >
           <span aria-hidden='true'></span>
           <span aria-hidden='true'></span>
@@ -31,7 +37,10 @@ function OurNavbar() {
         </a>
       </div>
 
-      <div id='navbarBasic' className='navbar-menu'>
+      <div
+        id='navbarBasic'
+        className={'navbar-menu ' + (isActive ? 'is-active' : '')}
+      >
         <div className='navbar-start'>
           <Link to='/search' className='navbar-item'>
             Search
