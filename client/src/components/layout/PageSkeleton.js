@@ -15,7 +15,7 @@ import { useToasts } from 'react-toast-notifications'
 import MatchaModal from '../miscellaneous/Modal'
 // dynamic components
 // import Match from '../components/layout/Match'
-// import MatchChat from '../components/layout/MatchChat'
+// import MatchChat from '../components/layout/MatchCha '
 import { usePosition } from 'use-position'
 
 // Si on veut mettre le projet sur github, ne pas oublier de mettre
@@ -84,7 +84,7 @@ function PageSkeleton({ location, children }) {
   //   ),
   //   matchChat: () => {
   //     return (
-  //       <MatchChat
+  //       <MatchCh t
   //         roomId={chatMsgInfos.current[0]}
   //         idToSend={chatMsgInfos.current[1]}
   //       />
