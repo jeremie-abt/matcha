@@ -2,8 +2,8 @@ const manageNotif = (io, infos) => {
   let content
 
   switch (infos.type) {
-    case 'view':
-      // content = `Someone visited your profil`
+    case 'seen':
+      io.to(`room${infos.receiverId}`).emit('notifPrinting', 'seen')
       break
     case 'like':
       io.to(`room${infos.receiverId}`).emit('likesEmit', infos.userId)

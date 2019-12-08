@@ -6,6 +6,7 @@ const usersController = require('./controller/usersController')
 const tagsController = require('./controller/tagsController')
 const seenController = require('./controller/seenController')
 const imagesController = require('./controller/imagesController')
+const onlineController = require('./controller/onlineController')
 const likesController = require('./controller/likesController')
 const matchsController = require('./controller/matchController')
 const messagesController = require('./controller/messagesController')
@@ -77,6 +78,7 @@ apiRouter.get('/tags/user/:userId', tagsController.userTags)
 
 // Seen routes
 apiRouter.get('/seen/:userId', seenController.index)
+apiRouter.post('/seen', seenController.add)
 
 // likes routes
 apiRouter.get('/like/:userId', likesController.index)
@@ -115,6 +117,9 @@ apiRouter.post('/messages', messagesController.add)
 // Geoloc routes
 apiRouter.get('/geoloc/:userId', geolocController.show)
 apiRouter.post('/geoloc/add', geolocController.add)
+
+// online
+apiRouter.get('/online/:userId', onlineController.index)
 
 // pour l'instant c'est hardcoder
 module.exports = apiRouter

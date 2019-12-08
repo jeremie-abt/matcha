@@ -49,6 +49,7 @@ function MyProvider(props) {
   const HandleDisconnection = () => {
     const cookies = new Cookies()
     cookies.remove('token', { path: '/' })
+    socketIo.emit('handleDisconnection', user.id)
     setIsAuth(false)
     setIsVerified(false)
     updateUser(false)

@@ -12,6 +12,8 @@ const apiRouter = require('./apiRouter')
 const notificationsModel = require('./model/notificationsModel')
 const manageNotif = require('./socket/notificationsContent')
 
+const onlineModel = require('./model/onlineModel')
+
 app.use(cookieParser())
 app.use(express.static('./img'))
 
@@ -34,12 +36,37 @@ function createNotifDb({ userId, receiverId, type }) {
 // require('./socket/socketManager')
 server.listen(8081)
 
-io.on('connection', socket => {
-  // ya pas moyen de passer un arg en params de l'event connection ??
+const userDeconnection = (userId) => {
+  if (userId) {
+    onlineModel.userDisconnection(userId)
+    .catch(e => {
+      console.log("err : ", e)
+    })
+  }
+  
+}
 
+io.on('connection', socket => {
   socket.on('join', id => {
+    // insertion 
+    onlineModel.userConnection(id)
+    .then(() => {
+      socket.userId = id
+    })
+    .catch((e) => {
+      console.log("fail : ", e)
+    })
     socket.join(`room${id}`)
   })
+
+  socket.on('handleDisconnection', (userId) => {
+    userDeconnection(userId)
+  })
+
+  socket.on('disconnect', () => {
+    userDeconnection(socket.userId)
+  })
+  
   /*
   socket.on('like', async infos => {
     try {
@@ -55,18 +82,38 @@ io.on('connection', socket => {
     manageNotif(socket, infos)
   })
 */
+
+// quand tu unlike quelqun -> enlever la notif like
+// quand tu unmatch quelqun enlever la notif match
+
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
+    if (type === 'unmatch') {
+      notificationsModel
+        .deleteNotification(userId, receiverId, 'match')
+        .then(() => {
+          return notificationsModel
+            .deleteNotification(receiverId, userId, 'match')
+          })
+        .then(() => {
+            manageNotif(io, {userId, receiverId, type: 'unmatch'})
+        })
+    }
     if (type === 'unlike' || type === 'unmatch') {
-      manageNotif(io, { userId, receiverId, type })
+      notificationsModel.
+        deleteNotification(userId, receiverId, 'like')
+        .then(() => {
+          manageNotif(io, { userId, receiverId, type: 'unlike' })
+        })
+        .catch((e) => {
+          console.log("error, can't suppress notif : e", e)
+        })
     } else {
       notificationsModel
-        .createNotification(userId, receiverId, type)
+        .createNotification(userId, receiverId, type === "seen" ? "view" : type)
         .then(result => {
           if (result.rowCount) {
             manageNotif(io, { userId, receiverId, type })
-          } else {
-            console.log('Error during creation')
           }
         })
         .catch(err => {
@@ -74,6 +121,10 @@ io.on('connection', socket => {
         })
     }
   })
+
+  /*socket.on('seen', (idToSend) => {
+    socket.to(`room${idToSend}`).emit('seenReceived')
+  })*/
 
   socket.on('messageSent', (idToSend, msgMetadata) => {
     socket.to(`room${idToSend}`).emit('messageReceived', msgMetadata)

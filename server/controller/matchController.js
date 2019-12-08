@@ -36,7 +36,10 @@ const index = (req, res) => {
     })
     .then(resp => {
       if (resp) {
-        const ret = resp.map((elem, index) => [elem.rows[0], roomIds[index]])
+        const ret = resp.filter(elem => {
+          return elem.rowCount > 0
+        })
+          .map((elem, index) => [elem.rows[0], roomIds[index]])
         res.json(ret)
       } else {
         res.json([])
@@ -57,10 +60,11 @@ const index = (req, res) => {
 const add = (req, res) => {
   const { user1 } = req.body
   const { user2 } = req.body
-
+  
   likesModel
     .verifyMatch(user1, user2)
     .then(resp => {
+    
       if (parseInt(resp.rows[0].count, 10) !== 2) {
         res.status(204).send('impossible to add match')
         return null
@@ -69,8 +73,10 @@ const add = (req, res) => {
       return matchModel.isExistingMatch(user1, user2)
     })
     .then(resp => {
-      if (resp.rowCount != 0) return null
-      return matchModel.addMatch(user1, user2)
+        if (resp) {
+        if (resp.rowCount != 0) return null
+        return matchModel.addMatch(user1, user2)
+      }
     })
     .then(resp => {
       if (resp) {

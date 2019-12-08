@@ -1,5 +1,6 @@
 import React from 'react'
 import Slide from '../miscellaneous/Slide'
+import Moment from 'react-moment'
 import {
   Card,
   Media,
@@ -9,7 +10,14 @@ import {
   Tag
 } from 'react-bulma-components'
 
-const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
+const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => {
+  let onlineDisplay
+
+  if (onlineInfos) {
+    onlineDisplay = onlineInfos.is_online ? <p>online</p> :
+      <Moment fromNow date={onlineInfos.last_connection} />
+  } else onlineDisplay = null
+
   return (
     <Card className='card-fullwidth'>
       {images.length > 0 && (
@@ -39,8 +47,7 @@ const UserProfil = ({ userInfos, profilPicture, images, tags }) => {
           {userInfos.bio}
           <a href='#2'>#responsive</a>
           <div className='profil-last-online' dateTime='2016-1-1'>
-            11:09 PM - 1 Jan 2016
-            {/* need last time online or online */}
+            { onlineDisplay }
           </div>
         </Content>
         <Tag.Group>
