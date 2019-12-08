@@ -23,8 +23,16 @@ function getAllNotifications(receiverId) {
   return client.query(query, [receiverId])
 }
 
+function deleteNotification(userId, receiverId, type) {
+  const query = 
+    "delete from notifications " + 
+    "WHERE user_id=$1 AND receiver_id=$2 AND type=$3"
+
+  return client.query(query, [userId, receiverId, type])
+}
+
 module.exports = {
   createNotification,
   updateNotificationToSeen,
-  getAllNotifications
+  getAllNotifications,deleteNotification
 }
