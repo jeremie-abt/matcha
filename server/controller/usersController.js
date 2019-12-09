@@ -9,12 +9,24 @@ const { createToken } = require('../helpers/ManageToken')
 function show(req, res) {
   let id = req.params.userId ? req.params.userId : req.tokenInfo.id
   userModel
-    .getUserInfo({ id })
+    .getCompleteUserInfo({ id })
     .then(resp => {
-      if (resp.rowCount !== 1) res.status(500).send('something got Wrong')
+      if (resp.rowCount === 0) {
+        return userModel
+          .getUserInfo({ id })
+      }
+      delete(resp.rows[0].password)
+      delete(resp.rows[0].user_id)
+      delete(resp.rows[0].is_online)
       res.json(resp.rows[0])
     })
+    .then(resp => {
+      if (resp && resp.rowCount === 1) {
+        res.json(resp.rows[0])
+      }
+    })
     .catch(e => {
+      console.log("\n\nEEEE : ", e, "\n\n")
       res.status(500).send(e)
     })
 }

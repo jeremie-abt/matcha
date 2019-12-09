@@ -21,21 +21,30 @@ function isUserAlreadyCreated(userInfo) {
   return client.query(statement, values)
 }
 
-function getUserInfo(requiredData) {
-  const Query = new ReqFormatter()
 
-  Query.table = 'users'
-  Query.where({
-    and: {
-      eq: {
-        ...requiredData
-      }
-    }
-  })
-  const ret = Query.generateQuery('select')
-  return client.query(...ret)
+// aller chercher en plus une lat et une long
+// si le mec est online on prend / si il est hors-ligne
+// de puis moins de 2 heures on prend !
+function getCompleteUserInfo(requiredData) {
+
+  const statement = 
+    'SELECT users.*, MAX(geoloc.created_at) as latest_geoloc, geoloc.lat, ' +
+    ' geoloc.long, online.*' +
+    ' FROM users INNER JOIN geoloc ON geoloc.user_id = users.id ' +
+    ' INNER JOIN online ON users.id = online.user_id' +
+    ' where users.id = $1' +
+    ' GROUP BY users.id, geoloc.lat, geoloc.long, online.user_id'
+
+  return client.query(statement, [requiredData.id])
 }
 
+function getUserInfo(requiredData) {
+
+  const statement = 
+    'SELECT * from users where id = $1'
+
+  return client.query(statement, [requiredData.id])
+}
 function isUserExisting(requiredData) {
   const statement = `SELECT * FROM users WHERE ${requiredData[0]} = $1`
 
@@ -119,5 +128,6 @@ module.exports = {
   deleteUser,
   verifyMail,
   getUserInfo,
+  getCompleteUserInfo,
   banUser
 }

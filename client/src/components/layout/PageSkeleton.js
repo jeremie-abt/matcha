@@ -11,16 +11,10 @@ import Cookies from 'universal-cookie'
 import userContext from '../../context/UserContext'
 import { useToasts } from 'react-toast-notifications'
 
-// import Title from '../components/layout/PageTitle'
 import MatchaModal from '../miscellaneous/Modal'
-// dynamic components
-// import Match from '../components/layout/Match'
-// import MatchChat from '../components/layout/MatchChat'
-import { usePosition } from 'use-position'
 
 // Si on veut mettre le projet sur github, ne pas oublier de mettre
 // cete key dans un ./env
-const API_KEY = 'AIzaSyBYgNn_j0zaXwMWFAdAGP3VMDKxcPRcNjI'
 
 function PageSkeleton({ location, children }) {
   const myClasses = classNames({
@@ -32,66 +26,7 @@ function PageSkeleton({ location, children }) {
   const [msg, setMsg] = useState([])
   const context = useContext(userContext)
   const { addToast } = useToasts()
-  // const [curComponent, setCurComponent] = useState('search')
-
-  // let chatMsgInfos = useRef(null)
-  // const setChatComponent = msgInfos => {
-  //   chatMsgInfos.current = msgInfos
-  //   setCurComponent('matchChat')
-  // }
-
-  const { latitude, longitude, error } = usePosition()
-
-  useEffect(() => {
-    if (latitude && longitude && !error) {
-      geolocData(latitude, longitude, error)
-    }
-    if (error) {
-      axios
-        .post(
-          `https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`
-        )
-        .then(result => {
-          const { lat, lng } = result.data.location
-          geolocData(lat, lng)
-        })
-        .catch(err => {
-          throw err
-        })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [latitude, longitude, error])
-
-  const geolocData = (lat, long, error = null) => {
-    if (!error && lat && long) {
-      axios
-        .post('/geoloc/add', { userId: context.store.user.id, lat, long })
-        .then(() => {
-          context.store.user.lat = lat
-          context.store.user.long = long
-        })
-        .catch(err => {
-          throw err
-        })
-    }
-    if (error) {
-    }
-  }
-
-  // const componentsMapping = {
-  //   matchMenu: () => (
-  //     <Match userId={context.store.user.id} setCurComponent={setChatComponent} />
-  //   ),
-  //   matchChat: () => {
-  //     return (
-  //       <MatchChat
-  //         roomId={chatMsgInfos.current[0]}
-  //         idToSend={chatMsgInfos.current[1]}
-  //       />
-  //     )
-  //   }
-  // }
-
+  
   // Voir ca demain !!!!
   useEffect(() => {
     if (context.socketIo) {
@@ -119,10 +54,10 @@ function PageSkeleton({ location, children }) {
         },
         { withCredentials: true }
       )
-      .then(resp => {
+      .then(() => {
         setMsg(['Mail has been resend, please validate it', 'success'])
       })
-      .catch(e => {
+      .catch(() => {
         setMsg(['Error, mail has not been sent', 'danger'])
       })
   }

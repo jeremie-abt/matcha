@@ -7,7 +7,7 @@ const client = require('../database/connection')
 // pour avoir pleins de profils et faire le tri en front
 // le truc c'est que la on ne selectionne pas large on selectionne tous
 function searchProfils(userInfos) {
-  
+ 
   let query =
     'SELECT DISTINCT ON(users.id) users.*, geoloc.lat, geoloc.long FROM users ' +
     `INNER JOIN geoloc ON users.id = geoloc.user_id WHERE users.id != ${userInfos.id} `

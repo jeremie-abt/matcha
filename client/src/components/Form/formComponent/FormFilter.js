@@ -172,14 +172,16 @@ function FormFilter() {
       })
       .then(resp => {
         const profils = resp.data
-        profils.forEach(profil => {
-          const distance = getDistance(
-            { lat: userInfos.lat, lng: userInfos.long },
-            { lat: profil.lat, lng: profil.long }
-          )
-          profil.localisation = distance / 1000
-        })
-        setProfils(profils)
+        if (userInfos.lat && userInfos.long) {
+          profils.forEach(profil => {
+            const distance = getDistance(
+              { lat: userInfos.lat, lng: userInfos.long },
+              { lat: profil.lat, lng: profil.long }
+            )
+            profil.localisation = distance / 1000
+          })
+          setProfils(profils)
+        }
       })
       .catch(e => {
         console.log('aie ', e)
