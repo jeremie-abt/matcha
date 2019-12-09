@@ -19,6 +19,26 @@ function show(req, res) {
     })
 }
 
+function isUserExisting(req, res) {
+  const { username } = req.params
+
+  userModel
+    .isUserExisting(['username', username])
+    .then(resp => {
+      console.log("resp reows : ", resp.rows)
+      if (resp.rows.length === 0) {
+        res.status(200).send(false)
+      }
+      else {
+        res.json(resp.rows[0])
+      }
+    })
+    .catch((e) => {
+      console.log("err : ", e)
+      res.status(500).end()
+    })
+}
+
 // GOAL :
 //   when user is not logged in take some info
 //   request BDD to see if Data are correct !
@@ -28,25 +48,27 @@ function show(req, res) {
 function ManageAuthentification(req, res) {
   const { username, password } = req.body
 
+  console.log("passwor : ", password)
   if (!username || !password) {
     res.status(500).send('somenthing went wrong')
   }
-  userModel.isUserExisting(['username', username]).then(response => {
-    const cryptPassword = Crypto.SHA256(password).toString()
-    if (
-      response.rows.length !== 1 ||
-      response.rows[0].password !== cryptPassword
-    ) {
-      res.status(401).send('Wrong data')
-      return
-    }
-    const user = response.rows[0]
-    if (user.password === cryptPassword) {
-      const token = createToken(response.rows[0].id)
-      res.status(200).send(token)
-    }
-  })
-}
+  userModel.isUserExisting(['username', username])
+    .then(response => {
+      const cryptPassword = Crypto.SHA256(password).toString()
+      if (
+        response.rows.length !== 1 ||
+        response.rows[0].password !== cryptPassword
+      ) {
+        res.status(401).send('Wrong data')
+        return
+      }
+      const user = response.rows[0]
+      if (user.password === cryptPassword) {
+        const token = createToken(response.rows[0].id)
+        res.status(200).send(token)
+      }
+    })
+  }
 
 function create(req, res) {
   const argsWanted = [
@@ -90,20 +112,22 @@ function create(req, res) {
 }
 
 function updatePassword(req, res) {
-  if (req.body.password === undefined) {
+  const { userId, password } = req.body
+  if (!userId || !password) {
     res.status(404).send('Wrong Data')
+    return
   }
 
   res.clearCookie('mailToken')
-  const hash = Crypto.SHA256(req.body.password).toString()
+  const hash = Crypto.SHA256(password).toString()
   userModel
     .updateUser(
       {
         password: hash
       },
-      req.tokenInfo.id
+      userId
     )
-    .then(() => {
+    .then((resp) => {
       res.status(200).send()
     })
     .catch(e => {
@@ -175,7 +199,9 @@ function del(req, res) {
     })
 }
 
+
 function sendTokenMail(req, res) {
+  console.log("WEESHHH")
   const token = Crypto.lib.WordArray.random(28).toString()
   const { redirectionLink, email, id } = req.body
   sendMail(token, email, redirectionLink, id)
@@ -220,5 +246,6 @@ module.exports = {
   confirmationMail,
   verifyMail,
   ManageAuthentification,
-  sendTokenMail
+  sendTokenMail,
+  isUserExisting
 }

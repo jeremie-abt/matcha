@@ -28,12 +28,18 @@ function sendMail(token, mail, path, id) {
     auth: {
       user: mailIdentifier.username,
       pass: mailIdentifier.password
-    }
+    },
   })
 
+  // alors pour l'instant j'envoie directement les mails
+  // dans ma boite mail, pour changer il faut remplacer le
+  // abtjeremie@gmail.com mit en dur par la variable mail
+  // -> enfaite ca va dans les spams et je pense que c'est
+  // du au fait d'utiliser ethereal comme serveur smtp
+  // bref je verrai ca plus tard
   transporter.sendMail({
-    from: 'no-reply@matcha.om', // sender address
-    to: mail, // list of receivers
+    from: 'no-reply@matcha.com', // sender address
+    to: 'abtjeremie@gmail.com', // list of receivers
     subject: 'Inscription matcha', // Subject line
     html: BodyMsg
   })

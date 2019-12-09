@@ -1,39 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { withRouter } from 'react-router'
+import Cookies from 'universal-cookie'
+import { withRouter } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import axios from 'axios'
 import FormUpdatePassword from '../components/Form/formComponent/FormUpdatePassword'
 
-function ValidateMail(props) {
-  const [formAccess, setFormAccess] = useState(null)
+const ValidateMail = withRouter(({ match }) => {
 
-  useEffect(() => {
-    const params = props.match.params
-    const token = params.token
+  const [redirect, setRedirect] = useState(false)
+  const { token, userId } = match.params
+  const cookies = new Cookies()
 
-    axios
-      .get('/auth/confirmationMail/' + token, {
-        withCredentials: true
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          setFormAccess(true)
-        }
-      })
-      .catch(() => {
-        setFormAccess(false)
-      })
-  }, [props.match.params])
+  // les tokens correspondent -> OK
+  // le tokens ne correspondent pas -> redirection
 
-  if (formAccess === true) {
-    return <FormUpdatePassword />
-  } else if (formAccess === false) {
+  
+  if (!redirect && cookies.get('mailToken') === token) {
     return (
-      <div>
-        <Redirect to='/profil' />
-      </div>
+      <FormUpdatePassword userId={userId} setRedirect={setRedirect} />
     )
-  } else return <div>loading ...</div>
-}
+  } 
+  return (
+    <Redirect link='/'/>
+  )
+})
 
-export default withRouter(ValidateMail)
+export default ValidateMail

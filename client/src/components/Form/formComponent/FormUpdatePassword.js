@@ -36,10 +36,9 @@ function parseFormData(formData) {
   return true
 }
 
-function FormUpdatePassword({ setShowModal }) {
+function FormUpdatePassword( { userId, setRedirect }) {
   const { addToast } = useToasts()
 
-  const cookies = new Cookies()
   const handleSubmit = ({ state }) => {
     const dataObligated = ['password', 'confirmpassword']
     const isAllDataGiven = dataObligated.every(elem => {
@@ -59,18 +58,17 @@ function FormUpdatePassword({ setShowModal }) {
           .post(
             '/users/updatePassword',
             {
-              password: state.password
+              password: state.password,
+              userId: userId
             },
             {
-              headers: {
-                authorization: 'Bearer ' + cookies.get('token')
-              },
               withCredentials: true
             }
           )
           .then(() => {
+            setRedirect(true)
             addToast('Modification du mot de passe réussi', {
-              appearance: 'error',
+              appearance: 'success',
               autoDismiss: true
             })
           })

@@ -223,6 +223,12 @@ function FormConstructor({ location, ...props }) {
       <Button className='is-primary' onClick={handleSubmit}>
         {location.pathname === '/account' ? 'Valider' : 'Rechercher'}
       </Button>
+      {
+        location.pathname === '/' &&
+        <Button onClick={() => props.handleNewPassword({ state })}>
+          forgot your password
+        </Button>
+      }
       <Content size={'small'} style={{ color: 'red' }}>
         {props.msg &&
           props.msg.length === 2 &&

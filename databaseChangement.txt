@@ -1,2 +1,0 @@
-ALTER TABLE users ADD CONSTRAINT valid_score CHECK (users.popularity_score < 10);
-ALTER TABLE seen add constraint unique_seen UNIQUE(watcher_id, watched_id);

@@ -36,6 +36,7 @@ apiRouter.post('/upload', upload.single('file'), uploadFile.add)
 // multer
 
 // user routes
+apiRouter.get('/users/isUserExisting/:username', usersController.isUserExisting)
 apiRouter.get(
   '/users/getUser/:userId?',
   dataVerifToken.verifyToken,
@@ -47,7 +48,6 @@ apiRouter.delete('/users/:userId/delete', usersController.del)
 apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
 apiRouter.post(
   '/users/updatePassword',
-  dataVerifToken.verifyToken,
   usersController.updatePassword
 )
 

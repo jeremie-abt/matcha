@@ -26,6 +26,7 @@ function LoginPage() {
             <Content>
               <h1> Sign-in</h1>
             </Content>
+
             <MyContext.Consumer>
               {context => {
                 return (

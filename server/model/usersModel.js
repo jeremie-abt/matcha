@@ -37,7 +37,8 @@ function getUserInfo(requiredData) {
 }
 
 function isUserExisting(requiredData) {
-  const statement = `SELECT * FROM users WHERE ${requiredData[0]} = $1`
+  const statement = "SELECT username, email, id, password " +
+                    `FROM users WHERE ${requiredData[0]} = $1`
 
   return client.query(statement, [requiredData[1]])
 }
@@ -96,6 +97,7 @@ function updateUser(updateInfo, userId) {
     }
   })
   const ret = ReqGenerator.generateQuery('update')
+  console.log("ret : ", ret)
   return client.query(...ret)
 }
 

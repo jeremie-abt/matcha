@@ -17,10 +17,10 @@ const FormLogin = ({ fields, setUserLogged }) => {
       fullwidth: true
     }
   }
-
+  
   const handleSubmit = ({ state }) => {
     let keepRefToToken
-
+    
     if (!state.username || !state.password) {
       addToast('Merci de remplir entièrement le formulaire', {
         appearance: 'error',
@@ -29,29 +29,29 @@ const FormLogin = ({ fields, setUserLogged }) => {
       return
     }
     axios
-      .post('/users/authenticate', state)
-      .then(resp => {
-        keepRefToToken = resp.data
-        return axios.get('/users/getUser', {
-          headers: {
-            authorization: 'Bearer ' + keepRefToToken
-          }
-        })
+    .post('/users/authenticate', state)
+    .then(resp => {
+      keepRefToToken = resp.data
+      return axios.get('/users/getUser', {
+        headers: {
+          authorization: 'Bearer ' + keepRefToToken
+        }
       })
-      .then(resp => {
-        if (resp.status === 200) {
-          const { banned } = resp.data
-          if (!banned) {
-            const cookies = new Cookies()
-            cookies.set('token', keepRefToToken, { path: '/' })
-            setUserLogged()
-          } else {
-            addToast(
-              'Cette utilisateur a été banni suite à de nombreux report',
-              {
-                appearance: 'error',
-                autoDismiss: true
-              }
+    })
+    .then(resp => {
+      if (resp.status === 200) {
+        const { banned } = resp.data
+        if (!banned) {
+          const cookies = new Cookies()
+          cookies.set('token', keepRefToToken, { path: '/' })
+          setUserLogged()
+        } else {
+          addToast(
+            'Cette utilisateur a été banni suite à de nombreux report',
+            {
+              appearance: 'error',
+              autoDismiss: true
+            }
             )
           }
         }
@@ -70,14 +70,50 @@ const FormLogin = ({ fields, setUserLogged }) => {
           })
         }
       })
-  }
-
-  return (
-    <div>
+    }
+    
+    function handleNewPassword( { state }) {
+      if (!state.username) {
+        addToast('Merci de remplir le userName', {
+          appearance: 'error',
+          autoDismiss: true
+        })
+      } else {
+        axios.get('/users/isUserExisting/' + state.username)
+          .then(resp => {
+            if (resp.data) {
+              console.log("resp.data : ", resp.data)
+              axios.post(
+                '/auth/sendTokenMail/',
+                {
+                  redirectionLink: 'http://localhost:3000/changePassword/',
+                  id: resp.data.id,
+                  email: resp.data.email
+                },
+                {
+                  withCredentials: true
+                }
+              )
+            } else {
+              addToast('this username is not existing', {
+                appearance: 'error',
+                autoDismiss: true
+              })
+            }
+          })
+          .catch(e => {
+            console.log("jarrive ici : ", e)
+          })
+      }
+    }
+    
+    return (
+      <div>
       <FormConstructor
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}
+        handleNewPassword={handleNewPassword}
       />
     </div>
   )
