@@ -4,7 +4,9 @@ const cors = require('cors')
 // const app = express()
 const app = express()
 const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+  pingTimeout: 60000
+})
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const apiRouter = require('./apiRouter')
@@ -36,37 +38,36 @@ function createNotifDb({ userId, receiverId, type }) {
 // require('./socket/socketManager')
 server.listen(8081)
 
-const userDeconnection = (userId) => {
+const userDeconnection = userId => {
   if (userId) {
-    onlineModel.userDisconnection(userId)
-    .catch(e => {
-      console.log("err : ", e)
+    onlineModel.userDisconnection(userId).catch(e => {
+      console.log('err : ', e)
     })
   }
-  
 }
 
 io.on('connection', socket => {
   socket.on('join', id => {
-    // insertion 
-    onlineModel.userConnection(id)
-    .then(() => {
-      socket.userId = id
-    })
-    .catch((e) => {
-      console.log("fail : ", e)
-    })
+    // insertion
+    onlineModel
+      .userConnection(id)
+      .then(() => {
+        socket.userId = id
+      })
+      .catch(e => {
+        console.log('fail : ', e)
+      })
     socket.join(`room${id}`)
   })
 
-  socket.on('handleDisconnection', (userId) => {
+  socket.on('handleDisconnection', userId => {
     userDeconnection(userId)
   })
 
   socket.on('disconnect', () => {
     userDeconnection(socket.userId)
   })
-  
+
   /*
   socket.on('like', async infos => {
     try {
@@ -83,8 +84,8 @@ io.on('connection', socket => {
   })
 */
 
-// quand tu unlike quelqun -> enlever la notif like
-// quand tu unmatch quelqun enlever la notif match
+  // quand tu unlike quelqun -> enlever la notif like
+  // quand tu unmatch quelqun enlever la notif match
 
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
@@ -92,25 +93,28 @@ io.on('connection', socket => {
       notificationsModel
         .deleteNotification(userId, receiverId, 'match')
         .then(() => {
-          return notificationsModel
-            .deleteNotification(receiverId, userId, 'match')
-          })
+          return notificationsModel.deleteNotification(
+            receiverId,
+            userId,
+            'match'
+          )
+        })
         .then(() => {
-            manageNotif(io, {userId, receiverId, type: 'unmatch'})
+          manageNotif(io, { userId, receiverId, type: 'unmatch' })
         })
     }
     if (type === 'unlike' || type === 'unmatch') {
-      notificationsModel.
-        deleteNotification(userId, receiverId, 'like')
+      notificationsModel
+        .deleteNotification(userId, receiverId, 'like')
         .then(() => {
           manageNotif(io, { userId, receiverId, type: 'unlike' })
         })
-        .catch((e) => {
+        .catch(e => {
           console.log("error, can't suppress notif : e", e)
         })
     } else {
       notificationsModel
-        .createNotification(userId, receiverId, type === "seen" ? "view" : type)
+        .createNotification(userId, receiverId, type === 'seen' ? 'view' : type)
         .then(result => {
           if (result.rowCount) {
             manageNotif(io, { userId, receiverId, type })

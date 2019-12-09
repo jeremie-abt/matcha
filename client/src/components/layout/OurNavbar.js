@@ -45,9 +45,42 @@ function OurNavbar() {
           <Link to='/search' className='navbar-item'>
             Search
           </Link>
+
+          {/* Notifications is-hoverable disable during loading*/}
+          <div className={'navbar-item has-dropdown '}>
+            <div class=' navbar-item '>
+              <Link
+                data-badge='8'
+                className='navbar-item
+                has-dropdown
+                has-badge-rounded
+                has-badge-danger'
+              >
+                Mes Notifications
+              </Link>
+            </div>
+            <div className='navbar-dropdown'>
+              <Link to='/myProfil' className='navbar-item'>
+                Mon profil
+              </Link>
+              <Link to='/account' className='navbar-item'>
+                Mon compte
+              </Link>
+              <Link to='/images' className='navbar-item'>
+                Mes images
+              </Link>
+              <Link to='/like' className='navbar-item'>
+                Likes
+              </Link>
+              <Link to='/seen' className='navbar-item'>
+                Vues
+              </Link>
+            </div>
+          </div>
+
+          {/* informations */}
           <div className='navbar-item has-dropdown is-hoverable'>
             <div className='navbar-link'>Mes informations</div>
-
             <div className='navbar-dropdown'>
               <Link to='/myProfil' className='navbar-item'>
                 Mon profil
