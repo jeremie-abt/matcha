@@ -1,5 +1,2 @@
-alter table online add primary key (user_id);
-alter table users drop column online;
-alter table users drop column localisation;
-delete from geoloc;
-alter table geoloc add primary key (user_id);
+alter table users alter column gender set default null;
+

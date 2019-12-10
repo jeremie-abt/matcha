@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Button } from 'react-bulma-components'
 
 import HeaderLinks from './HeaderLinks'
@@ -7,9 +7,54 @@ import { Link } from 'react-router-dom'
 
 function OurNavbar() {
   const [isActive, setIsActive] = useState(false)
+  const context = useContext(UserContext)
 
   const handleClick = () => {
     setIsActive(!isActive)
+  }
+
+  let navButton 
+  if (context.store.isProfilCompleted) {
+    navButton = <div className='navbar-start'>
+        <Link to='/search' className='navbar-item'>
+          Search
+        </Link>
+        <div className='navbar-item has-dropdown is-hoverable'>
+          <div className='navbar-link'>Mes informations</div>
+
+          <div className='navbar-dropdown'>
+            <Link to='/myProfil' className='navbar-item'>
+              Mon profil
+            </Link>
+            <Link to='/account' className='navbar-item'>
+              Mon compte
+            </Link>
+            <Link to='/images' className='navbar-item'>
+              Mes images
+            </Link>
+            <Link to='/like' className='navbar-item'>
+              Likes
+            </Link>
+            <Link to='/seen' className='navbar-item'>
+              Vues
+            </Link>
+          </div>
+        </div>
+      </div>
+  } else {
+    navButton = <div className='navbar-start'>
+        <div className='navbar-item has-dropdown is-hoverable'>
+          <div className='navbar-link'>Mes informations</div>
+          <div className='navbar-dropdown'>
+            <Link to='/myProfil' className='navbar-item'>
+              Mon profil
+            </Link>
+            <Link to='/account' className='navbar-item'>
+              Mon compte
+            </Link>
+          </div>
+        </div>
+      </div>
   }
 
   return (
@@ -41,32 +86,7 @@ function OurNavbar() {
         id='navbarBasic'
         className={'navbar-menu ' + (isActive ? 'is-active' : '')}
       >
-        <div className='navbar-start'>
-          <Link to='/search' className='navbar-item'>
-            Search
-          </Link>
-          <div className='navbar-item has-dropdown is-hoverable'>
-            <div className='navbar-link'>Mes informations</div>
-
-            <div className='navbar-dropdown'>
-              <Link to='/myProfil' className='navbar-item'>
-                Mon profil
-              </Link>
-              <Link to='/account' className='navbar-item'>
-                Mon compte
-              </Link>
-              <Link to='/images' className='navbar-item'>
-                Mes images
-              </Link>
-              <Link to='/like' className='navbar-item'>
-                Likes
-              </Link>
-              <Link to='/seen' className='navbar-item'>
-                Vues
-              </Link>
-            </div>
-          </div>
-        </div>
+        {navButton}
 
         <div className='navbar-end'>
           <div className='navbar-item'>

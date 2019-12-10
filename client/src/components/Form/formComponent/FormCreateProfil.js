@@ -34,13 +34,14 @@ const fields = [
     name: 'confirmpassword',
     label: 'confirmpassword',
     type: 'password'
-  },
+  }
+  /*,
   {
     name: 'gender',
     title: 'gender',
     type: 'radio',
     radioValues: ['female', 'male']
-  }
+  }*/
 ]
 
 const buttonStyle = {
@@ -76,7 +77,6 @@ function FormCreateProfil() {
       'email',
       'password',
       'confirmpassword',
-      'gender'
     ]
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {
@@ -95,6 +95,7 @@ function FormCreateProfil() {
             setMsg(['user already created', 'danger'])
           })
           .then(resp => {
+            console.log("oui")
             if (resp) {
               return axios.post(
                 '/auth/sendTokenMail/',

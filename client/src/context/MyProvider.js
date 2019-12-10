@@ -11,6 +11,7 @@ function MyProvider(props) {
   const [isVerified, setIsVerified] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
   const [socketIo, setSocketIo] = useState(null)
+  const [isProfilCompleted, setIsProfilCompleted] = useState(false)
 
   useEffect(() => {
     const verifyIfAuth = async () => {
@@ -19,6 +20,22 @@ function MyProvider(props) {
     }
     verifyIfAuth()
   }, [])
+
+  //const updateCompletedProfil = () => {
+  useEffect(() => {
+    // je pense qu'ici on peut partir du principe quon utilise
+    // le contexte donc la variable user
+    // A voir selon le sujet enfaite ils parlent de profils etendue
+    // persos je demande a ce que le mec rajoute une bio au moins 
+    // un Tag et son genre -> A voir
+    console.log("update complete : ", user)
+    if (Object.entries(user).length > 0 && 
+        user.bio !== "" && user.tags.length > 0 && user.gender){
+      console.log("OUIII")
+      setIsProfilCompleted(true)
+    }
+  }, [user])
+    
 
   // fonction pour pouvoir update le user et le isAuth
   const updateUser = newUser => {
@@ -30,6 +47,9 @@ function MyProvider(props) {
         newUserContext[key] = val
       })
       setUser(newUserContext)
+      /*if (isProfilCompleted === false) {
+        updateCompletedProfil()
+      }*/
     }
   }
 
@@ -50,6 +70,7 @@ function MyProvider(props) {
           setSocketIo(setSocket(response.data.id))
           setUser(response.data)
           setIsAuth(true)
+          //updateCompletedProfil()
           return {...response.data}
         })
         .catch(e => {
@@ -77,12 +98,14 @@ function MyProvider(props) {
             store: {
               isAuth,
               isVerified,
-              user
+              user,
+              isProfilCompleted: isProfilCompleted
             },
             updateUser: updateUser,
             setUserLogged: setUserLogged,
             HandleDisconnection: HandleDisconnection,
-            socketIo: socketIo
+            socketIo: socketIo,
+            updateProfilCompleted: setIsProfilCompleted
           }}
         >
           {props.children}

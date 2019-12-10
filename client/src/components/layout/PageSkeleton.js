@@ -1,8 +1,8 @@
 import { Section, Container, Columns } from 'react-bulma-components'
-import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import OurHeader from './OurHeader'
 import OurFooter from './OurFooter'
+import { Link, withRouter } from 'react-router-dom'
 
 import React, { useState, useContext, useEffect } from 'react'
 import { Button, Content } from 'react-bulma-components'
@@ -11,12 +11,13 @@ import Cookies from 'universal-cookie'
 import userContext from '../../context/UserContext'
 import { useToasts } from 'react-toast-notifications'
 
+
 import MatchaModal from '../miscellaneous/Modal'
 
 // Si on veut mettre le projet sur github, ne pas oublier de mettre
 // cete key dans un ./env
 
-function PageSkeleton({ location, children }) {
+const PageSkeleton = withRouter(({ location, children }) => {
   const myClasses = classNames({
     homepage: true,
     'image-background': location.pathname === '/',
@@ -62,13 +63,45 @@ function PageSkeleton({ location, children }) {
       })
   }
 
+  
+  let body = <Columns.Column>{children}</Columns.Column>
+
+  if (context.store.isAuth === true) {
+    // quand il est log
+    if (context.store.user.verified_mail === false) {
+      body = <div>
+          {Object.entries(msg).length !== 0 && (
+            <MatchaModal
+              color={msg[1]}
+              msg={msg[0]}
+              setMsg={setMsg}
+            ></MatchaModal>
+          )}
+          <Content>
+            <h1>You must confirm your mail</h1>
+            <Button onClick={sendNewMail}>
+              Click here to send new Mail
+            </Button>
+          </Content>
+        </div>
+    } else if (context.store.isProfilCompleted === false
+        && location.pathname !== '/account') {
+      body = <div>
+          <h1>Veuillez completer votre profil</h1>
+          <Link to="account">Completer mon profil</Link>
+        </div>
+    }
+  }
+
   return (
     <div className='layout-color'>
       <OurHeader />
       <Section className={myClasses}>
         <Container>
           <Columns>
-            {context.store.user.verified_mail === false ? (
+            { body }
+            {/*
+            context.store.user.verified_mail === false ? (
               <div>
                 {Object.entries(msg).length !== 0 && (
                   <MatchaModal
@@ -86,13 +119,14 @@ function PageSkeleton({ location, children }) {
               </div>
             ) : (
               <Columns.Column>{children}</Columns.Column>
-            )}
+            )
+            */}
           </Columns>
         </Container>
       </Section>
       <OurFooter />
     </div>
   )
-}
+})
 
 export default withRouter(PageSkeleton)
