@@ -40,6 +40,11 @@ const fields = [
     title: 'gender',
     type: 'radio',
     radioValues: ['female', 'male']
+  },
+  {
+    name: 'birthdate',
+    title: 'birthdate',
+    type: 'datepicker'
   }
 ]
 
@@ -54,8 +59,15 @@ const buttonStyle = {
 }
 
 function parseFormData(formData) {
-  const { email, password, confirmpassword } = formData
+  const { email, password, confirmpassword, currentDate } = formData
 
+  let tmpDate = new Date()
+  if (tmpDate - currentDate < 0) return 'Date invalid'
+  tmpDate = new Date(
+      tmpDate.getFullYear() - 18,
+      tmpDate.getMonth(), tmpDate.getDate()
+  )
+  if (currentDate >= tmpDate) return 'Date invalid'
   const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
   if (confirmpassword !== password)
     return 'Password and confirmpassword are not the same ...'
@@ -68,7 +80,7 @@ function parseFormData(formData) {
 function FormCreateProfil() {
   const [msg, setMsg] = useState([])
 
-  const handleSubmit = ({ state }) => {
+  const handleSubmit = ({ state, currentDate }) => {
     const dataObligated = [
       'firstname',
       'lastname',
@@ -78,6 +90,10 @@ function FormCreateProfil() {
       'confirmpassword',
       'gender'
     ]
+    if (!currentDate) {
+      setMsg(['pls fill all input', 'danger'])
+      return null
+    }
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {
         setMsg(['pls fill all input', 'danger'])
@@ -86,11 +102,11 @@ function FormCreateProfil() {
       return true
     })
     if (isAllDataGiven) {
-      const ret = parseFormData(state)
+      const ret = parseFormData({ ...state, currentDate })
       if (ret === true) {
         // creation du user
         axios
-          .post('/users', state)
+          .post('/users', { ...state, birthdate:currentDate })
           .catch(e => {
             setMsg(['user already created', 'danger'])
           })

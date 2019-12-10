@@ -62,7 +62,8 @@ function ManageAuthentification(req, res) {
 function create(req, res) {
   const argsWanted = [
     'firstname', 'lastname', 'email',
-    'password', 'username', 'gender'
+    'password', 'username', 'gender',
+    'birthdate'
   ]
   const userAccountInfos = {}
 

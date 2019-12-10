@@ -47,6 +47,13 @@ let fields = [
     label: 'Bio',
     type: 'text'
   }
+  // chepa si on veut le laisser changer son birthdate,
+  // c'est bizarre non ? 
+  /*{
+    name: 'birthdate',
+    title: 'birthdate',
+    type: 'datepicker'
+  }*/
 ]
 
 class FormUpdateProfil extends React.Component {

@@ -7,6 +7,8 @@ import Checkbox from './InputStyle/CheckboxStyle'
 import MyRadio from './InputStyle/RadioStyle'
 import Range from './InputStyle/InputDoubleRange'
 import Slider from './InputStyle/InputSlider'
+import MyDatePicker from "../miscellaneous/MyDatePicker"
+
 
 import UserContext from '../../context/UserContext'
 
@@ -14,6 +16,11 @@ function FormConstructor({ location, ...props }) {
   const context = useContext(UserContext)
   const [state, setState] = useState({})
   const [checkbox, setCheckbox] = useState({})
+  const [currentDate, setCurrentDate] = useState(
+    context.store.user.birthdate ?
+    new Date(context.store.user.birthdate) :
+    new Date()
+  )
 
   useEffect(() => {
     const checkboxObj = {}
@@ -106,6 +113,17 @@ function FormConstructor({ location, ...props }) {
     )
   }
 
+  const _renderDatepicker = elem => {
+    return (
+      <MyDatePicker
+        key={'saucissemayonaise'}
+        title={elem.name}
+        currentDate={currentDate}
+        setCurrentDate={setCurrentDate}
+      />
+    )
+  }
+
   const _renderCheckbox = elem => {
     let checkboxComponent
 
@@ -192,7 +210,8 @@ function FormConstructor({ location, ...props }) {
 
     props.handleForm({
       state: state,
-      checkbox: checkbox
+      checkbox: checkbox,
+      currentDate: currentDate
     })
   }
 
@@ -213,6 +232,8 @@ function FormConstructor({ location, ...props }) {
             return _renderRange(field)
           } else if (field.type === 'slider') {
             return _renderSlider(field)
+          } else if (field.type === 'datepicker') {
+            return _renderDatepicker(field)
           } else {
             return _renderText({
               elem: field
