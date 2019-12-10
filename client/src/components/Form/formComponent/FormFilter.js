@@ -177,7 +177,7 @@ function FormFilter() {
             // 7 200 000 -> 2 heures because it is in milisec
             // 2 * 60 * 60 * 1000
             if (profil.is_online || (
-                new Date() - new Date(profil.last_connection) <= 7200000
+                new Date() - new Date(profil.last_connection) <= 43200000
                 )){
               // c'est ma condition pour les moins de 2 heures ! 
               // il faut test !!!
