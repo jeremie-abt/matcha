@@ -201,7 +201,6 @@ function del(req, res) {
 
 
 function sendTokenMail(req, res) {
-  console.log("WEESHHH")
   const token = Crypto.lib.WordArray.random(28).toString()
   const { redirectionLink, email, id } = req.body
   sendMail(token, email, redirectionLink, id)

@@ -44,7 +44,6 @@ function isUserExisting(requiredData) {
 }
 
 function createUser(userInfo) {
-  console.log("userInfos : ", userInfo)
   const statement =
     `INSERT INTO users` +
     `(firstname, lastname, password, username, email, gender) ` +

@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer')
-
 const mailIdentifier = require('../config/mailIdentifiant')
 
 /**
@@ -22,12 +21,13 @@ function sendMail(token, mail, path, id) {
     ` to register your account`
   const transporter = nodemailer.createTransport({
     sendmail: true,
-    host: 'smtp.ethereal.email',
+    //host: 'smtp.ethereal.email',
+    service: 'gmail',
     port: 587,
     secure: false,
     auth: {
-      user: mailIdentifier.username,
-      pass: mailIdentifier.password
+      user: 'matcha42jabtdalauren@gmail.com',
+      pass: 'Mystas95'
     },
   })
 

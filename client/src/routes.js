@@ -22,12 +22,6 @@ const AppRouter = () => (
       <div>
         <MyProvider>
           <Switch>
-            <Route component={DoubleRange} path='/test' />
-            <Route
-              path='/changePassword/:userId/:token'
-              render={() => <ChangePasswordPage />}
-              key={50}
-            />
             <Route
               path='/confirmationMail/:userId/:token'
               render={() => <ValidateMail />}
