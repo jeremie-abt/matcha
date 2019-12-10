@@ -17,7 +17,6 @@ function show(req, res) {
       }
       delete(resp.rows[0].password)
       delete(resp.rows[0].user_id)
-      delete(resp.rows[0].is_online)
       res.json(resp.rows[0])
     })
     .then(resp => {
