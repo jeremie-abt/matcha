@@ -6,6 +6,12 @@ function getUserFromId(id) {
   return client.query(statement, [id])
 }
 
+function getArrayOfUsers(ids) {
+  const query = `SELECT * from users WHERE id = ANY (ARRAY[${ids}])`
+
+  return client.query(query, [])
+}
+
 function isUserAlreadyCreated(userInfo) {
   const statement =
     `SELECT * FROM users ` +
@@ -43,7 +49,6 @@ function isUserExisting(requiredData) {
 }
 
 function createUser(userInfo) {
-  console.log("userInfos : ", userInfo)
   const statement =
     `INSERT INTO users` +
     `(firstname, lastname, password, username, email, gender) ` +
@@ -119,5 +124,6 @@ module.exports = {
   deleteUser,
   verifyMail,
   getUserInfo,
+  getArrayOfUsers,
   banUser
 }

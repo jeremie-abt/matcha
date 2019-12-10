@@ -8,6 +8,7 @@ import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
 import DefaultPage from '../components/GeneralRedirection/LoggedDefaultPage'
+import Notifications from '../components/notifications/Notifications'
 import Layout from '../components/layout/PageSkeleton'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -47,6 +48,16 @@ function LoggedRoutes() {
                   userInfos={context.store.user}
                   key={8}
                   exact
+                />,
+                <Route
+                  path='/notifications'
+                  render={() => (
+                    <Notifications
+                      userInfos={context.store.user}
+                      updateUser={context.updateUser}
+                    />
+                  )}
+                  key={9}
                 />
               ]
             }}

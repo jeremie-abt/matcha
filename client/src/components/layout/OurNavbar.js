@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState, useContext } from 'react'
 import { Button } from 'react-bulma-components'
 
 import HeaderLinks from './HeaderLinks'
@@ -7,11 +8,11 @@ import { Link } from 'react-router-dom'
 
 function OurNavbar() {
   const [isActive, setIsActive] = useState(false)
-
+  const context = useContext(UserContext)
   const handleClick = () => {
     setIsActive(!isActive)
   }
-
+  const isAuth = context.store.isAuth
   return (
     <nav
       className='navbar layout-color'
@@ -36,71 +37,70 @@ function OurNavbar() {
           <span aria-hidden='true'></span>
         </a>
       </div>
-
       <div
         id='navbarBasic'
         className={'navbar-menu ' + (isActive ? 'is-active' : '')}
       >
-        <div className='navbar-start'>
-          <Link to='/search' className='navbar-item'>
-            Search
-          </Link>
-
-          {/* Notifications is-hoverable disable during loading*/}
-          <div className={'navbar-item has-dropdown '}>
-            <div class=' navbar-item '>
-              <Link
-                data-badge='8'
-                className='navbar-item
+        {isAuth && (
+          <div className='navbar-start'>
+            <Link to='/search' className='navbar-item'>
+              Search
+            </Link>
+            {/* Notifications is-hoverable disable during loading*/}
+            <div className={'navbar-item has-dropdown '}>
+              <div className=' navbar-item '>
+                <Link
+                  to='/notifications'
+                  data-badge={context.store.user.notifications.length}
+                  className='navbar-item
                 has-dropdown
                 has-badge-rounded
                 has-badge-danger'
-              >
-                Mes Notifications
-              </Link>
+                >
+                  Mes Notifications
+                </Link>
+              </div>
+              <div className='navbar-dropdown'>
+                <Link to='/myProfil' className='navbar-item'>
+                  Mon profil
+                </Link>
+                <Link to='/account' className='navbar-item'>
+                  Mon compte
+                </Link>
+                <Link to='/images' className='navbar-item'>
+                  Mes images
+                </Link>
+                <Link to='/like' className='navbar-item'>
+                  Likes
+                </Link>
+                <Link to='/seen' className='navbar-item'>
+                  Vues
+                </Link>
+              </div>
             </div>
-            <div className='navbar-dropdown'>
-              <Link to='/myProfil' className='navbar-item'>
-                Mon profil
-              </Link>
-              <Link to='/account' className='navbar-item'>
-                Mon compte
-              </Link>
-              <Link to='/images' className='navbar-item'>
-                Mes images
-              </Link>
-              <Link to='/like' className='navbar-item'>
-                Likes
-              </Link>
-              <Link to='/seen' className='navbar-item'>
-                Vues
-              </Link>
+            {/* informations */}
+            <div className='navbar-item has-dropdown is-hoverable'>
+              <div className='navbar-link'>Mes informations</div>
+              <div className='navbar-dropdown'>
+                <Link to='/myProfil' className='navbar-item'>
+                  Mon profil
+                </Link>
+                <Link to='/account' className='navbar-item'>
+                  Mon compte
+                </Link>
+                <Link to='/images' className='navbar-item'>
+                  Mes images
+                </Link>
+                <Link to='/like' className='navbar-item'>
+                  Likes
+                </Link>
+                <Link to='/seen' className='navbar-item'>
+                  Vues
+                </Link>
+              </div>
             </div>
           </div>
-
-          {/* informations */}
-          <div className='navbar-item has-dropdown is-hoverable'>
-            <div className='navbar-link'>Mes informations</div>
-            <div className='navbar-dropdown'>
-              <Link to='/myProfil' className='navbar-item'>
-                Mon profil
-              </Link>
-              <Link to='/account' className='navbar-item'>
-                Mon compte
-              </Link>
-              <Link to='/images' className='navbar-item'>
-                Mes images
-              </Link>
-              <Link to='/like' className='navbar-item'>
-                Likes
-              </Link>
-              <Link to='/seen' className='navbar-item'>
-                Vues
-              </Link>
-            </div>
-          </div>
-        </div>
-
+        )}
         <div className='navbar-end'>
           <div className='navbar-item'>
             <UserContext.Consumer>

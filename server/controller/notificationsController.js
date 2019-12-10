@@ -29,6 +29,24 @@ const index = async (req, res) => {
     .finally(() => res.end())
 }
 
+const getSenderInfos = (req, res) => {
+  let { ids } = req.params
+  ids = ids.split(',').map(elem => parseInt(elem, 10))
+  usersModel
+    .getArrayOfUsers(ids)
+    .catch(err => {
+      throw err
+    })
+    .then(result => {
+      if (result.rowCount) res.json(result.rows)
+      else res.status(204).send('no content')
+    })
+    .catch(err => {
+      throw err
+    })
+    .finally(() => res.end())
+}
+
 const add = async (req, res) => {
   const { type } = req.body
   const userId = parseInt(req.body.userId, 10)
@@ -84,5 +102,6 @@ const update = (req, res) => {
 module.exports = {
   index,
   add,
-  update
+  update,
+  getSenderInfos
 }

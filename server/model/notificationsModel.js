@@ -17,16 +17,16 @@ function updateNotificationToSeen(notifId) {
 
 function getAllNotifications(receiverId) {
   const query =
-    `Select user_id, max(created_at), type from notifications where` +
-    ` receiver_id = $1 group by user_id, type`
+    `Select user_id, type from notifications where` +
+    ` receiver_id = $1 AND seen=false GROUP BY user_id, type`
 
   return client.query(query, [receiverId])
 }
 
 function deleteNotification(userId, receiverId, type) {
-  const query = 
-    "delete from notifications " + 
-    "WHERE user_id=$1 AND receiver_id=$2 AND type=$3"
+  const query =
+    'delete from notifications ' +
+    'WHERE user_id=$1 AND receiver_id=$2 AND type=$3'
 
   return client.query(query, [userId, receiverId, type])
 }
@@ -34,5 +34,6 @@ function deleteNotification(userId, receiverId, type) {
 module.exports = {
   createNotification,
   updateNotificationToSeen,
-  getAllNotifications,deleteNotification
+  getAllNotifications,
+  deleteNotification
 }

@@ -103,6 +103,10 @@ apiRouter.post('/auth/sendTokenMail', usersController.sendTokenMail)
 
 // Notifications
 apiRouter.get('/notifications/:receiverId', notificationsController.index)
+apiRouter.get(
+  '/notifications/users/:ids',
+  notificationsController.getSenderInfos
+)
 apiRouter.post('/notifications/add', notificationsController.add)
 apiRouter.put('/notifications/update', notificationsController.update)
 

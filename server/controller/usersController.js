@@ -2,17 +2,24 @@
 const Crypto = require('crypto-js')
 
 const userModel = require('../model/usersModel')
+const notificationsModel = require('../model/notificationsModel')
 const { sendMail } = require('../helpers/MailSender')
 
 const { createToken } = require('../helpers/ManageToken')
 
 function show(req, res) {
-  let id = req.params.userId ? req.params.userId : req.tokenInfo.id
+  const id = req.params.userId ? req.params.userId : req.tokenInfo.id
   userModel
-    .getUserInfo({ id })
-    .then(resp => {
-      if (resp.rowCount !== 1) res.status(500).send('something got Wrong')
-      res.json(resp.rows[0])
+    .getUserInfo(id)
+    .then(async resp => {
+      if (resp.rowCount !== 1) {
+        console.log('heloo')
+        res.status(500).send('something went Wrong')
+        return
+      }
+      // const notif = await notificationsModel.getAllNotifications(id)
+      res.json({ ...resp.rows[0] })
+      // , notifications: notif.rows })
     })
     .catch(e => {
       res.status(500).send(e)
@@ -50,8 +57,12 @@ function ManageAuthentification(req, res) {
 
 function create(req, res) {
   const argsWanted = [
-    'firstname', 'lastname', 'email',
-    'password', 'username', 'gender'
+    'firstname',
+    'lastname',
+    'email',
+    'password',
+    'username',
+    'gender'
   ]
   const userAccountInfos = {}
 

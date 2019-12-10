@@ -12,7 +12,15 @@ import {
 } from 'react-bulma-components'
 import axios from 'axios'
 
-function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onlineInfos }) {
+function ProfilSearchable({
+  userInfos,
+  tags,
+  profilPicture,
+  event,
+  isLiked,
+  onlineInfos,
+  ...props
+}) {
   const context = useContext(userContext)
   let likedButton = null
   let printAllButton = false
@@ -26,7 +34,7 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
       handleBlocked: Function.prototype
     }
   } else {
-    printAllButton = true 
+    printAllButton = true
   }
 
   if (isLiked) {
@@ -57,25 +65,28 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
       </Button>
     )
   }
-  
+
   if (onlineInfos) {
-    onlineDisplay = onlineInfos.is_online ? <p>online</p> :
+    onlineDisplay = onlineInfos.is_online ? (
+      <p>online</p>
+    ) : (
       <Moment fromNow date={onlineInfos.last_connection} />
+    )
   } else onlineDisplay = null
 
-
   const disPlayProfil = () => {
-    axios.post('/seen', {userId: context.store.user.id, seenId: userInfos.id})
-    .then((resp) => {
-      context.socketIo.emit('notifSent', {
-        userId: context.store.user.id,
-        receiverId: userInfos.id,
-        type: 'seen'
+    axios
+      .post('/seen', { userId: context.store.user.id, seenId: userInfos.id })
+      .then(resp => {
+        context.socketIo.emit('notifSent', {
+          userId: context.store.user.id,
+          receiverId: userInfos.id,
+          type: 'seen'
+        })
       })
-    })
-    .catch((e) => {
-      console.log("Beug du seen : ", e)
-    })
+      .catch(e => {
+        console.log('Beug du seen : ', e)
+      })
   }
 
   return (
@@ -100,7 +111,9 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
           <Media.Item>
             <Button.Group position='right'>
               {printAllButton && likedButton}
-              <Button color='primary' onClick={disPlayProfil}>Voir le profil</Button>
+              <Button color='primary' onClick={disPlayProfil}>
+                Voir le profil
+              </Button>
             </Button.Group>
           </Media.Item>
         </Media>
@@ -115,20 +128,22 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
-            { onlineDisplay }
-            
-            { printAllButton &&
-            <Button
-              id={userInfos.id}
-              size='small'
-              text={true}
-              onClick={() => {
-                event.setShowModal(true)
-                event.setReportedId(userInfos.id)
-              }}
-            >
-              report
-            </Button> }
+            <Button onClick={props.updateNotif}>Mark as seen</Button>
+            {onlineDisplay}
+
+            {printAllButton && (
+              <Button
+                id={userInfos.id}
+                size='small'
+                text={true}
+                onClick={() => {
+                  event.setShowModal(true)
+                  event.setReportedId(userInfos.id)
+                }}
+              >
+                report
+              </Button>
+            )}
           </div>
         </Content>
       </Card.Content>
