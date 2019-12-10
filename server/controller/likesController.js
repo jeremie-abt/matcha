@@ -88,7 +88,7 @@ const add = async (req, res) => {
   likesModel
     .addUserLiked(userId, likesId)
     .catch(() => {
-      throw [500, 'Request failed']
+      console.log("request failed")
     })
     .then(result => {
       if (result.rowCount) {
@@ -119,10 +119,10 @@ const del = async (req, res) => {
   likesModel
     .deleteLike(userId, likesId)
     .catch(() => {
-      throw [500, 'Request failed']
+      console.log('Request failed')
     })
     .then(result => {
-      if (!result.rowCount) throw [204, 'No like found']
+      if (!result.rowCount) res.status(500)
       else res.status(200)
     })
     .catch(err => {

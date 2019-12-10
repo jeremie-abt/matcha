@@ -15,16 +15,12 @@ const index = async (req, res) => {
   }
   notificationsModel
     .getAllNotifications(receiverId)
-    .catch(err => {
-      throw err
-    })
     .then(result => {
       if (!result.rowCount) throw [204, 'No notifications found']
       res.json(result.rows)
     })
     .catch(err => {
-      res.status(err[0])
-      res.write(err[1])
+      res.status(500)
     })
     .finally(() => res.end())
 }
@@ -44,9 +40,6 @@ const add = async (req, res) => {
   }
   notificationsModel
     .createNotification(userId, receiverId, type)
-    .catch(err => {
-      throw err
-    })
     .then(result => {
       if (result.rowCount) res.status(200)
       else throw [400, 'Error during add']

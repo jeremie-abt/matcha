@@ -29,7 +29,7 @@ const add = (req, res) => {
   geolocModel
     .addGeoloc(userId, lat, long)
     .catch(err => {
-      throw err
+      console.log("error geoloc : ", err)
     })
     .finally(() => res.end())
 }
