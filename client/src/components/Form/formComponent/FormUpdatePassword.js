@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
 import { useToasts } from 'react-toast-notifications'
-import Cookies from 'universal-cookie'
 
 const fields = [
   {
@@ -72,12 +71,18 @@ function FormUpdatePassword( { userId, setRedirect }) {
               autoDismiss: true
             })
           })
-      } else {
-        addToast(ret, {
-          appearance: 'error',
-          autoDismiss: true
-        })
-      }
+          .catch(() => {
+            addToast('something Went Wrong', {
+              appearance: 'error',
+              autoDismiss: true
+            })
+          })
+        } else {
+          addToast(ret, {
+            appearance: 'error',
+            autoDismiss: true
+          })
+        }
     }
   }
 

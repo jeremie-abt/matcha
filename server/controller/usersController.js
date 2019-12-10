@@ -9,12 +9,23 @@ const { createToken } = require('../helpers/ManageToken')
 function show(req, res) {
   let id = req.params.userId ? req.params.userId : req.tokenInfo.id
   userModel
-    .getUserInfo({ id })
+    .getCompleteUserInfo({ id })
     .then(resp => {
-      if (resp.rowCount !== 1) res.status(500).send('something got Wrong')
+      if (resp.rowCount === 0) {
+        return userModel
+          .getUserInfo({ id })
+      }
+      delete(resp.rows[0].password)
+      delete(resp.rows[0].user_id)
       res.json(resp.rows[0])
     })
+    .then(resp => {
+      if (resp && resp.rowCount === 1) {
+        res.json(resp.rows[0])
+      }
+    })
     .catch(e => {
+      console.log("\n\nEEEE : ", e, "\n\n")
       res.status(500).send(e)
     })
 }
@@ -25,7 +36,6 @@ function isUserExisting(req, res) {
   userModel
     .isUserExisting(['username', username])
     .then(resp => {
-      console.log("resp reows : ", resp.rows)
       if (resp.rows.length === 0) {
         res.status(200).send(false)
       }
@@ -48,7 +58,6 @@ function isUserExisting(req, res) {
 function ManageAuthentification(req, res) {
   const { username, password } = req.body
 
-  console.log("passwor : ", password)
   if (!username || !password) {
     res.status(500).send('somenthing went wrong')
   }

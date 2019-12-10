@@ -138,7 +138,7 @@ class FormUpdateProfil extends React.Component {
       .put('/users/' + this.context.store.user.id, { ...formData })
       .then(resp => {
         if (resp.status === 200) {
-          this.context.updateState(formData)
+          this.context.updateUser(formData)
         }
       })
       .catch(e => {

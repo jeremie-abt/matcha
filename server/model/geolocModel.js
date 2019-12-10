@@ -11,7 +11,9 @@ const addGeoloc = (userId, lat, long) => {
   const query =
     'INSERT INTO geoloc' +
     '(user_id, lat, long, created_at)' +
-    'VALUES ($1, $2, $3, now())'
+    'VALUES ($1, $2, $3, now()) ' +
+    ' ON CONFLICT(user_id) ' +
+    ` DO UPDATE SET lat=${lat}, long=${long}, created_at=NOW(); `
 
   return client.query(query, [userId, lat, long])
 }

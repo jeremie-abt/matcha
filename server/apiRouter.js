@@ -46,10 +46,7 @@ apiRouter.post('/users', usersController.create)
 apiRouter.put('/users/:userId', usersController.update)
 apiRouter.delete('/users/:userId/delete', usersController.del)
 apiRouter.post('/users/authenticate', usersController.ManageAuthentification)
-apiRouter.post(
-  '/users/updatePassword',
-  usersController.updatePassword
-)
+apiRouter.post('/users/updatePassword', usersController.updatePassword)
 
 // search
 apiRouter.get(

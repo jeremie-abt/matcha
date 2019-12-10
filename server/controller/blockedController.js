@@ -57,7 +57,6 @@ const add = async (req, res) => {
     })
     .then(result => {
       if (result.rowCount) res.status(200)
-      else throw [400, 'Error during add']
     })
     .catch(err => {
       res.status(err[0])
