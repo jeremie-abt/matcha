@@ -20,41 +20,6 @@ function MyProvider(props) {
     verifyIfAuth()
   }, [])
 
-  const setUserLogged = () => {
-    const cookies = new Cookies()
-    const token = cookies.get('token')
-
-    if (token !== undefined) {
-      return axios
-        .get('/users/getUser', {
-          headers: {
-            authorization: 'Bearer ' + cookies.get('token')
-          }
-        })
-        .then(resp => {
-          if (resp.data.verified_mail === true) setIsVerified(true)
-          setSocketIo(setSocket(resp.data.id))
-          setUser(resp.data)
-          setIsAuth(true)
-          //updateUser(resp.data)
-          return resp.data
-        })
-        .catch(e => {
-          console.log('bad Cookie !!', e)
-          return undefined
-        })
-    } else return new Promise((resolve, reject) => resolve(undefined))
-  }
-
-  const HandleDisconnection = () => {
-    const cookies = new Cookies()
-    cookies.remove('token', { path: '/' })
-    socketIo.emit('handleDisconnection', user.id)
-    setIsAuth(false)
-    setIsVerified(false)
-    updateUser(false)
-  }
-
   // fonction pour pouvoir update le user et le isAuth
   const updateUser = newUser => {
     if (newUser === false) {
@@ -68,6 +33,42 @@ function MyProvider(props) {
     }
   }
 
+  const setUserLogged = () => {
+    const cookies = new Cookies()
+    const token = cookies.get('token')
+
+    if (token !== undefined) {
+      //{ latitude, longitude, error } = usePosition()
+      return axios
+        .get('/users/getUser', {
+          headers: {
+            authorization: 'Bearer ' + cookies.get('token')
+          }
+        })
+        .then(response => {
+          if (response.data.verified_mail === true) setIsVerified(true)
+          setSocketIo(setSocket(response.data.id))
+          setUser(response.data)
+          setIsAuth(true)
+          return {...response.data}
+        })
+        .catch(e => {
+          console.log('bad Cookie !!', e)
+          return undefined
+        })
+    } else return new Promise((resolve, reject) => resolve(undefined))
+  }
+
+  const HandleDisconnection = () => {
+    const cookies = new Cookies()
+    socketIo.emit('handleDisconnection', user.id)
+    cookies.remove('token', { path: '/' })
+    setIsAuth(false)
+    setIsVerified(false)
+    updateUser(false)
+  }
+
+
   return (
     <div>
       {(!hasFetched && <div>loading ...</div>) || (
@@ -78,7 +79,7 @@ function MyProvider(props) {
               isVerified,
               user
             },
-            updateState: updateUser,
+            updateUser: updateUser,
             setUserLogged: setUserLogged,
             HandleDisconnection: HandleDisconnection,
             socketIo: socketIo

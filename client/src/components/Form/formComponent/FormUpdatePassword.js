@@ -70,7 +70,7 @@ function FormUpdatePassword({ setShowModal }) {
           )
           .then(() => {
             addToast('Modification du mot de passe réussi', {
-              appearance: 'error',
+              appearance: 'success',
               autoDismiss: true
             })
           })

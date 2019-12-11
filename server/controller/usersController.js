@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
 const Crypto = require('crypto-js')
 
@@ -7,23 +9,38 @@ const { sendMail } = require('../helpers/MailSender')
 
 const { createToken } = require('../helpers/ManageToken')
 
-function show(req, res) {
+async function show(req, res) {
   const id = req.params.userId ? req.params.userId : req.tokenInfo.id
+  const notif = await notificationsModel.getAllNotifications(id)
   userModel
-    .getUserInfo(id)
-    .then(async resp => {
-      if (resp.rowCount !== 1) {
-        console.log('heloo')
-        res.status(500).send('something went Wrong')
-        return
+    // .getUserInfo(id)
+    // .then(async resp => {
+    //   if (resp.rowCount !== 1) {
+    //     console.log('heloo')
+    //     res.status(500).send('something went Wrong')
+    //     return
+    //   }
+    //   res.json({ ...resp.rows[0] })
+    //   // , notifications: notif.rows })
+    .getCompleteUserInfo({ id })
+    .then(resp => {
+      if (resp.rowCount === 0) {
+        return userModel.getUserInfo({ id })
       }
-      // const notif = await notificationsModel.getAllNotifications(id)
-      res.json({ ...resp.rows[0] })
-      // , notifications: notif.rows })
+      delete resp.rows[0].password
+      delete resp.rows[0].user_id
+      res.json({ ...resp.rows[0], notifications: notif.rows })
+    })
+    .then(resp => {
+      if (resp && resp.rowCount === 1) {
+        res.json({ ...resp.rows[0], notifications: notif.rows })
+      }
     })
     .catch(e => {
+      console.log('\n\nEEEE : ', e, '\n\n')
       res.status(500).send(e)
     })
+    .finally(() => res.end())
 }
 
 // GOAL :
