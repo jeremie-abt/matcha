@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
@@ -40,7 +40,6 @@ function parseFormData(formData) {
 
 function FormUpdatePassword({ setShowModal }) {
   const { addToast } = useToasts()
-  const [msg, setMsg] = useState([])
 
   const cookies = new Cookies()
   const handleSubmit = ({ state }) => {
@@ -89,7 +88,6 @@ function FormUpdatePassword({ setShowModal }) {
   return (
     <div>
       <FormConstructor
-        msg={msg}
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}

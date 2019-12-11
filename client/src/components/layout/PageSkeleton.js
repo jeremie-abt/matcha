@@ -2,7 +2,7 @@ import { Section, Container, Columns } from 'react-bulma-components'
 import classNames from 'classnames'
 import OurHeader from './OurHeader'
 import OurFooter from './OurFooter'
-import { Link, withRouter, Redirect } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 
 import React, { useState, useContext, useEffect } from 'react'
 import { Button, Content } from 'react-bulma-components'
@@ -59,7 +59,7 @@ const PageSkeleton = withRouter(({ location, children }) => {
         setMsg(['Mail has been resend, please validate it', 'success'])
       })
       .catch(() => {
-        setMsg(['Error, mail has not been sent', 'danger'])
+        setMsg(['Error, mail has not been sent', 'error'])
       })
   }
 
@@ -98,27 +98,6 @@ const PageSkeleton = withRouter(({ location, children }) => {
         <Container>
           <Columns>
             { body }
-            {/*
-            context.store.user.verified_mail === false ? (
-              <div>
-                {Object.entries(msg).length !== 0 && (
-                  <MatchaModal
-                    color={msg[1]}
-                    msg={msg[0]}
-                    setMsg={setMsg}
-                  ></MatchaModal>
-                )}
-                <Content>
-                  <h1>You must confirm your mail</h1>
-                  <Button onClick={sendNewMail}>
-                    Click here to send new Mail
-                  </Button>
-                </Content>
-              </div>
-            ) : (
-              <Columns.Column>{children}</Columns.Column>
-            )
-            */}
           </Columns>
         </Container>
       </Section>

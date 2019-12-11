@@ -34,14 +34,12 @@ const fields = [
     name: 'confirmpassword',
     label: 'confirmpassword',
     type: 'password'
-  }
-  /*,
+  },
   {
-    name: 'gender',
-    title: 'gender',
-    type: 'radio',
-    radioValues: ['female', 'male']
-  }*/
+    name: 'birthdate',
+    title: 'birthdate',
+    type: 'datepicker'
+  }
 ]
 
 const buttonStyle = {
@@ -55,8 +53,15 @@ const buttonStyle = {
 }
 
 function parseFormData(formData) {
-  const { email, password, confirmpassword } = formData
+  const { email, password, confirmpassword, currentDate } = formData
 
+  let tmpDate = new Date()
+  if (tmpDate - currentDate < 0) return 'Date invalid'
+  tmpDate = new Date(
+      tmpDate.getFullYear() - 18,
+      tmpDate.getMonth(), tmpDate.getDate()
+  )
+  if (currentDate >= tmpDate) return 'Date invalid'
   const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
   if (confirmpassword !== password)
     return 'Password and confirmpassword are not the same ...'
@@ -69,7 +74,7 @@ function parseFormData(formData) {
 function FormCreateProfil() {
   const [msg, setMsg] = useState([])
 
-  const handleSubmit = ({ state }) => {
+  const handleSubmit = ({ state, currentDate }) => {
     const dataObligated = [
       'firstname',
       'lastname',
@@ -78,21 +83,25 @@ function FormCreateProfil() {
       'password',
       'confirmpassword',
     ]
+    if (!currentDate) {
+      setMsg(['pls fill all input', 'error'])
+      return null
+    }
     const isAllDataGiven = dataObligated.every(elem => {
       if (!state[elem]) {
-        setMsg(['pls fill all input', 'danger'])
+        setMsg(['pls fill all input', 'error'])
         return false
       }
       return true
     })
     if (isAllDataGiven) {
-      const ret = parseFormData(state)
+      const ret = parseFormData({ ...state, currentDate })
       if (ret === true) {
         // creation du user
         axios
-          .post('/users', state)
+          .post('/users', { ...state, birthdate:currentDate })
           .catch(e => {
-            setMsg(['user already created', 'danger'])
+            setMsg(['user already created', 'error'])
           })
           .then(resp => {
             console.log("oui")
@@ -119,11 +128,11 @@ function FormCreateProfil() {
           .catch(e => {
             setMsg([
               'Request failed contact the devTeam if it persist',
-              'danger'
+              'error'
             ])
           })
       } else {
-        setMsg([ret, 'danger'])
+        setMsg([ret, 'error'])
       }
     }
   }

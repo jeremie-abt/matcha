@@ -7,6 +7,7 @@ import UserContext from '../../../context/UserContext'
 import ChangePasswordModal from '../../miscellaneous/ChangePasswordModal'
 import { Button, Card } from 'react-bulma-components'
 
+
 import MatchaModal from '../../../components/miscellaneous/Modal'
 
 let fields = [
@@ -47,6 +48,13 @@ let fields = [
     label: 'Bio',
     type: 'text'
   }
+  // chepa si on veut le laisser changer son birthdate,
+  // c'est bizarre non ? 
+  /*{
+    name: 'birthdate',
+    title: 'birthdate',
+    type: 'datepicker'
+  }*/
 ]
 
 class FormUpdateProfil extends React.Component {
@@ -105,7 +113,7 @@ class FormUpdateProfil extends React.Component {
         <Card className='card-fullwidth'>
           {
             !this.context.store.isProfilCompleted &&
-            <h1 class="completeProfil"> 
+            <h1 className="completeProfil"> 
               Vous devez completer votre profil
             </h1>
           }
@@ -141,23 +149,48 @@ class FormUpdateProfil extends React.Component {
   // that it won't be updated in the back ?
   removeNullStrings = (args) => {
     const after = {}
-    let trimmedFields = false
+    let blankMsgs = true
     Object.keys(args).forEach((elem) => {
       if (typeof args[elem] !== 'string') {
         after[elem] = args[elem]
+        if (elem === 'tags' && args.tags.length > 0)
+          blankMsgs = false
+        else if (elem === 'gender' && args.gender) blankMsgs = false
       } else if (args[elem] && args[elem].trim() !== "") {
+        blankMsgs = false
         after[elem] = args[elem]
-      } else {
-        trimmedFields = true
       }
     })
-    return [after, trimmedFields]
+    return [after, blankMsgs]
   }
 
   verifyFormData(formData) {
+    const BreakException = {}
+    let isAtLeastOneField = false
+    const presentFields = [
+      'firstname', 'lastname', 'username',
+      'email', 'bio'
+    ]
+    try {
+      Object.keys(formData).forEach(elem => {
+        if (presentFields.includes(elem)) {
+          throw BreakException
+        }
+      })
+    }
+    catch(e) {
+      if (e !== BreakException) throw e
+      isAtLeastOneField = true
+    }
+    if (formData.tags.length > 0 || formData.gender) {
+      isAtLeastOneField = true
+    }
+    if (isAtLeastOneField === false) {
+      return "can't send empty data"
+    }
     const { email } = formData
     const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
-    if (!verifyMailPattern.exec(email))
+    if (email && email !== '' && !verifyMailPattern.exec(email))
       return 'please send a valid email ...'
     // faudrait faire gaff a la date
     return true
@@ -166,24 +199,27 @@ class FormUpdateProfil extends React.Component {
   handleSubmit = ({ state, checkbox }) => {
 
     let formData = { ...state, ...checkbox }
-    let ret = this.removeNullStrings(formData)
-    formData = ret[0]
-    if (ret[1] === true) this.setState({msg : ['invalid blank messages', 'danger']})
-    ret = this.verifyFormData(formData)
-    if (ret === true) {
-      axios
-        .put('/users/' + this.context.store.user.id, { ...formData })
-        .then(resp => {
-          if (resp.status === 200) {
-            this.context.updateUser(formData)
-          }
-        })
-        .catch(e => {
-          this.setState({ msg: ['Something Went wrong please retry', 'danger'] })
-        })
-    } else {
-      this.setState({msg: [ret, 'danger']})
+    const retNullStrings = this.removeNullStrings(formData)
+    formData = retNullStrings[0]
+    const retVerify = this.verifyFormData(formData)
+    if (retVerify !== true) {
+      this.setState({msg : [retVerify, 'error']})
+      return null
     }
+    if (retNullStrings[1] === true) {
+      this.setState({msg : ['invalid blank messages', 'error']})
+      return null
+    }
+    axios
+      .put('/users/' + this.context.store.user.id, { ...formData })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.context.updateUser(formData)
+        }
+      })
+      .catch(e => {
+        this.setState({ msg: ['Something Went wrong please retry', 'error'] })
+      })
   }
 }
 
