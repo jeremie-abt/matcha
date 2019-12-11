@@ -87,7 +87,6 @@ function OurNavbar() {
         className={'navbar-menu ' + (isActive ? 'is-active' : '')}
       >
         {navButton}
-
         <div className='navbar-end'>
           <div className='navbar-item'>
             <UserContext.Consumer>

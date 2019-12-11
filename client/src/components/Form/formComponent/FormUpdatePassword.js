@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
@@ -31,6 +31,8 @@ const buttonStyle = {
 function parseFormData(formData) {
   const { password, confirmpassword } = formData
 
+  if (confirmpassword === '' || password === '')
+    return "password not enough complex"
   if (confirmpassword !== password)
     return 'Les deux mots de passes doivent être identiques'
   return true
@@ -38,6 +40,7 @@ function parseFormData(formData) {
 
 function FormUpdatePassword({ setShowModal }) {
   const { addToast } = useToasts()
+  const [msg, setMsg] = useState([])
 
   const cookies = new Cookies()
   const handleSubmit = ({ state }) => {
@@ -86,6 +89,7 @@ function FormUpdatePassword({ setShowModal }) {
   return (
     <div>
       <FormConstructor
+        msg={msg}
         buttonStyle={buttonStyle}
         fields={fields}
         handleForm={handleSubmit}

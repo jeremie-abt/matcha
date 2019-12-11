@@ -2,7 +2,7 @@ import { Section, Container, Columns } from 'react-bulma-components'
 import classNames from 'classnames'
 import OurHeader from './OurHeader'
 import OurFooter from './OurFooter'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, withRouter, Redirect } from 'react-router-dom'
 
 import React, { useState, useContext, useEffect } from 'react'
 import { Button, Content } from 'react-bulma-components'
@@ -85,11 +85,9 @@ const PageSkeleton = withRouter(({ location, children }) => {
           </Content>
         </div>
     } else if (context.store.isProfilCompleted === false
-        && location.pathname !== '/account') {
-      body = <div>
-          <h1>Veuillez completer votre profil</h1>
-          <Link to="account">Completer mon profil</Link>
-        </div>
+        && location.pathname !== '/account'
+        && location.pathname !== '/myProfil') {
+      body = <Redirect to="account" />
     }
   }
 

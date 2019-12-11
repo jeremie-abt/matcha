@@ -95,14 +95,20 @@ class FormUpdateProfil extends React.Component {
       <div>
         {Object.entries(this.state.msg).length !== 0 && (
           <MatchaModal
-            color={this.state.msg[1]}
-            msg={this.state.msg[0]}
-            setMsg={this.setMsg}
+          color={this.state.msg[1]}
+          msg={this.state.msg[0]}
+          setMsg={this.setMsg}
           >
             {this.state.msg}
           </MatchaModal>
         )}
         <Card className='card-fullwidth'>
+          {
+            !this.context.store.isProfilCompleted &&
+            <h1 class="completeProfil"> 
+              Vous devez completer votre profil
+            </h1>
+          }
           <Card.Content>
             <div className='is-right'>
               <Button
@@ -131,19 +137,53 @@ class FormUpdateProfil extends React.Component {
     )
   }
 
-  handleSubmit = ({ state, checkbox }) => {
-    const formData = { ...state, ...checkbox }
+  // do we need to tell the user when a stirng is empty ?
+  // that it won't be updated in the back ?
+  removeNullStrings = (args) => {
+    const after = {}
+    let trimmedFields = false
+    Object.keys(args).forEach((elem) => {
+      if (typeof args[elem] !== 'string') {
+        after[elem] = args[elem]
+      } else if (args[elem] && args[elem].trim() !== "") {
+        after[elem] = args[elem]
+      } else {
+        trimmedFields = true
+      }
+    })
+    return [after, trimmedFields]
+  }
 
-    axios
-      .put('/users/' + this.context.store.user.id, { ...formData })
-      .then(resp => {
-        if (resp.status === 200) {
-          this.context.updateUser(formData)
-        }
-      })
-      .catch(e => {
-        this.setState({ msg: ['Something Went wrong please retry', 'danger'] })
-      })
+  verifyFormData(formData) {
+    const { email } = formData
+    const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
+    if (!verifyMailPattern.exec(email))
+      return 'please send a valid email ...'
+    // faudrait faire gaff a la date
+    return true
+  }
+
+  handleSubmit = ({ state, checkbox }) => {
+
+    let formData = { ...state, ...checkbox }
+    let ret = this.removeNullStrings(formData)
+    formData = ret[0]
+    if (ret[1] === true) this.setState({msg : ['invalid blank messages', 'danger']})
+    ret = this.verifyFormData(formData)
+    if (ret === true) {
+      axios
+        .put('/users/' + this.context.store.user.id, { ...formData })
+        .then(resp => {
+          if (resp.status === 200) {
+            this.context.updateUser(formData)
+          }
+        })
+        .catch(e => {
+          this.setState({ msg: ['Something Went wrong please retry', 'danger'] })
+        })
+    } else {
+      this.setState({msg: [ret, 'danger']})
+    }
   }
 }
 

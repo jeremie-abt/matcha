@@ -28,15 +28,15 @@ function MyProvider(props) {
     // A voir selon le sujet enfaite ils parlent de profils etendue
     // persos je demande a ce que le mec rajoute une bio au moins 
     // un Tag et son genre -> A voir
-    console.log("update complete : ", user)
     if (Object.entries(user).length > 0 && 
         user.bio !== "" && user.tags.length > 0 && user.gender){
-      console.log("OUIII")
       setIsProfilCompleted(true)
     }
+    // ya pas de else pour surveiller un retour du isprofilCompleted a false
+    // car en theorie une fois quon a un profil completed, on ne peut pas
+    // revenir en arriere !
   }, [user])
     
-
   // fonction pour pouvoir update le user et le isAuth
   const updateUser = newUser => {
     if (newUser === false) {
