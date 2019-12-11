@@ -10,6 +10,17 @@ import {
   Tag
 } from 'react-bulma-components'
 
+const genderMatching = {
+  'female' : 'femme',
+  'male': 'homme'
+}
+
+const sexeOrientationMatching = {
+  'female' : 'les femmes',
+  'male' : 'les hommes',
+  'bisexual' : 'femmes ou hommes'
+}
+
 const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => {
   let onlineDisplay
 
@@ -39,13 +50,15 @@ const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => 
               {userInfos.firstname} {userInfos.lastname}
             </Heading>
             <Heading subtitle size={6}>
-              @{userInfos.username}
+              @{userInfos.username} ( {genderMatching[userInfos.gender]} )
             </Heading>
           </Media.Item>
         </Media>
+          <div className="sexual_orientation">
+            interesse par {sexeOrientationMatching[userInfos.sexual_orientation]}
+          </div>
         <Content>
-          {userInfos.bio}
-          <a href='#2'>#responsive</a>
+          <div className="bio">{userInfos.bio}</div>
           <div className='profil-last-online' dateTime='2016-1-1'>
             { onlineDisplay }
           </div>
@@ -59,6 +72,9 @@ const UserProfil = ({ userInfos, profilPicture, images, onlineInfos, tags }) => 
             )
           })}
         </Tag.Group>
+        <div className='popularity'>
+          popularite : {userInfos.popularity_score} / 100
+        </div>
       </Card.Content>
     </Card>
   )

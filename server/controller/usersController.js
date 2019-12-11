@@ -22,6 +22,8 @@ function show(req, res) {
     .then(resp => {
       if (resp && resp.rowCount === 1) {
         res.json(resp.rows[0])
+      } else {
+        res.json(null)
       }
     })
     .catch(e => {

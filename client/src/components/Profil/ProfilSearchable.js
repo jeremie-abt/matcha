@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import userContext from '../../context/UserContext'
+import { Link } from 'react-router-dom'
 import Moment from 'react-moment'
 import {
   Content,
@@ -100,7 +101,9 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
           <Media.Item>
             <Button.Group position='right'>
               {printAllButton && likedButton}
-              <Button color='primary' onClick={disPlayProfil}>Voir le profil</Button>
+              <Link to={'/Profil/' + userInfos.id}>
+                <Button color='primary' onClick={disPlayProfil}>Voir le profil</Button>
+              </Link>
             </Button.Group>
           </Media.Item>
         </Media>
