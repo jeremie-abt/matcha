@@ -40,7 +40,7 @@ function PageSkeleton({ location, children }) {
         })
       })
     }
-  }, [addToast, context, context.socketIo])
+  }, [addToast, context.socketIo])
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
