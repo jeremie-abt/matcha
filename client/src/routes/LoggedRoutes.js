@@ -5,12 +5,14 @@ import { usePosition } from 'use-position'
 import axios from 'axios'
 
 import Profil from '../components/Profil/Profil'
+import Match from '../components/layout/Match'
 import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
 import DefaultPage from '../components/GeneralRedirection/LoggedDefaultPage'
 import Layout from '../components/layout/PageSkeleton'
+import MatchChat from '../components/layout/MatchChat'
 import { BrowserRouter } from 'react-router-dom'
 
 const API_KEY = 'AIzaSyBYgNn_j0zaXwMWFAdAGP3VMDKxcPRcNjI'
@@ -92,6 +94,18 @@ function LoggedRoutes() {
                   component={DefaultPage}
                   userInfos={context.store.user}
                   key={8}
+                  exact
+                />,
+                <Route 
+                  path='/match'
+                  component={Match}
+                  key={9}
+                  exact
+                />,
+                <Route 
+                  path='/chat'
+                  component={MatchChat}
+                  key={10}
                   exact
                 />
               ]

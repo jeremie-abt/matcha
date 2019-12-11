@@ -1,11 +1,7 @@
 const client = require('../database/connection')
 
 
-// peut-etre tenter de faire une requette un peu plus complexe pour 
-// preselectionner un peu mieux ?
-// de base ce quon voulait faire c'est selectionner assez large
-// pour avoir pleins de profils et faire le tri en front
-// le truc c'est que la on ne selectionne pas large on selectionne tous
+// effacer
 function searchProfils(userInfos) {
  
   let query =

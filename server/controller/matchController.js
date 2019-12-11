@@ -11,6 +11,7 @@ const usersModel = require('../model/usersModel')
 const index = (req, res) => {
   const userId = parseInt(req.params.userId, 10)
 
+  // ici
   let roomIds = []
 
   matchModel
@@ -19,9 +20,6 @@ const index = (req, res) => {
       if (resp.rowCount === 0) return
       else {
         let matchIds = resp.rows.map(elem => {
-          /*return elem.user1_id !== userId
-            ? [elem.room_id, elem.user1_id]
-            : [elem.room_id, elem.user2_id]*/
           return elem.user1_id !== userId
             ? elem.user1_id
             : elem.user2_id
@@ -47,7 +45,6 @@ const index = (req, res) => {
       return
     })
     .catch(e => {
-      console.log('oui : ', e)
       res.status(500).send('Something Went Wrong')
     })
 }
