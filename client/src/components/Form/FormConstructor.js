@@ -38,7 +38,7 @@ function FormConstructor({ location, ...props }) {
   const _renderSlider = elem => {
     if (state[elem.name]) {
       return (
-        <Columns.Column>
+        <Columns.Column key={elem.name + elem.label}>
           <Slider
             label={elem.name}
             name={elem.name}
@@ -57,7 +57,7 @@ function FormConstructor({ location, ...props }) {
   const _renderRange = elem => {
     if (state[elem.name]) {
       return (
-        <Columns.Column>
+        <Columns.Column key={elem.name + elem.label}>
           <Range
             name={elem.name}
             label={elem.label}
@@ -89,7 +89,7 @@ function FormConstructor({ location, ...props }) {
 
   const _renderRadio = elem => {
     return (
-      <Columns.Column>
+      <Columns.Column key={elem.name + elem.title}>
         {elem.radioValues.map(radioElem => {
           return (
             <MyRadio
@@ -111,7 +111,7 @@ function FormConstructor({ location, ...props }) {
 
     if (checkbox[elem.name]) {
       return (
-        <Columns.Column size={12}>
+        <Columns.Column size={12} key={elem.name + elem.title}>
           <Form.Field key={elem.name + elem.type}>
             <Form.Control>
               <Form.Label>{elem.title}</Form.Label>

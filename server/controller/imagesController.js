@@ -41,7 +41,7 @@ const update = async (req, res) => {
       if (result.rowCount) currentProfilImage = result.rows[0].id
     })
     .catch(err => {
-      throw err
+      console.log("err : ", err )
     })
   if (!(currentProfilImage === imgId)) {
     imageModel
@@ -52,7 +52,7 @@ const update = async (req, res) => {
           imageModel.updateImage(currentProfilImage, false)
           res.status(200).send('Image updated')
         } else {
-          throw 'Error during update'
+          res.status(500)
         }
       })
       .catch(err => res.status(404).send(err))
@@ -108,11 +108,11 @@ const add = async (req, res) => {
   imageModel
     .addImage(userId, url)
     .catch(err => {
-      throw err
+      console.log("image err : ", err)
     })
     .then(result => {
       if (result.rowCount) res.json(result.rows[0])
-      else throw 'Error during image upload'
+      else res.status(500)
     })
     .catch(err => res.status(404).send(err))
     .finally(() => res.end())

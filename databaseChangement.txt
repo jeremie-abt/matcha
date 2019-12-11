@@ -1,2 +1,5 @@
-ALTER TABLE users ADD CONSTRAINT valid_score CHECK (users.popularity_score < 10);
-ALTER TABLE seen add constraint unique_seen UNIQUE(watcher_id, watched_id);
+alter table online add primary key (user_id);
+alter table users drop column online;
+alter table users drop column localisation;
+delete from geoloc;
+alter table geoloc add primary key (user_id);
