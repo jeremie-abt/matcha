@@ -89,6 +89,18 @@ function ProfilSearchable({
       })
   }
 
+  const PhraseNotif = () => {
+    const type = userInfos.notif.type
+    let message = ''
+    if (type === 'like') message = 'aime votre profil !'
+    else if (type === 'view') message = 'a vu votre profil'
+    else if (type === 'message') message = 'vous a envoyé un message'
+    else if (type === 'match') message = 'vient de match avec vous !'
+    else if (type === 'unmatch') message = 'Le match est terminer !'
+
+    return <span>{message}</span>
+  }
+
   return (
     <Card className='profil-card'>
       <Card.Content className='profil-content'>
@@ -105,7 +117,7 @@ function ProfilSearchable({
               {userInfos.firstname} {userInfos.lastname}
             </Heading>
             <Heading subtitle size={6}>
-              @{userInfos.username}
+              @{userInfos.username} {userInfos.notif ? <PhraseNotif /> : ''}
             </Heading>
           </Media.Item>
           <Media.Item>

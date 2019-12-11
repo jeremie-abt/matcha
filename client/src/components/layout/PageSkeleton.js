@@ -26,19 +26,21 @@ function PageSkeleton({ location, children }) {
   const [msg, setMsg] = useState([])
   const context = useContext(userContext)
   const { addToast } = useToasts()
-  
+
   // Voir ca demain !!!!
   useEffect(() => {
     if (context.socketIo) {
-
       context.socketIo.on('notifPrinting', type => {
+        const user = context.store.user
+        user.nbNotifs += 1
+        context.updateUser(user)
         addToast(`vous avez un nouveau ${type}`, {
           appearance: 'success',
           autoDismiss: true
         })
       })
     }
-  }, [addToast, context.socketIo])
+  }, [addToast, context, context.socketIo])
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {

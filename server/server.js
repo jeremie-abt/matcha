@@ -128,7 +128,7 @@ io.on('connection', socket => {
 
   /*socket.on('seen', (idToSend) => {
     socket.to(`room${idToSend}`).emit('seenReceived')
-  })*/
+  }) */
 
   socket.on('messageSent', (idToSend, msgMetadata) => {
     socket.to(`room${idToSend}`).emit('messageReceived', msgMetadata)

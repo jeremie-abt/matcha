@@ -40,7 +40,6 @@ const Notifications = ({ userInfos, updateUser }) => {
 
   const updateProfils = e => {
     const notifId = e.target.getAttribute('notifid')
-    console.log(notifId)
     axios
       .delete(`notifications/delete/${notifId}`)
       .then(res => {
@@ -50,6 +49,7 @@ const Notifications = ({ userInfos, updateUser }) => {
           userInfos.notifications = userInfos.notifications.filter(
             elem => elem.id != notifId
           )
+          userInfos.nbNotifs -= 1
           updateUser(userInfos)
         }
       })
@@ -66,6 +66,7 @@ const Notifications = ({ userInfos, updateUser }) => {
         if (res.status === 200) {
           setProfils([])
           userInfos.notifications = []
+          userInfos.nbNotifs = 0
           updateUser(userInfos)
         }
       })
