@@ -130,13 +130,15 @@ function ProfilSearchable({
           </Media.Item>
         </Media>
         <Tag.Group>
-          {tags.map(tag => {
-            return (
-              <Tag key={tag.id} className='primary-light'>
-                #{tag.name}
-              </Tag>
-            )
-          })}
+          {!props.notif
+            ? tags.map(tag => {
+                return (
+                  <Tag key={tag.id} className='primary-light'>
+                    #{tag.name}
+                  </Tag>
+                )
+              })
+            : ''}
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>

@@ -8,7 +8,7 @@ import Profil from '../Profil/Profil'
 
 const Notifications = ({ userInfos, updateUser }) => {
   const [profils, setProfils] = useState([])
-  const addToast = useToasts()
+  const { addToast } = useToasts()
   const ids = userInfos.notifications.map(notif => notif.user_id)
 
   useEffect(() => {
