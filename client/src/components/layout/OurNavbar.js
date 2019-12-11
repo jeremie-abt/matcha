@@ -52,10 +52,12 @@ function OurNavbar() {
                 <Link
                   to='/notifications'
                   data-badge={context.store.user.notifications.length}
-                  className='navbar-item
-                has-dropdown
-                has-badge-rounded
-                has-badge-danger'
+                  className={
+                    'navbar-item has-dropdown has-badge-rounded has-badge-danger ' +
+                    (!context.store.user.notifications.length
+                      ? 'has-badge-outlined'
+                      : '')
+                  }
                 >
                   Mes Notifications
                 </Link>

@@ -128,7 +128,17 @@ function ProfilSearchable({
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
-            <Button onClick={props.updateNotif}>Mark as seen</Button>
+            {props.notif && (
+              <Button
+                text
+                className='is-size-7'
+                notifid={userInfos.notif.id}
+                type={userInfos.notif.type}
+                onClick={props.updateNotif}
+              >
+                Supprimer la notification
+              </Button>
+            )}
             {onlineDisplay}
 
             {printAllButton && (
@@ -141,7 +151,7 @@ function ProfilSearchable({
                   event.setReportedId(userInfos.id)
                 }}
               >
-                report
+                Report
               </Button>
             )}
           </div>

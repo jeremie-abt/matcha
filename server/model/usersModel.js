@@ -130,5 +130,6 @@ module.exports = {
   verifyMail,
   getUserInfo,
   getCompleteUserInfo,
+  getArrayOfUsers,
   banUser
 }

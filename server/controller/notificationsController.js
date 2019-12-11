@@ -19,7 +19,7 @@ const index = async (req, res) => {
       if (!result.rowCount) throw [204, 'No notifications found']
       res.json(result.rows)
     })
-    .catch(err => {
+    .catch(() => {
       res.status(500)
     })
     .finally(() => res.end())
@@ -92,9 +92,51 @@ const update = (req, res) => {
     .finally(() => res.end())
 }
 
+const del = (req, res) => {
+  const notifId = parseInt(req.params.notifId, 10)
+  if (!notifId) {
+    res.status(400).send('A param is missing or bad value or already exist')
+    res.end()
+    return
+  }
+  notificationsModel
+    .deleteNotification(notifId)
+    .then(resp => {
+      if (resp.rowCount === 0) {
+        throw 'no notification found for this id\n'
+      }
+      res.status(200).send('notification_deleted\n')
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
+const delAll = (req, res) => {
+  const userId = parseInt(req.params.userId, 10)
+  if (!userId) {
+    res.status(400).send('A param is missing or bad value or already exist')
+    res.end()
+    return
+  }
+  notificationsModel
+    .deleteAllNotifications(userId)
+    .then(resp => {
+      if (resp.rowCount === 0) {
+        throw 'no notifications found for this user\n'
+      }
+      res.status(200).send('notifications_deleted\n')
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
 module.exports = {
   index,
   add,
+  del,
+  delAll,
   update,
   getSenderInfos
 }

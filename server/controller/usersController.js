@@ -13,15 +13,6 @@ async function show(req, res) {
   const id = req.params.userId ? req.params.userId : req.tokenInfo.id
   const notif = await notificationsModel.getAllNotifications(id)
   userModel
-    // .getUserInfo(id)
-    // .then(async resp => {
-    //   if (resp.rowCount !== 1) {
-    //     console.log('heloo')
-    //     res.status(500).send('something went Wrong')
-    //     return
-    //   }
-    //   res.json({ ...resp.rows[0] })
-    //   // , notifications: notif.rows })
     .getCompleteUserInfo({ id })
     .then(resp => {
       if (resp.rowCount === 0) {

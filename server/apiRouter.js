@@ -109,6 +109,11 @@ apiRouter.get(
 )
 apiRouter.post('/notifications/add', notificationsController.add)
 apiRouter.put('/notifications/update', notificationsController.update)
+apiRouter.delete('/notifications/delete/:notifId', notificationsController.del)
+apiRouter.delete(
+  '/notifications/delete/:userId/all',
+  notificationsController.delAll
+)
 
 // match
 apiRouter.get('/match/:userId', matchsController.index)
