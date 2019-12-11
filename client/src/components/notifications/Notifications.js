@@ -36,7 +36,7 @@ const Notifications = ({ userInfos, updateUser }) => {
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfos.notifications])
+  }, [userInfos.nbNotifs])
 
   const updateProfils = e => {
     const notifId = e.target.getAttribute('notifid')

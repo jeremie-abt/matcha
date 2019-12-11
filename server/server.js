@@ -68,25 +68,6 @@ io.on('connection', socket => {
     userDeconnection(socket.userId)
   })
 
-  /*
-  socket.on('like', async infos => {
-    try {
-      await createNotifDb(infos)
-      manageNotif(socket, infos)
-    } catch {
-      // comment on gere cette erreur ???
-    }
-  })
-
-  socket.on('unlike', async infos => {
-    conosle
-    manageNotif(socket, infos)
-  })
-*/
-
-  // quand tu unlike quelqun -> enlever la notif like
-  // quand tu unmatch quelqun enlever la notif match
-
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
     if (type === 'unmatch') {
