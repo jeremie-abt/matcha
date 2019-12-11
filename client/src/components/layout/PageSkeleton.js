@@ -34,7 +34,11 @@ function PageSkeleton({ location, children }) {
         const user = context.store.user
         user.nbNotifs += 1
         context.updateUser(user)
-        addToast(`vous avez un nouveau ${type}`, {
+        const msg =
+          type === 'unmatch'
+            ? "Malheureusement, vous venez d'être unmatch"
+            : `vous avez un nouveau ${type}`
+        addToast(msg, {
           appearance: 'success',
           autoDismiss: true
         })

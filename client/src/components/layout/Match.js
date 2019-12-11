@@ -2,12 +2,14 @@ import React, { useEffect, useState, useContext } from 'react'
 import userContext from '../../context/UserContext'
 import axios from 'axios'
 import { Button } from 'react-bulma-components'
+import { Link } from 'react-router-dom'
 
-function Match({ userId, setCurComponent }) {
+const Match = () => {
   // get all the match for the user Id
 
   const [match, setMatch] = useState([])
   const context = useContext(userContext)
+  const userId = context.store.user.id
 
   // c'est ok de mettre ca la comme ca ???
   function deleteMatch(e) {
@@ -73,9 +75,16 @@ function Match({ userId, setCurComponent }) {
               <Button data-liked_id={elem[0].id} onClick={e => deleteMatch(e)}>
                 Supprimer matchs
               </Button>
-              <Button onClick={() => setCurComponent([elem[1], elem[0].id])}>
-                Click for chat
-              </Button>
+              <Link to={{
+                pathname: '/chat',
+                state:{
+                  roomId: elem[1],
+                  idToSend: elem[0].id
+                }
+              }}
+              className='navbar-item'>
+                chat
+              </Link>
               <br />
               <br />
               <br />

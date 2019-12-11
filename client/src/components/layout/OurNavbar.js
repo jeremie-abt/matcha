@@ -62,23 +62,6 @@ function OurNavbar() {
                   Mes Notifications
                 </Link>
               </div>
-              <div className='navbar-dropdown'>
-                <Link to='/myProfil' className='navbar-item'>
-                  Mon profil
-                </Link>
-                <Link to='/account' className='navbar-item'>
-                  Mon compte
-                </Link>
-                <Link to='/images' className='navbar-item'>
-                  Mes images
-                </Link>
-                <Link to='/like' className='navbar-item'>
-                  Likes
-                </Link>
-                <Link to='/seen' className='navbar-item'>
-                  Vues
-                </Link>
-              </div>
             </div>
             {/* informations */}
             <div className='navbar-item has-dropdown is-hoverable'>
@@ -92,6 +75,9 @@ function OurNavbar() {
                 </Link>
                 <Link to='/images' className='navbar-item'>
                   Mes images
+                </Link>
+                <Link to='/match' className='navbar-item'>
+                  match
                 </Link>
                 <Link to='/like' className='navbar-item'>
                   Likes

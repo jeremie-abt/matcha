@@ -68,49 +68,13 @@ io.on('connection', socket => {
     userDeconnection(socket.userId)
   })
 
-  /*
-  socket.on('like', async infos => {
-    try {
-      await createNotifDb(infos)
-      manageNotif(socket, infos)
-    } catch {
-      // comment on gere cette erreur ???
-    }
-  })
-
-  socket.on('unlike', async infos => {
-    conosle
-    manageNotif(socket, infos)
-  })
-*/
-
-  // quand tu unlike quelqun -> enlever la notif like
-  // quand tu unmatch quelqun enlever la notif match
-
   socket.on('notifSent', ({ userId, receiverId, type }) => {
     // bon ca c'est tres clairement shlag
     if (type === 'unmatch') {
       notificationsModel
-        .deleteNotification(userId, receiverId, 'match')
-        .then(() => {
-          return notificationsModel.deleteNotification(
-            receiverId,
-            userId,
-            'match'
-          )
-        })
+        .createNotification(userId, receiverId, 'unmatch')
         .then(() => {
           manageNotif(io, { userId, receiverId, type: 'unmatch' })
-        })
-    }
-    if (type === 'unlike' || type === 'unmatch') {
-      notificationsModel
-        .deleteNotification(userId, receiverId, 'like')
-        .then(() => {
-          manageNotif(io, { userId, receiverId, type: 'unlike' })
-        })
-        .catch(e => {
-          console.log("error, can't suppress notif : e", e)
         })
     } else {
       notificationsModel
@@ -125,10 +89,6 @@ io.on('connection', socket => {
         })
     }
   })
-
-  /*socket.on('seen', (idToSend) => {
-    socket.to(`room${idToSend}`).emit('seenReceived')
-  }) */
 
   socket.on('messageSent', (idToSend, msgMetadata) => {
     socket.to(`room${idToSend}`).emit('messageReceived', msgMetadata)

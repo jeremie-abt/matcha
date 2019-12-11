@@ -100,7 +100,7 @@ const del = (req, res) => {
     return
   }
   notificationsModel
-    .deleteNotification(notifId)
+    .deleteNotificationFromId(notifId)
     .then(resp => {
       if (resp.rowCount === 0) {
         throw 'no notification found for this id\n'
