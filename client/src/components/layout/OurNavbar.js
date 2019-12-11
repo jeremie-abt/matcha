@@ -76,6 +76,9 @@ function OurNavbar() {
                 <Link to='/images' className='navbar-item'>
                   Mes images
                 </Link>
+                <Link to='/match' className='navbar-item'>
+                  match
+                </Link>
                 <Link to='/like' className='navbar-item'>
                   Likes
                 </Link>
