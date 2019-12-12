@@ -76,7 +76,10 @@ io.on('connection', socket => {
         .then(() => {
           manageNotif(io, { userId, receiverId, type: 'unmatch' })
         })
-    } else {
+    }
+    if (type === 'unlike' || type === 'unmatch')
+      manageNotif(io, { userId, receiverId, type: 'unlike' })
+    else {
       notificationsModel
         .createNotification(userId, receiverId, type === 'seen' ? 'view' : type)
         .then(result => {

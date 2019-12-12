@@ -17,7 +17,7 @@ function updateNotificationToSeen(notifId) {
 
 function getAllNotifications(receiverId) {
   const query =
-    `Select distinct on (user_id, type) user_id, type, id from notifications where` +
+    `Select distinct on (user_id, type, created_at) user_id, type, id from notifications where` +
     ` receiver_id = $1 AND seen=false GROUP BY user_id, type, id`
 
   return client.query(query, [receiverId])
