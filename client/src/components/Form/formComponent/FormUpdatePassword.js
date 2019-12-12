@@ -32,7 +32,7 @@ function parseFormData(formData) {
   const { password, confirmpassword } = formData
 
   if (confirmpassword === '' || password === '')
-    return "password not enough complex"
+    return "mot de passe pas assez complique (cette feature n'est pas vraiment implemente faudra pas oublier !)"
   if (confirmpassword !== password)
     return 'Les deux mots de passes doivent être identiques'
   return true

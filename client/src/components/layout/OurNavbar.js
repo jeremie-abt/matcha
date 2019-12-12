@@ -14,7 +14,7 @@ function OurNavbar() {
   }
 
   let navButton 
-  if (context.store.isProfilCompleted) {
+  if (context.store.isProfilCompleted === 1) {
     navButton = <div className='navbar-start'>
         <Link to='/search' className='navbar-item'>
           Search
@@ -51,6 +51,9 @@ function OurNavbar() {
             </Link>
             <Link to='/account' className='navbar-item'>
               Mon compte
+            </Link>
+            <Link to='/images' className='navbar-item'>
+              Mes images
             </Link>
           </div>
         </div>

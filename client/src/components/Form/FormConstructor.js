@@ -94,8 +94,10 @@ function FormConstructor({ location, ...props }) {
   }
 
   const _renderText = ({ elem, placeholder }) => {
+    
     return (
       <InputComponent
+        defaultInfo={context.store.user[elem.name]}
         {...elem}
         onChange={handleChange}
         value={state[elem.name]}
@@ -127,7 +129,7 @@ function FormConstructor({ location, ...props }) {
   const _renderDatepicker = elem => {
     return (
       <MyDatePicker
-        key={'saucissemayonaise'}
+        key={'saucissesamouraibiggy'}
         title={elem.name}
         currentDate={currentDate}
         setCurrentDate={setCurrentDate}
@@ -220,9 +222,9 @@ function FormConstructor({ location, ...props }) {
     e.preventDefault()
 
     props.handleForm({
-      state: state,
-      checkbox: checkbox,
-      currentDate: currentDate
+      state,
+      checkbox,
+      currentDate
     })
   }
 

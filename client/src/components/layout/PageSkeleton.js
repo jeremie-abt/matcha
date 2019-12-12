@@ -84,9 +84,10 @@ const PageSkeleton = withRouter(({ location, children }) => {
             </Button>
           </Content>
         </div>
-    } else if (context.store.isProfilCompleted === false
+    } else if (context.store.isProfilCompleted > 1
         && location.pathname !== '/account'
-        && location.pathname !== '/myProfil') {
+        && location.pathname !== '/myProfil'
+        && location.pathname !== '/images') {
       body = <Redirect to="account" />
     }
   }

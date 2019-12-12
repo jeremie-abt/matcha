@@ -48,13 +48,6 @@ let fields = [
     label: 'Bio',
     type: 'text'
   }
-  // chepa si on veut le laisser changer son birthdate,
-  // c'est bizarre non ? 
-  /*{
-    name: 'birthdate',
-    title: 'birthdate',
-    type: 'datepicker'
-  }*/
 ]
 
 class FormUpdateProfil extends React.Component {
@@ -112,7 +105,10 @@ class FormUpdateProfil extends React.Component {
         )}
         <Card className='card-fullwidth'>
           {
-            !this.context.store.isProfilCompleted &&
+            console.log("is isProfilCompleted", this.context.store.isProfilCompleted )
+          }
+          {
+            this.context.store.isProfilCompleted > 1 &&
             <h1 className="completeProfil"> 
               Vous devez completer votre profil
             </h1>
