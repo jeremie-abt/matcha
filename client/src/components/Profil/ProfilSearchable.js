@@ -142,12 +142,15 @@ function ProfilSearchable({
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
+            {
+              props.notif && <div>{props.notif.type}</div>
+            }
             {props.notif && (
               <Button
                 text
                 className='is-size-7'
-                notifid={userInfos.notif.id}
-                type={userInfos.notif.type}
+                notifid={props.notif.id}
+                type={props.notif.type}
                 onClick={props.updateNotif}
               >
                 Supprimer la notification

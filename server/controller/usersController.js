@@ -11,6 +11,8 @@ const { createToken } = require('../helpers/ManageToken')
 
 async function show(req, res) {
   const id = req.params.userId ? req.params.userId : req.tokenInfo.id
+  // je vais toucher a pas mal de truc a voir si c'est toujours 
+  // utile a la fin !
   const notif = await notificationsModel.getAllNotifications(id)
   userModel
     .getCompleteUserInfo({ id })
