@@ -50,7 +50,7 @@ function MyProvider(props) {
           setSocketIo(setSocket(response.data.id))
           setUser(response.data)
           setIsAuth(true)
-          return {...response.data}
+          return { ...response.data }
         })
         .catch(e => {
           console.log('bad Cookie !!', e)
@@ -67,7 +67,6 @@ function MyProvider(props) {
     setIsVerified(false)
     updateUser(false)
   }
-
 
   return (
     <div>

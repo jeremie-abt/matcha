@@ -58,7 +58,6 @@ function LoggedRoutes() {
     }
   }
 
-
   return (
     <BrowserRouter>
       <Layout>
@@ -68,7 +67,12 @@ function LoggedRoutes() {
               return [
                 <Route path='/search' render={() => <FormFilter />} key={2} />,
                 <Route path='/account' render={() => <UpdateForm />} key={3} />,
-                <Route path='/Profil/:seenId' render={() => <SeenProfilPage />} key='patteencroute' />,
+                <Route
+                  path='/Profil/:seenId'
+                  exact
+                  component={SeenProfilPage}
+                  key='patteencroute'
+                />,
                 <Route
                   path='/myProfil'
                   render={() => <Profil userInfos={context.store.user} />}

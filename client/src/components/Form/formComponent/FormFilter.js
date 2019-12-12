@@ -176,17 +176,18 @@ function FormFilter() {
           profils.forEach(profil => {
             // 7 200 000 -> 2 heures because it is in milisec
             // 2 * 60 * 60 * 1000
-            if (profil.is_online || (
-                new Date() - new Date(profil.last_connection) <= 43200000
-                )){
-              // c'est ma condition pour les moins de 2 heures ! 
+            if (
+              profil.is_online ||
+              new Date() - new Date(profil.last_connection) <= 43200000
+            ) {
+              // c'est ma condition pour les moins de 2 heures !
               // il faut test !!!
               const distance = getDistance(
                 { lat: userInfos.lat, lng: userInfos.long },
                 { lat: profil.lat, lng: profil.long }
               )
               profil.localisation = distance / 1000
-           }
+            }
           })
           setProfils(profils)
         }
@@ -303,13 +304,13 @@ function FormFilter() {
         />
         {profils
           .filter(elem => {
-            if ("localisation" in elem) {
+            if ('localisation' in elem) {
               let isFalse = false
               Object.keys(filters).forEach(filter => {
                 // eslint-disable-next-line default-case
                 if (filter.startsWith('max')) {
                   const filterName = filter.split('max')[1].toLowerCase()
-  
+
                   if (elem[filterName]) {
                     if (Array.isArray(filters[filter])) {
                       const boundaries = filters[filter]

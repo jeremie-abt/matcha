@@ -12,22 +12,17 @@ function show(req, res) {
     .getCompleteUserInfo({ id })
     .then(resp => {
       if (resp.rowCount === 0) {
-        return userModel
-          .getUserInfo({ id })
+        return userModel.getUserInfo({ id })
       }
-      delete(resp.rows[0].password)
-      delete(resp.rows[0].user_id)
+      delete resp.rows[0].password
+      delete resp.rows[0].user_id
       res.json(resp.rows[0])
     })
     .then(resp => {
-      if (resp && resp.rowCount === 1) {
-        res.json(resp.rows[0])
-      } else {
-        res.json(null)
-      }
+      if (resp && resp.rowCount === 1) res.json(resp.rows[0])
     })
     .catch(e => {
-      console.log("\n\nEEEE : ", e, "\n\n")
+      console.log('\n\nEEEE : ', e, '\n\n')
       res.status(500).send(e)
     })
 }
@@ -63,8 +58,12 @@ function ManageAuthentification(req, res) {
 
 function create(req, res) {
   const argsWanted = [
-    'firstname', 'lastname', 'email',
-    'password', 'username', 'gender'
+    'firstname',
+    'lastname',
+    'email',
+    'password',
+    'username',
+    'gender'
   ]
   const userAccountInfos = {}
 
