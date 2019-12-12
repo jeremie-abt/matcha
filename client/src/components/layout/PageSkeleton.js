@@ -44,6 +44,7 @@ function PageSkeleton({ location, children }) {
         })
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addToast, context.socketIo])
 
   // ~! Bouger ce truc ailleur
