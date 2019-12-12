@@ -76,8 +76,10 @@ function FormConstructor({ location, ...props }) {
   }
 
   const _renderText = ({ elem, placeholder }) => {
+    
     return (
       <InputComponent
+        defaultInfo={context.store.user[elem.name]}
         {...elem}
         onChange={handleChange}
         value={state[elem.name]}
