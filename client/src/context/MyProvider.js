@@ -26,30 +26,37 @@
       verifyIfAuth()
     }, [])
 
-    useEffect(() => {
-      if (isProfilCompleted !== 1) {
-        if (isProfilCompleted === 0 &&
-            Object.entries(user).length > 0 && 
-            user.bio !== "" && user.tags.length > 0 && user.gender){
-          
-          axios.get('/' + user.id + '/images')
-          .then(resp => {
-            if (resp.data.length > 0) {
-              setIsProfilCompleted(1)
-            }
-          })
-          .catch(e => {
-            console.log("\n\nerr : ", e, "\n\n  ")
+     
+    const verifyProfilCompleted = () => {
+      if (Object.entries(user).length > 0 && 
+          user.bio !== "" && user.tags.length > 0 && user.gender){
+
+        axios.get('/' + user.id + '/images')
+        .then(resp => {
+          if (resp.data.length > 0) {
+            setIsProfilCompleted(1)
+          } else {
             setIsProfilCompleted(2)
-          })
-        } else if (Object.entries(user).length > 0) {
+          }
+        })
+        .catch(e => {
+          console.log("\n\nerr : ", e, "\n\n  ")
           setIsProfilCompleted(2)
-        }
+        })
+      } else if (Object.entries(user).length > 0) {
+        setIsProfilCompleted(2)
       }
-      // ya pas de else pour surveiller un retour du isprofilCompleted a false
-      // car en theorie une fois quon a un profil completed, on ne peut pas
-      // revenir en arriere ( bien faire gaf a ce que cette condition reste vraie ) !
-    }, [user, isProfilCompleted])
+    }
+
+    useEffect(() => {
+      // je l'ai mis dans une fonction a part comme ca 
+      // je peux donner verifyProfilCompleted dans mon 
+      // context ce qui permet au composant image
+      // de call manuellement la fonction pour reverif que
+      // tout est bien !
+      verifyProfilCompleted()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user])
 
     const updateUser = newUser => {
       if (newUser === false) {
@@ -115,7 +122,7 @@
               setUserLogged: setUserLogged,
               HandleDisconnection: HandleDisconnection,
               socketIo: socketIo,
-              updateProfilCompleted: setIsProfilCompleted
+              updateProfilCompleted: verifyProfilCompleted
             }}
           >
             {props.children}

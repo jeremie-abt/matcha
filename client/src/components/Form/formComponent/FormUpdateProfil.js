@@ -105,9 +105,6 @@ class FormUpdateProfil extends React.Component {
         )}
         <Card className='card-fullwidth'>
           {
-            console.log("is isProfilCompleted", this.context.store.isProfilCompleted )
-          }
-          {
             this.context.store.isProfilCompleted > 1 &&
             <h1 className="completeProfil"> 
               Vous devez completer votre profil
