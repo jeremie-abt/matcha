@@ -1,33 +1,39 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
 const Crypto = require('crypto-js')
 
 const userModel = require('../model/usersModel')
+const notificationsModel = require('../model/notificationsModel')
 const { sendMail } = require('../helpers/MailSender')
 
 const { createToken } = require('../helpers/ManageToken')
 
-function show(req, res) {
-  let id = req.params.userId ? req.params.userId : req.tokenInfo.id
+async function show(req, res) {
+  const id = req.params.userId ? req.params.userId : req.tokenInfo.id
+  // je vais toucher a pas mal de truc a voir si c'est toujours
+  // utile a la fin !
+  const notif = await notificationsModel.getAllNotifications(id)
   userModel
     .getCompleteUserInfo({ id })
     .then(resp => {
       if (resp.rowCount === 0) {
-        return userModel
-          .getUserInfo({ id })
+        return userModel.getUserInfo({ id })
       }
-      delete(resp.rows[0].password)
-      delete(resp.rows[0].user_id)
-      res.json(resp.rows[0])
+      delete resp.rows[0].password
+      delete resp.rows[0].user_id
+      res.json({ ...resp.rows[0], notifications: notif.rows })
     })
     .then(resp => {
       if (resp && resp.rowCount === 1) {
-        res.json(resp.rows[0])
+        res.json({ ...resp.rows[0], notifications: notif.rows })
       }
     })
     .catch(e => {
-      console.log("\n\nEEEE : ", e, "\n\n")
+      console.log('\n\nEEEE : ', e, '\n\n')
       res.status(500).send(e)
     })
+    .finally(() => res.end())
 }
 
 // GOAL :
@@ -61,8 +67,12 @@ function ManageAuthentification(req, res) {
 
 function create(req, res) {
   const argsWanted = [
-    'firstname', 'lastname', 'email',
-    'password', 'username', 'birthdate'
+    'firstname',
+    'lastname',
+    'email',
+    'password',
+    'username',
+    'gender'
   ]
   const userAccountInfos = {}
 

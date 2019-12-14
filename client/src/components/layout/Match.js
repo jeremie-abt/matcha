@@ -24,6 +24,7 @@ const Match = () => {
         receiverId: likesId,
         type: 'unmatch'
       })
+
       axios
         .delete('/match', { data: { userId: userId, likesId: likesId } })
         .then(() => {

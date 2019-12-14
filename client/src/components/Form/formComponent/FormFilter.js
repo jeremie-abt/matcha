@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
-import { Card } from 'react-bulma-components'
+import { Card, Heading } from 'react-bulma-components'
 import { useToasts } from 'react-toast-notifications'
 import { getDistance } from 'geolib'
 import Cookies from 'universal-cookie'
@@ -176,17 +176,18 @@ function FormFilter() {
           profils.forEach(profil => {
             // 7 200 000 -> 2 heures because it is in milisec
             // 2 * 60 * 60 * 1000
-            if (profil.is_online || (
-                new Date() - new Date(profil.last_connection) <= 43200000
-                )){
-              // c'est ma condition pour les moins de 2 heures ! 
+            if (
+              profil.is_online ||
+              new Date() - new Date(profil.last_connection) <= 43200000
+            ) {
+              // c'est ma condition pour les moins de 2 heures !
               // il faut test !!!
               const distance = getDistance(
                 { lat: userInfos.lat, lng: userInfos.long },
                 { lat: profil.lat, lng: profil.long }
               )
               profil.localisation = distance / 1000
-           }
+            }
           })
           setProfils(profils)
         }
@@ -226,12 +227,6 @@ function FormFilter() {
             userId: context.store.user.id,
             receiverId: likesId,
             type: 'unmatch'
-          })
-        } else {
-          context.socketIo.emit('notifSent', {
-            userId: context.store.user.id,
-            receiverId: likesId,
-            type: 'unlike'
           })
         }
         let newLikedProfils = [...liked]
@@ -296,6 +291,9 @@ function FormFilter() {
   return (
     <Card className='card-fullwidth'>
       <Card.Content>
+        <Heading size={3} className='has-text-centered'>
+          Search
+        </Heading>
         <FormConstructor
           fields={inputs}
           handleForm={handleSubmit}
@@ -303,13 +301,13 @@ function FormFilter() {
         />
         {profils
           .filter(elem => {
-            if ("localisation" in elem) {
+            if ('localisation' in elem) {
               let isFalse = false
               Object.keys(filters).forEach(filter => {
                 // eslint-disable-next-line default-case
                 if (filter.startsWith('max')) {
                   const filterName = filter.split('max')[1].toLowerCase()
-  
+
                   if (elem[filterName]) {
                     if (Array.isArray(filters[filter])) {
                       const boundaries = filters[filter]

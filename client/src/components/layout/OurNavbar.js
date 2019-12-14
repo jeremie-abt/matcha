@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useContext } from 'react'
 import { Button } from 'react-bulma-components'
 
@@ -8,58 +9,10 @@ import { Link } from 'react-router-dom'
 function OurNavbar() {
   const [isActive, setIsActive] = useState(false)
   const context = useContext(UserContext)
-
   const handleClick = () => {
     setIsActive(!isActive)
   }
-
-  let navButton 
-  if (context.store.isProfilCompleted === 1) {
-    navButton = <div className='navbar-start'>
-        <Link to='/search' className='navbar-item'>
-          Search
-        </Link>
-        <div className='navbar-item has-dropdown is-hoverable'>
-          <div className='navbar-link'>Mes informations</div>
-
-          <div className='navbar-dropdown'>
-            <Link to='/myProfil' className='navbar-item'>
-              Mon profil
-            </Link>
-            <Link to='/account' className='navbar-item'>
-              Mon compte
-            </Link>
-            <Link to='/images' className='navbar-item'>
-              Mes images
-            </Link>
-            <Link to='/like' className='navbar-item'>
-              Likes
-            </Link>
-            <Link to='/seen' className='navbar-item'>
-              Vues
-            </Link>
-          </div>
-        </div>
-      </div>
-  } else {
-    navButton = <div className='navbar-start'>
-        <div className='navbar-item has-dropdown is-hoverable'>
-          <div className='navbar-link'>Mes informations</div>
-          <div className='navbar-dropdown'>
-            <Link to='/myProfil' className='navbar-item'>
-              Mon profil
-            </Link>
-            <Link to='/account' className='navbar-item'>
-              Mon compte
-            </Link>
-            <Link to='/images' className='navbar-item'>
-              Mes images
-            </Link>
-          </div>
-        </div>
-      </div>
-  }
-
+  const isAuth = context.store.isAuth
   return (
     <nav
       className='navbar layout-color'
@@ -84,12 +37,58 @@ function OurNavbar() {
           <span aria-hidden='true'></span>
         </a>
       </div>
-
       <div
         id='navbarBasic'
         className={'navbar-menu ' + (isActive ? 'is-active' : '')}
       >
-        {navButton}
+        {isAuth && (
+          <div className='navbar-start'>
+            <Link to='/search' className='navbar-item'>
+              Search
+            </Link>
+            {/* Notifications is-hoverable disable during loading*/}
+            <div className={'navbar-item has-dropdown '}>
+              <div className=' navbar-item '>
+                <Link
+                  to='/notifications'
+                  data-badge={context.store.user.nbNotifs}
+                  className={
+                    'navbar-item has-dropdown has-badge-rounded has-badge-danger ' +
+                    (context.store.user.nbNotifs <= 0
+                      ? 'has-badge-outlined'
+                      : '')
+                  }
+                >
+                  Mes Notifications
+                </Link>
+              </div>
+            </div>
+            {/* informations */}
+            <div className='navbar-item has-dropdown is-hoverable'>
+              <div className='navbar-link'>Mes informations</div>
+              <div className='navbar-dropdown'>
+                <Link to='/myProfil' className='navbar-item'>
+                  Mon profil
+                </Link>
+                <Link to='/account' className='navbar-item'>
+                  Mon compte
+                </Link>
+                <Link to='/images' className='navbar-item'>
+                  Mes images
+                </Link>
+                <Link to='/match' className='navbar-item'>
+                  match
+                </Link>
+                <Link to='/like' className='navbar-item'>
+                  Likes
+                </Link>
+                <Link to='/seen' className='navbar-item'>
+                  Vues
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
         <div className='navbar-end'>
           <div className='navbar-item'>
             <UserContext.Consumer>

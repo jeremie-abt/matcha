@@ -27,18 +27,26 @@ const PageSkeleton = withRouter(({ location, children }) => {
   const [msg, setMsg] = useState([])
   const context = useContext(userContext)
   const { addToast } = useToasts()
-  
+
   // Voir ca demain !!!!
   useEffect(() => {
     if (context.socketIo) {
-
       context.socketIo.on('notifPrinting', type => {
-        addToast(`vous avez un nouveau ${type}`, {
-          appearance: 'success',
+        const user = context.store.user
+        console.log(user)
+        user.nbNotifs += 1
+        context.updateUser(user)
+        const msg =
+          type === 'unmatch'
+            ? "Malheureusement, vous venez d'être unmatch"
+            : `vous avez un nouveau ${type}`
+        addToast(msg, {
+          appearance: 'info',
           autoDismiss: true
         })
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addToast, context.socketIo])
 
   // ~! Bouger ce truc ailleur
