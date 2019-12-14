@@ -41,17 +41,6 @@ function MyProvider(props) {
             setIsProfilCompleted(2)
           }
         })
-        .then(response => {
-          if (response.data.verified_mail === true) setIsVerified(true)
-          setSocketIo(setSocket(response.data.id))
-          const user = response.data
-          user.nbNotifs = user.notifications.length
-            ? user.notifications.length
-            : 0
-          setUser(user)
-          setIsAuth(true)
-          return { ...response.data }
-        })
         .catch(e => {
           console.log('\n\nerr : ', e, '\n\n  ')
           setIsProfilCompleted(2)
@@ -98,7 +87,11 @@ function MyProvider(props) {
         .then(response => {
           if (response.data.verified_mail === true) setIsVerified(true)
           setSocketIo(setSocket(response.data.id))
-          setUser(response.data)
+          const user = response.data
+          user.nbNotifs = user.notifications.length
+            ? user.notifications.length
+            : 0
+          setUser(user)
           setIsAuth(true)
           //updateCompletedProfil()
           return { ...response.data }

@@ -11,7 +11,6 @@ import Cookies from 'universal-cookie'
 import userContext from '../../context/UserContext'
 import { useToasts } from 'react-toast-notifications'
 
-
 import MatchaModal from '../miscellaneous/Modal'
 
 // Si on veut mettre le projet sur github, ne pas oublier de mettre
@@ -27,13 +26,25 @@ const PageSkeleton = withRouter(({ location, children }) => {
   const [msg, setMsg] = useState([])
   const context = useContext(userContext)
   const { addToast } = useToasts()
+  const [isToastDisplayed, setIsToastDisplayed] = useState(false)
 
   // Voir ca demain !!!!
   useEffect(() => {
+    if (context.store.isProfilCompleted > 1) {
+      if (!isToastDisplayed) {
+        addToast(
+          'Pour pouvoir accéder à la recherche, votre profil doit contenir au moins 1 tag, une image et votre bio doit être compléte',
+          {
+            appearance: 'warning',
+            autoDismiss: false
+          }
+        )
+        setIsToastDisplayed(true)
+      }
+    }
     if (context.socketIo) {
       context.socketIo.on('notifPrinting', type => {
         const user = context.store.user
-        console.log(user)
         user.nbNotifs += 1
         context.updateUser(user)
         const msg =
@@ -47,7 +58,7 @@ const PageSkeleton = withRouter(({ location, children }) => {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addToast, context.socketIo])
+  }, [addToast, context.socketIo, context.store.isProfilCompleted])
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
@@ -71,13 +82,13 @@ const PageSkeleton = withRouter(({ location, children }) => {
       })
   }
 
-  
   let body = <Columns.Column>{children}</Columns.Column>
 
   if (context.store.isAuth === true) {
     // quand il est log
     if (context.store.user.verified_mail === false) {
-      body = <div>
+      body = (
+        <div>
           {Object.entries(msg).length !== 0 && (
             <MatchaModal
               color={msg[1]}
@@ -87,16 +98,17 @@ const PageSkeleton = withRouter(({ location, children }) => {
           )}
           <Content>
             <h1>You must confirm your mail</h1>
-            <Button onClick={sendNewMail}>
-              Click here to send new Mail
-            </Button>
+            <Button onClick={sendNewMail}>Click here to send new Mail</Button>
           </Content>
         </div>
-    } else if (context.store.isProfilCompleted > 1
-        && location.pathname !== '/account'
-        && location.pathname !== '/myProfil'
-        && location.pathname !== '/images') {
-      body = <Redirect to="account" />
+      )
+    } else if (
+      context.store.isProfilCompleted > 1 &&
+      location.pathname !== '/account' &&
+      location.pathname !== '/myProfil' &&
+      location.pathname !== '/images'
+    ) {
+      body = <Redirect to='account' />
     }
   }
 
@@ -105,9 +117,7 @@ const PageSkeleton = withRouter(({ location, children }) => {
       <OurHeader />
       <Section className={myClasses}>
         <Container>
-          <Columns>
-            { body }
-          </Columns>
+          <Columns>{body}</Columns>
         </Container>
       </Section>
       <OurFooter />

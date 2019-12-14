@@ -7,7 +7,6 @@ import UserContext from '../../../context/UserContext'
 import ChangePasswordModal from '../../miscellaneous/ChangePasswordModal'
 import { Button, Card } from 'react-bulma-components'
 
-
 import MatchaModal from '../../../components/miscellaneous/Modal'
 
 let fields = [
@@ -96,20 +95,14 @@ class FormUpdateProfil extends React.Component {
       <div>
         {Object.entries(this.state.msg).length !== 0 && (
           <MatchaModal
-          color={this.state.msg[1]}
-          msg={this.state.msg[0]}
-          setMsg={this.setMsg}
+            color={this.state.msg[1]}
+            msg={this.state.msg[0]}
+            setMsg={this.setMsg}
           >
             {this.state.msg}
           </MatchaModal>
         )}
         <Card className='card-fullwidth'>
-          {
-            this.context.store.isProfilCompleted > 1 &&
-            <h1 className="completeProfil"> 
-              Vous devez completer votre profil
-            </h1>
-          }
           <Card.Content>
             <div className='is-right'>
               <Button
@@ -140,16 +133,15 @@ class FormUpdateProfil extends React.Component {
 
   // do we need to tell the user when a stirng is empty ?
   // that it won't be updated in the back ?
-  removeNullStrings = (args) => {
+  removeNullStrings = args => {
     const after = {}
     let blankMsgs = true
-    Object.keys(args).forEach((elem) => {
+    Object.keys(args).forEach(elem => {
       if (typeof args[elem] !== 'string') {
         after[elem] = args[elem]
-        if (elem === 'tags' && args.tags.length > 0)
-          blankMsgs = false
+        if (elem === 'tags' && args.tags.length > 0) blankMsgs = false
         else if (elem === 'gender' && args.gender) blankMsgs = false
-      } else if (args[elem] && args[elem].trim() !== "") {
+      } else if (args[elem] && args[elem].trim() !== '') {
         blankMsgs = false
         after[elem] = args[elem]
       }
@@ -160,18 +152,14 @@ class FormUpdateProfil extends React.Component {
   verifyFormData(formData) {
     const BreakException = {}
     let isAtLeastOneField = false
-    const presentFields = [
-      'firstname', 'lastname', 'username',
-      'email', 'bio'
-    ]
+    const presentFields = ['firstname', 'lastname', 'username', 'email', 'bio']
     try {
       Object.keys(formData).forEach(elem => {
         if (presentFields.includes(elem)) {
           throw BreakException
         }
       })
-    }
-    catch(e) {
+    } catch (e) {
       if (e !== BreakException) throw e
       isAtLeastOneField = true
     }
@@ -190,17 +178,16 @@ class FormUpdateProfil extends React.Component {
   }
 
   handleSubmit = ({ state, checkbox }) => {
-
     let formData = { ...state, ...checkbox }
     const retNullStrings = this.removeNullStrings(formData)
     formData = retNullStrings[0]
     const retVerify = this.verifyFormData(formData)
     if (retVerify !== true) {
-      this.setState({msg : [retVerify, 'error']})
+      this.setState({ msg: [retVerify, 'error'] })
       return null
     }
     if (retNullStrings[1] === true) {
-      this.setState({msg : ['invalid blank messages', 'error']})
+      this.setState({ msg: ['invalid blank messages', 'error'] })
       return null
     }
     axios
