@@ -1,12 +1,15 @@
 /* eslint-disable eqeqeq */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Card, Columns, Button } from 'react-bulma-components'
 import ImageComponent from './Images'
 import axios from 'axios'
 
+import userContext from '../../context/UserContext'
+
 const UserImages = ({ userId }) => {
   const [userImages, setUserImages] = useState([])
   const [file, setFile] = useState('')
+  const context = useContext(userContext)
 
   useEffect(() => {
     if (userId) {
@@ -27,6 +30,7 @@ const UserImages = ({ userId }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
+    if (!file) return
     axios
       .post('/upload', file)
       .then(res => {
@@ -34,6 +38,7 @@ const UserImages = ({ userId }) => {
         axios
           .post('images/add', { userId, url: data.path })
           .then(res => {
+            context.updateProfilCompleted()
             getImages(userId)
           })
           .catch(err => console.log(err))
@@ -56,6 +61,7 @@ const UserImages = ({ userId }) => {
       .then(res => {
         const images = userImages.filter(img => img.id != imageId)
         setUserImages(images)
+        context.updateProfilCompleted()
         // notif -> image destroyed
       })
       .catch(err => console.log(err))

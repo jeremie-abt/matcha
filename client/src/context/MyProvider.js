@@ -11,6 +11,11 @@ function MyProvider(props) {
   const [isVerified, setIsVerified] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
   const [socketIo, setSocketIo] = useState(null)
+  const [isProfilCompleted, setIsProfilCompleted] = useState(0)
+  // isProfilCompleted state :
+  // 0 -> we don't know yet
+  // 1 -> It is completed !
+  // 2 and all superior integer -> no its not completed
 
   useEffect(() => {
     const verifyIfAuth = async () => {
@@ -20,7 +25,41 @@ function MyProvider(props) {
     verifyIfAuth()
   }, [])
 
-  // fonction pour pouvoir update le user et le isAuth
+  const verifyProfilCompleted = () => {
+    if (
+      Object.entries(user).length > 0 &&
+      user.bio !== '' &&
+      user.tags.length > 0 &&
+      user.gender
+    ) {
+      axios
+        .get('/' + user.id + '/images')
+        .then(resp => {
+          if (resp.data.length > 0) {
+            setIsProfilCompleted(1)
+          } else {
+            setIsProfilCompleted(2)
+          }
+        })
+        .catch(e => {
+          console.log('\n\nerr : ', e, '\n\n  ')
+          setIsProfilCompleted(2)
+        })
+    } else if (Object.entries(user).length > 0) {
+      setIsProfilCompleted(2)
+    }
+  }
+
+  useEffect(() => {
+    // je l'ai mis dans une fonction a part comme ca
+    // je peux donner verifyProfilCompleted dans mon
+    // context ce qui permet au composant image
+    // de call manuellement la fonction pour reverif que
+    // tout est bien !
+    verifyProfilCompleted()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+
   const updateUser = newUser => {
     if (newUser === false) {
       setUser({})
@@ -54,6 +93,7 @@ function MyProvider(props) {
             : 0
           setUser(user)
           setIsAuth(true)
+          //updateCompletedProfil()
           return { ...response.data }
         })
         .catch(e => {
@@ -80,12 +120,14 @@ function MyProvider(props) {
             store: {
               isAuth,
               isVerified,
-              user
+              user,
+              isProfilCompleted: isProfilCompleted
             },
             updateUser: updateUser,
             setUserLogged: setUserLogged,
             HandleDisconnection: HandleDisconnection,
-            socketIo: socketIo
+            socketIo: socketIo,
+            updateProfilCompleted: verifyProfilCompleted
           }}
         >
           {props.children}

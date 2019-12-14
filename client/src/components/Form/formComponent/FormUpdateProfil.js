@@ -131,9 +131,65 @@ class FormUpdateProfil extends React.Component {
     )
   }
 
-  handleSubmit = ({ state, checkbox }) => {
-    const formData = { ...state, ...checkbox }
+  // do we need to tell the user when a stirng is empty ?
+  // that it won't be updated in the back ?
+  removeNullStrings = args => {
+    const after = {}
+    let blankMsgs = true
+    Object.keys(args).forEach(elem => {
+      if (typeof args[elem] !== 'string') {
+        after[elem] = args[elem]
+        if (elem === 'tags' && args.tags.length > 0) blankMsgs = false
+        else if (elem === 'gender' && args.gender) blankMsgs = false
+      } else if (args[elem] && args[elem].trim() !== '') {
+        blankMsgs = false
+        after[elem] = args[elem]
+      }
+    })
+    return [after, blankMsgs]
+  }
 
+  verifyFormData(formData) {
+    const BreakException = {}
+    let isAtLeastOneField = false
+    const presentFields = ['firstname', 'lastname', 'username', 'email', 'bio']
+    try {
+      Object.keys(formData).forEach(elem => {
+        if (presentFields.includes(elem)) {
+          throw BreakException
+        }
+      })
+    } catch (e) {
+      if (e !== BreakException) throw e
+      isAtLeastOneField = true
+    }
+    if (formData.tags.length > 0 || formData.gender) {
+      isAtLeastOneField = true
+    }
+    if (isAtLeastOneField === false) {
+      return "can't send empty data"
+    }
+    const { email } = formData
+    const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
+    if (email && email !== '' && !verifyMailPattern.exec(email))
+      return 'please send a valid email ...'
+    // faudrait faire gaff a la date
+    return true
+  }
+
+  handleSubmit = ({ state, checkbox }) => {
+    let formData = { ...state, ...checkbox }
+    const retNullStrings = this.removeNullStrings(formData)
+    formData = retNullStrings[0]
+    const retVerify = this.verifyFormData(formData)
+    if (retVerify !== true) {
+      this.setState({ msg: [retVerify, 'error'] })
+      return null
+    }
+    if (retNullStrings[1] === true) {
+      this.setState({ msg: ['invalid blank messages', 'error'] })
+      return null
+    }
     axios
       .put('/users/' + this.context.store.user.id, { ...formData })
       .then(resp => {
@@ -142,7 +198,7 @@ class FormUpdateProfil extends React.Component {
         }
       })
       .catch(e => {
-        this.setState({ msg: ['Something Went wrong please retry', 'danger'] })
+        this.setState({ msg: ['Something Went wrong please retry', 'error'] })
       })
   }
 }

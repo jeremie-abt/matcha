@@ -7,6 +7,7 @@ function searchProfils(userInfos) {
   let query =
     'SELECT DISTINCT ON(users.id) users.*, online.is_online, online.last_connection, geoloc.lat, geoloc.long FROM users ' +
     `INNER JOIN geoloc ON users.id = geoloc.user_id ` +
+    `INNER JOIN images ON users.id = images.user_id ` +
     `INNER JOIN online ON users.id = online.user_id ` +
     `WHERE users.id != ${userInfos.id} `
   if (userInfos.sexual_orientation !== 'bisexual'){

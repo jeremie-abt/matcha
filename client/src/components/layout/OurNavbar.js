@@ -20,7 +20,10 @@ function OurNavbar() {
       aria-label='main navigation'
     >
       <div className='navbar-brand'>
-        <a className='navbar-item' href='/'>
+        <a
+          className='navbar-item'
+          href={context.store.isProfilcompleted > 1 ? '/account' : '/'}
+        >
           <img src={require('../../assets/img/OUI.png')} alt='logo' />
         </a>
 
@@ -48,7 +51,7 @@ function OurNavbar() {
             </Link>
             {/* Notifications is-hoverable disable during loading*/}
             <div className={'navbar-item has-dropdown '}>
-              <div className=' navbar-item '>
+              <div className='navbar-item'>
                 <Link
                   to='/notifications'
                   data-badge={context.store.user.nbNotifs}
