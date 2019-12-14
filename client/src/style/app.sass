@@ -6,12 +6,14 @@ $header-height: 84px
 $footer-height: 50px
 
 @import '~bulma/bulma.sass'
+@import '~bulma-badge/dist/css/bulma-badge.min.css'
 @import './pages/homePage.sass'
 @import './pages/registerPage.sass'
 @import './pages/userPage.sass'
 @import './components/profil.sass'
 @import './components/updateProfil.sass'
 @import './components/images.sass'
+@import './components/notifications.sass'
 @import './components/modal.sass'
 @import './bulma/card'
 @import './components/chat'
@@ -20,7 +22,10 @@ $footer-height: 50px
 // header config
 .navbar
   z-index: auto
-  
+
+.container
+  width: -webkit-fill-available
+
 .capitalize
   text-transform: capitalize
 

@@ -48,9 +48,13 @@ function MyProvider(props) {
         .then(response => {
           if (response.data.verified_mail === true) setIsVerified(true)
           setSocketIo(setSocket(response.data.id))
-          setUser(response.data)
+          const user = response.data
+          user.nbNotifs = user.notifications.length
+            ? user.notifications.length
+            : 0
+          setUser(user)
           setIsAuth(true)
-          return {...response.data}
+          return { ...response.data }
         })
         .catch(e => {
           console.log('bad Cookie !!', e)
@@ -67,7 +71,6 @@ function MyProvider(props) {
     setIsVerified(false)
     updateUser(false)
   }
-
 
   return (
     <div>

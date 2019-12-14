@@ -9,7 +9,8 @@ function Profil({
   userInfos,
   event = null,
   fullProfil = true,
-  isLiked = null
+  isLiked = null,
+  ...props
 }) {
   const { addToast } = useToasts()
   const [images, setImages] = useState([])
@@ -49,12 +50,10 @@ function Profil({
 
   // fetch isOnline
   useEffect(() => {
-    axios.get('/online/' + userInfos.id)
-    .then((resp) => {
+    axios.get('/online/' + userInfos.id).then(resp => {
       setOnlineInfos(resp.data)
     })
   }, [])
-
 
   function errorDuringLoading() {
     return addToast(
@@ -72,17 +71,19 @@ function Profil({
         profilPicture={profilPicture}
         images={images}
         tags={tags}
-        />
-        )
-      } else {
-        return (
-          <SearchableProfil
-          isLiked={isLiked}
-          userInfos={userInfos}
-          profilPicture={profilPicture}
-          event={event}
-          tags={tags}
-          onlineInfos={onlineInfos}
+      />
+    )
+  } else {
+    return (
+      <SearchableProfil
+        isLiked={isLiked}
+        notif={props.notif}
+        userInfos={userInfos}
+        profilPicture={profilPicture}
+        updateNotif={props.updateNotif}
+        event={event}
+        tags={tags}
+        onlineInfos={onlineInfos}
       />
     )
   }

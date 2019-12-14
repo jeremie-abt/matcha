@@ -12,7 +12,15 @@ import {
 } from 'react-bulma-components'
 import axios from 'axios'
 
-function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onlineInfos }) {
+function ProfilSearchable({
+  userInfos,
+  tags,
+  profilPicture,
+  event,
+  isLiked,
+  onlineInfos,
+  ...props
+}) {
   const context = useContext(userContext)
   let likedButton = null
   let printAllButton = false
@@ -26,7 +34,7 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
       handleBlocked: Function.prototype
     }
   } else {
-    printAllButton = true 
+    printAllButton = true
   }
 
   if (isLiked) {
@@ -57,25 +65,40 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
       </Button>
     )
   }
-  
+
   if (onlineInfos) {
-    onlineDisplay = onlineInfos.is_online ? <p>online</p> :
+    onlineDisplay = onlineInfos.is_online ? (
+      <p>online</p>
+    ) : (
       <Moment fromNow date={onlineInfos.last_connection} />
+    )
   } else onlineDisplay = null
 
-
   const disPlayProfil = () => {
-    axios.post('/seen', {userId: context.store.user.id, seenId: userInfos.id})
-    .then((resp) => {
-      context.socketIo.emit('notifSent', {
-        userId: context.store.user.id,
-        receiverId: userInfos.id,
-        type: 'seen'
+    axios
+      .post('/seen', { userId: context.store.user.id, seenId: userInfos.id })
+      .then(resp => {
+        context.socketIo.emit('notifSent', {
+          userId: context.store.user.id,
+          receiverId: userInfos.id,
+          type: 'seen'
+        })
       })
-    })
-    .catch((e) => {
-      console.log("Beug du seen : ", e)
-    })
+      .catch(e => {
+        console.log('Beug du seen : ', e)
+      })
+  }
+
+  const PhraseNotif = () => {
+    const type = userInfos.notif.type
+    let message = ''
+    if (type === 'like') message = 'aime votre profil !'
+    else if (type === 'view') message = 'a vu votre profil'
+    else if (type === 'message') message = 'vous a envoyé un message'
+    else if (type === 'match') message = 'vient de match avec vous !'
+    else if (type === 'unmatch') message = 'Le match est terminer !'
+
+    return <span>{message}</span>
   }
 
   return (
@@ -94,41 +117,60 @@ function ProfilSearchable({ userInfos, tags, profilPicture, event, isLiked, onli
               {userInfos.firstname} {userInfos.lastname}
             </Heading>
             <Heading subtitle size={6}>
-              @{userInfos.username}
+              @{userInfos.username} {userInfos.notif ? <PhraseNotif /> : ''}
             </Heading>
           </Media.Item>
           <Media.Item>
             <Button.Group position='right'>
               {printAllButton && likedButton}
-              <Button color='primary' onClick={disPlayProfil}>Voir le profil</Button>
+              <Button color='primary' onClick={disPlayProfil}>
+                Voir le profil
+              </Button>
             </Button.Group>
           </Media.Item>
         </Media>
         <Tag.Group>
-          {tags.map(tag => {
-            return (
-              <Tag key={tag.id} className='primary-light'>
-                #{tag.name}
-              </Tag>
-            )
-          })}
+          {!props.notif
+            ? tags.map(tag => {
+                return (
+                  <Tag key={tag.id} className='primary-light'>
+                    #{tag.name}
+                  </Tag>
+                )
+              })
+            : ''}
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
-            { onlineDisplay }
-            
-            { printAllButton &&
-            <Button
-              id={userInfos.id}
-              size='small'
-              text={true}
-              onClick={() => {
-                event.setShowModal(true)
-                event.setReportedId(userInfos.id)
-              }}
-            >
-              report
-            </Button> }
+            {
+              props.notif && <div>{props.notif.type}</div>
+            }
+            {props.notif && (
+              <Button
+                text
+                className='is-size-7'
+                notifid={props.notif.id}
+                type={props.notif.type}
+                onClick={props.updateNotif}
+              >
+                Supprimer la notification
+              </Button>
+            )}
+            {onlineDisplay}
+
+            {printAllButton && (
+              <Button
+                id={userInfos.id}
+                size='small'
+                text={true}
+                onClick={() => {
+                  event.setShowModal(true)
+                  event.setReportedId(userInfos.id)
+                }}
+              >
+                Report
+              </Button>
+            )}
           </div>
         </Content>
       </Card.Content>
