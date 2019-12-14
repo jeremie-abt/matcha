@@ -32,6 +32,7 @@ function PageSkeleton({ location, children }) {
     if (context.socketIo) {
       context.socketIo.on('notifPrinting', type => {
         const user = context.store.user
+        console.log(user)
         user.nbNotifs += 1
         context.updateUser(user)
         const msg =
@@ -39,7 +40,7 @@ function PageSkeleton({ location, children }) {
             ? "Malheureusement, vous venez d'être unmatch"
             : `vous avez un nouveau ${type}`
         addToast(msg, {
-          appearance: 'success',
+          appearance: 'info',
           autoDismiss: true
         })
       })

@@ -16,11 +16,11 @@ const index = async (req, res) => {
   notificationsModel
     .getAllNotifications(receiverId)
     .then(result => {
-      if (!result.rowCount) throw [204, 'No notifications found']
-      res.json(result.rows)
+      if (!result.rowCount) res.status(204).send('no content')
+      else res.json(result.rows)
     })
-    .catch(() => {
-      res.status(500)
+    .catch(err => {
+      throw err
     })
     .finally(() => res.end())
 }
