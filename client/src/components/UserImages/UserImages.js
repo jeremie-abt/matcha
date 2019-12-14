@@ -30,6 +30,7 @@ const UserImages = ({ userId }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
+    if (!file) return
     axios
       .post('/upload', file)
       .then(res => {
@@ -54,13 +55,13 @@ const UserImages = ({ userId }) => {
   const deleteImage = e => {
     const imageId = e.target.getAttribute('id')
     const url = e.target.getAttribute('url')
-    
+
     axios
-    .delete('/images/delete', { data: { imageId, userId, url } })
-    .then(res => {
-      const images = userImages.filter(img => img.id != imageId)
-      setUserImages(images)
-      context.updateProfilCompleted()
+      .delete('/images/delete', { data: { imageId, userId, url } })
+      .then(res => {
+        const images = userImages.filter(img => img.id != imageId)
+        setUserImages(images)
+        context.updateProfilCompleted()
         // notif -> image destroyed
       })
       .catch(err => console.log(err))
