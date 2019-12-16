@@ -52,7 +52,10 @@ const buttonStyle = {
 }
 
 function parseFormData(formData) {
-  const { email, password, confirmpassword, currentDate } = formData
+  const {
+    email, password,
+    confirmpassword, currentDate, 
+    firstname, lastname, username } = formData
 
   let tmpDate = new Date()
   if (tmpDate - currentDate < 0) return 'Invalide Date'
@@ -61,12 +64,30 @@ function parseFormData(formData) {
       tmpDate.getMonth(), tmpDate.getDate()
   )
   if (currentDate >= tmpDate) return 'Invalide Date'
+  const verifyNamePattern = RegExp('^(?=.*[a-zA-Z]{3,})')
+  if (!verifyNamePattern.exec(firstname))
+    return "prenom invalide ..."
+  if (!verifyNamePattern.exec(lastname))
+    return "nom invalide ..."
+  if (!verifyNamePattern.exec(username))
+    return "pseudo invalide ..."
   const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
+  // regex password : 
+  // - at least one minuscule / majuscule / number / special character
+  // - at least 8 character
+  //console.log("fiestname : ", user)
+  const verifyPasswordPattern = new RegExp(
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"
+    );
+  if (!verifyPasswordPattern.exec(password)) {
+    return "le mot de passe est trop faible, il doit faire 8 caractere de long " +
+          "et contenir au moins une lettre majuscule, minuscule, un chiffre " +
+          "et un caractere special !"
+  }
   if (confirmpassword !== password)
     return 'Password and confirmpassword ne sont pas identiques ...'
   else if (!verifyMailPattern.exec(email))
     return 'veuillez mettre une addresse mail valide ...'
-  // faut faire des verifs sur les firstname et tout ?
   return true
 }
 
@@ -94,6 +115,7 @@ function FormCreateProfil() {
       return true
     })
     if (isAllDataGiven) {
+      console.log("state ; ", state)
       const ret = parseFormData({ ...state, currentDate })
       if (ret === true) {
         // creation du user

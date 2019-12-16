@@ -79,6 +79,19 @@ function create(req, res) {
     }
     userAccountInfos[element] = value
   })
+  
+  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
+  // regex password : 
+  // - at least one minuscule / majuscule / number / special character
+  // - at least 8 character
+  const verifyPasswordPattern = new RegExp(
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"
+    );
+  if (!verifyPasswordPattern.exec(userAccountInfos.password) || 
+      !verifyMailPattern.exec(userAccountInfos.email)) {
+    res.status(500).send("invalid Data")
+    return 
+  }
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel
