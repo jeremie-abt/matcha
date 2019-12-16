@@ -15,7 +15,7 @@ function LoginPage() {
           pathname: '/',
           state: {
             msg: {
-              success: "Profil ok"
+              success: "ton profil a ete cree, tu dois maintenan cliquer sur le liens envoye par mail"
             }
           }
         }}/>
