@@ -36,12 +36,6 @@ async function show(req, res) {
     .finally(() => res.end())
 }
 
-// GOAL :
-//   when user is not logged in take some info
-//   request BDD to see if Data are correct !
-//   If yes create and return a token
-//   which will be passed to each request who need
-//   auth !
 function ManageAuthentification(req, res) {
   const { username, password } = req.body
 

@@ -28,7 +28,6 @@ const PageSkeleton = withRouter(({ location, children }) => {
   const { addToast } = useToasts()
   const [isToastDisplayed, setIsToastDisplayed] = useState(false)
 
-  // Voir ca demain !!!!
   useEffect(() => {
     if (context.store.isProfilCompleted > 1) {
       if (!isToastDisplayed) {
@@ -42,11 +41,15 @@ const PageSkeleton = withRouter(({ location, children }) => {
         setIsToastDisplayed(true)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.store.isProfilCompleted])
+  
+  useEffect(() => {
     if (context.socketIo) {
       context.socketIo.on('notifPrinting', type => {
         const user = context.store.user
         user.nbNotifs += 1
-        context.updateUser(user)
+        //context.updateUser(user)
         const msg =
           type === 'unmatch'
             ? "Malheureusement, vous venez d'être unmatch"
@@ -57,8 +60,7 @@ const PageSkeleton = withRouter(({ location, children }) => {
         })
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addToast, context.socketIo, context.store.isProfilCompleted])
+  }, [context.socketIo])
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {

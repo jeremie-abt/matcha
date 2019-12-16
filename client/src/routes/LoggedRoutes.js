@@ -10,6 +10,7 @@ import Images from '../components/UserImages/UserImages'
 import UpdateForm from '../components/Form/formComponent/FormUpdateProfil'
 import Histo from '../components/Profil/Histo'
 import FormFilter from '../components/Form/formComponent/FormFilter'
+import SeenProfilPage from '../pages/SeenProfilPage'
 import DefaultPage from '../components/GeneralRedirection/LoggedDefaultPage'
 import Notifications from '../components/notifications/Notifications'
 import Layout from '../components/layout/PageSkeleton'
@@ -69,6 +70,12 @@ function LoggedRoutes() {
               return [
                 <Route path='/search' render={() => <FormFilter />} key={2} />,
                 <Route path='/account' render={() => <UpdateForm />} key={3} />,
+                <Route
+                  path='/Profil/:seenId'
+                  exact
+                  component={SeenProfilPage}
+                  key='patteencroute'
+                />,
                 <Route
                   path='/myProfil'
                   render={() => <Profil userInfos={context.store.user} />}

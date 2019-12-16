@@ -93,7 +93,6 @@ function MyProvider(props) {
             : 0
           setUser(user)
           setIsAuth(true)
-          //updateCompletedProfil()
           return { ...response.data }
         })
         .catch(e => {

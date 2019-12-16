@@ -1,6 +1,7 @@
 import React from 'react'
 import { Columns, Box } from 'react-bulma-components'
 import Moment from 'react-moment'
+import 'moment/locale/fr'
 
 function MessageBubble({ MessageInfo, userInfos, isCurrentUser }) {
   let className = isCurrentUser
@@ -16,7 +17,7 @@ function MessageBubble({ MessageInfo, userInfos, isCurrentUser }) {
         <h1>{userInfos.username} </h1>
         <p>{MessageInfo.message}</p>
         <p className='chat-date'>
-          <Moment fromNow date={MessageInfo.send_at} />
+          <Moment locale='fr' fromNow date={MessageInfo.send_at} />
         </p>
       </Box>
     </Columns.Column>

@@ -71,6 +71,7 @@ function Profil({
         profilPicture={profilPicture}
         images={images}
         tags={tags}
+        onlineInfos={onlineInfos}
       />
     )
   } else {

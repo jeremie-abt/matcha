@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import userContext from '../../context/UserContext'
+import { Link } from 'react-router-dom'
 import Moment from 'react-moment'
+import 'moment/locale/fr'
 import {
   Content,
   Card,
@@ -70,7 +72,7 @@ function ProfilSearchable({
     onlineDisplay = onlineInfos.is_online ? (
       <p>online</p>
     ) : (
-      <Moment fromNow date={onlineInfos.last_connection} />
+      <Moment fromNow locale='fr' date={onlineInfos.last_connection} />
     )
   } else onlineDisplay = null
 
@@ -123,9 +125,11 @@ function ProfilSearchable({
           <Media.Item>
             <Button.Group position='right'>
               {printAllButton && likedButton}
-              <Button color='primary' onClick={disPlayProfil}>
-                Voir le profil
-              </Button>
+              <Link to={'/Profil/' + userInfos.id}>
+                <Button color='primary' onClick={disPlayProfil}>
+                  Voir le profil
+                </Button>
+              </Link>
             </Button.Group>
           </Media.Item>
         </Media>
@@ -168,7 +172,7 @@ function ProfilSearchable({
                   event.setReportedId(userInfos.id)
                 }}
               >
-                Report
+                report
               </Button>
             )}
           </div>
