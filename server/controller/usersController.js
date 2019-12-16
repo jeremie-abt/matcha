@@ -1,3 +1,5 @@
+const verifyData = require('../helpers/validation')
+
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
@@ -79,16 +81,8 @@ function create(req, res) {
     }
     userAccountInfos[element] = value
   })
-  
-  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
-  // regex password : 
-  // - at least one minuscule / majuscule / number / special character
-  // - at least 8 character
-  const verifyPasswordPattern = new RegExp(
-    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"
-    );
-  if (!verifyPasswordPattern.exec(userAccountInfos.password) || 
-      !verifyMailPattern.exec(userAccountInfos.email)) {
+
+  if (!verifyData(userAccountInfos)) {
     res.status(500).send("invalid Data")
     return 
   }
@@ -155,6 +149,10 @@ function update(req, res) {
       toUpdateFields[elem] = req.body[elem]
     }
   })
+  if (!verifyData(toUpdateFields)) {
+    res.status(500).send("invalid Data")
+    return 
+  }
   if (Object.keys(toUpdateFields).length === 0) {
     // !~ quel status renvoyer ??
     res.status(404).send('no Data provided to update users')

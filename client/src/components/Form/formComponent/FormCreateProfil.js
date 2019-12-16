@@ -83,6 +83,7 @@ function FormCreateProfil() {
         axios
           .post('/users', { ...state, birthdate:currentDate })
           .catch(e => {
+            console.log("err : ", e)
             setMsg(['user deja existant', 'error'])
           })
           .then(resp => {
