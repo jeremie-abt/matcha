@@ -66,7 +66,6 @@ function create(req, res) {
     'email',
     'password',
     'username',
-    'gender'
   ]
   const userAccountInfos = {}
 
