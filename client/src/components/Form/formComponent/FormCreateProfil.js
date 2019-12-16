@@ -70,7 +70,7 @@ function parseFormData(formData) {
   return true
 }
 
-function FormCreateProfil() {
+function FormCreateProfil({ setAccountCreated }) {
   const [msg, setMsg] = useState([])
 
   const handleSubmit = ({ state, currentDate }) => {
@@ -117,12 +117,9 @@ function FormCreateProfil() {
           })
           .then(resp => {
             if (resp) {
-              setMsg([
-                'success, vous devez maintenan valider votre profil par mail',
-                'success'
-              ])
+              setAccountCreated(true)
             }
-          })
+        })
           .catch(e => {
             setMsg([
               'Error contactez les dev si l\'erreur persiste',

@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Container, Card, Content } from 'react-bulma-components'
 import LoginForm from '../components/Form/formComponent/FormLogin'
 import MyContext from '../context/UserContext'
 import PageSkeleton from '../components/layout/PageSkeleton'
+import { useToasts } from 'react-toast-notifications'
+
 
 let fields = [
   {
@@ -17,7 +20,22 @@ let fields = [
   }
 ]
 
-function LoginPage() {
+const LoginPage = withRouter(({ location }) => {
+  const { addToast } = useToasts()
+  
+  // j'ai fais un useEffect pour pouvoir surveiller la variable
+  // location.state, enfaite sinon je ne peux pas le rendre empty
+  // je ne pense pas que ce soit possible d'ailleurs !
+  useEffect(() => {
+    if (location.state.msg.success) {
+      addToast(location.state.msg.success, {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state])
+
   return (
     <PageSkeleton>
       <Container className='login-form'>
@@ -41,6 +59,6 @@ function LoginPage() {
       </Container>
     </PageSkeleton>
   )
-}
+})
 
 export default LoginPage

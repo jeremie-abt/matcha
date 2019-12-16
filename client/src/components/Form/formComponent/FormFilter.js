@@ -47,7 +47,7 @@ const fields = [
 ]
 
 // function used for the sorting
-function FormFilter() {
+const FormFilter = () => {
   const { addToast } = useToasts()
   const context = useContext(userContext)
   const [inputs, setInputs] = useState(fields)
