@@ -1,12 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Button, Form, Content, Columns, Tag } from 'react-bulma-components'
+import { Button, Form, Columns, Tag } from 'react-bulma-components'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import InputComponent from './InputStyle/InputStyle'
 import Checkbox from './InputStyle/CheckboxStyle'
 import MyRadio from './InputStyle/RadioStyle'
 import Range from './InputStyle/InputDoubleRange'
 import Slider from './InputStyle/InputSlider'
+import MyDatePicker from "../miscellaneous/MyDatePicker"
+import { useToasts } from 'react-toast-notifications'
+
 
 import UserContext from '../../context/UserContext'
 
@@ -14,6 +17,21 @@ function FormConstructor({ location, ...props }) {
   const context = useContext(UserContext)
   const [state, setState] = useState({})
   const [checkbox, setCheckbox] = useState({})
+  const [currentDate, setCurrentDate] = useState(
+    context.store.user.birthdate ?
+    new Date(context.store.user.birthdate) :
+    new Date()
+  )
+  const { addToast } = useToasts()
+
+  useEffect(() => {
+    if (props.msg && props.msg.length === 2) {
+      addToast(props.msg[0], {
+        appearance: props.msg[1],
+        autoDismiss: true
+      })
+    }
+  }, [props.msg, addToast])
 
   useEffect(() => {
     const checkboxObj = {}
@@ -76,8 +94,10 @@ function FormConstructor({ location, ...props }) {
   }
 
   const _renderText = ({ elem, placeholder }) => {
+    
     return (
       <InputComponent
+        defaultInfo={context.store.user[elem.name]}
         {...elem}
         onChange={handleChange}
         value={state[elem.name]}
@@ -103,6 +123,17 @@ function FormConstructor({ location, ...props }) {
           )
         })}
       </Columns.Column>
+    )
+  }
+
+  const _renderDatepicker = elem => {
+    return (
+      <MyDatePicker
+        key={'saucissesamouraibiggy'}
+        title={elem.name}
+        currentDate={currentDate}
+        setCurrentDate={setCurrentDate}
+      />
     )
   }
 
@@ -191,8 +222,9 @@ function FormConstructor({ location, ...props }) {
     e.preventDefault()
 
     props.handleForm({
-      state: state,
-      checkbox: checkbox
+      state,
+      checkbox,
+      currentDate
     })
   }
 
@@ -213,6 +245,8 @@ function FormConstructor({ location, ...props }) {
             return _renderRange(field)
           } else if (field.type === 'slider') {
             return _renderSlider(field)
+          } else if (field.type === 'datepicker') {
+            return _renderDatepicker(field)
           } else {
             return _renderText({
               elem: field
@@ -223,12 +257,6 @@ function FormConstructor({ location, ...props }) {
       <Button className='is-primary' onClick={handleSubmit}>
         {location.pathname === '/account' ? 'Valider' : 'Rechercher'}
       </Button>
-      <Content size={'small'} style={{ color: 'red' }}>
-        {props.msg &&
-          props.msg.length === 2 &&
-          props.msg[1] === 'danger' &&
-          props.msg[0]}
-      </Content>
     </div>
   )
 }

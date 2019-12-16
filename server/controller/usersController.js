@@ -1,13 +1,19 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
 const Crypto = require('crypto-js')
 
 const userModel = require('../model/usersModel')
+const notificationsModel = require('../model/notificationsModel')
 const { sendMail } = require('../helpers/MailSender')
 
 const { createToken } = require('../helpers/ManageToken')
 
-function show(req, res) {
-  let id = req.params.userId ? req.params.userId : req.tokenInfo.id
+async function show(req, res) {
+  const id = req.params.userId ? req.params.userId : req.tokenInfo.id
+  // je vais toucher a pas mal de truc a voir si c'est toujours
+  // utile a la fin !
+  const notif = await notificationsModel.getAllNotifications(id)
   userModel
     .getCompleteUserInfo({ id })
     .then(resp => {
@@ -16,23 +22,20 @@ function show(req, res) {
       }
       delete resp.rows[0].password
       delete resp.rows[0].user_id
-      res.json(resp.rows[0])
+      res.json({ ...resp.rows[0], notifications: notif.rows })
     })
     .then(resp => {
-      if (resp && resp.rowCount === 1) res.json(resp.rows[0])
+      if (resp && resp.rowCount === 1) {
+        res.json({ ...resp.rows[0], notifications: notif.rows })
+      }
     })
     .catch(e => {
       console.log('\n\nEEEE : ', e, '\n\n')
       res.status(500).send(e)
     })
+    .finally(() => res.end())
 }
 
-// GOAL :
-//   when user is not logged in take some info
-//   request BDD to see if Data are correct !
-//   If yes create and return a token
-//   which will be passed to each request who need
-//   auth !
 function ManageAuthentification(req, res) {
   const { username, password } = req.body
 

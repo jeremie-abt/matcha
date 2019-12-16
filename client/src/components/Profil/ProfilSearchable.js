@@ -20,7 +20,8 @@ function ProfilSearchable({
   profilPicture,
   event,
   isLiked,
-  onlineInfos
+  onlineInfos,
+  ...props
 }) {
   const context = useContext(userContext)
   let likedButton = null
@@ -90,6 +91,18 @@ function ProfilSearchable({
       })
   }
 
+  const PhraseNotif = () => {
+    const type = userInfos.notif.type
+    let message = ''
+    if (type === 'like') message = 'aime votre profil !'
+    else if (type === 'view') message = 'a vu votre profil'
+    else if (type === 'message') message = 'vous a envoyé un message'
+    else if (type === 'match') message = 'vient de match avec vous !'
+    else if (type === 'unmatch') message = 'Le match est terminer !'
+
+    return <span>{message}</span>
+  }
+
   return (
     <Card className='profil-card'>
       <Card.Content className='profil-content'>
@@ -106,7 +119,7 @@ function ProfilSearchable({
               {userInfos.firstname} {userInfos.lastname}
             </Heading>
             <Heading subtitle size={6}>
-              @{userInfos.username}
+              @{userInfos.username} {userInfos.notif ? <PhraseNotif /> : ''}
             </Heading>
           </Media.Item>
           <Media.Item>
@@ -121,16 +134,32 @@ function ProfilSearchable({
           </Media.Item>
         </Media>
         <Tag.Group>
-          {tags.map(tag => {
-            return (
-              <Tag key={tag.id} className='primary-light'>
-                #{tag.name}
-              </Tag>
-            )
-          })}
+          {!props.notif
+            ? tags.map(tag => {
+                return (
+                  <Tag key={tag.id} className='primary-light'>
+                    #{tag.name}
+                  </Tag>
+                )
+              })
+            : ''}
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
+            {
+              props.notif && <div>{props.notif.type}</div>
+            }
+            {props.notif && (
+              <Button
+                text
+                className='is-size-7'
+                notifid={props.notif.id}
+                type={props.notif.type}
+                onClick={props.updateNotif}
+              >
+                Supprimer la notification
+              </Button>
+            )}
             {onlineDisplay}
 
             {printAllButton && (

@@ -42,7 +42,7 @@ function ValidateMail(props) {
   if (isValid === true) {
     msg = ['Email confirmed !', 'success']
   } else if (isFalse === true) {
-    msg = ['Email not confirmed, you should retry !', 'danger']
+    msg = ['Email not confirmed, you should retry !', 'error']
   }
   return (
     <div>

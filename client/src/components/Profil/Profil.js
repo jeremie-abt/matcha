@@ -9,7 +9,8 @@ function Profil({
   userInfos,
   event = null,
   fullProfil = true,
-  isLiked = null
+  isLiked = null,
+  ...props
 }) {
   const { addToast } = useToasts()
   const [images, setImages] = useState([])
@@ -77,8 +78,10 @@ function Profil({
     return (
       <SearchableProfil
         isLiked={isLiked}
+        notif={props.notif}
         userInfos={userInfos}
         profilPicture={profilPicture}
+        updateNotif={props.updateNotif}
         event={event}
         tags={tags}
         onlineInfos={onlineInfos}

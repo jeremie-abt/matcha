@@ -6,6 +6,7 @@ import UserContext from '../../context/UserContext'
 import Cookies from 'universal-cookie'
 import { Columns, Card } from 'react-bulma-components'
 import { useToasts } from 'react-toast-notifications'
+import { withRouter } from "react-router";
 
 const funSentences = [
   'ne fait pas patienter ton match ...',
@@ -18,7 +19,7 @@ function getRandomInt(max) {
 }
 const sentence = funSentences[getRandomInt(funSentences.length - 1)]
 
-function MatchChat({ roomId, idToSend }) {
+const MatchChat = withRouter(({ location }) => {
   const { addToast } = useToasts()
   const context = useContext(UserContext)
   const userId = context.store.user.id
@@ -27,6 +28,9 @@ function MatchChat({ roomId, idToSend }) {
   const [noMessages, setNoMessages] = useState(true)
   const [currentMessage, setCurrentMessage] = useState('')
   const [chattingWithUser, setChattingWithUser] = useState({})
+
+  const roomId = location.state.roomId
+  const idToSend = location.state.idToSend
 
   useEffect(() => {
     const cookies = new Cookies()
@@ -122,6 +126,6 @@ function MatchChat({ roomId, idToSend }) {
       />
     </div>
   )
-}
+})
 
 export default MatchChat

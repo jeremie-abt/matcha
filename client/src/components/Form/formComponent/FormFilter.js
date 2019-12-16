@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import FormConstructor from '../FormConstructor'
 import axios from 'axios'
-import { Card } from 'react-bulma-components'
+import { Card, Heading } from 'react-bulma-components'
 import { useToasts } from 'react-toast-notifications'
 import { getDistance } from 'geolib'
 import Cookies from 'universal-cookie'
@@ -228,12 +228,6 @@ function FormFilter() {
             receiverId: likesId,
             type: 'unmatch'
           })
-        } else {
-          context.socketIo.emit('notifSent', {
-            userId: context.store.user.id,
-            receiverId: likesId,
-            type: 'unlike'
-          })
         }
         let newLikedProfils = [...liked]
         newLikedProfils = newLikedProfils.filter(elem => elem !== likesId)
@@ -297,6 +291,9 @@ function FormFilter() {
   return (
     <Card className='card-fullwidth'>
       <Card.Content>
+        <Heading size={3} className='has-text-centered'>
+          Search
+        </Heading>
         <FormConstructor
           fields={inputs}
           handleForm={handleSubmit}

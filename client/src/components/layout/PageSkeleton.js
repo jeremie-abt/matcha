@@ -1,8 +1,8 @@
 import { Section, Container, Columns } from 'react-bulma-components'
-import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
 import OurHeader from './OurHeader'
 import OurFooter from './OurFooter'
+import { withRouter, Redirect } from 'react-router-dom'
 
 import React, { useState, useContext, useEffect } from 'react'
 import { Button, Content } from 'react-bulma-components'
@@ -16,7 +16,7 @@ import MatchaModal from '../miscellaneous/Modal'
 // Si on veut mettre le projet sur github, ne pas oublier de mettre
 // cete key dans un ./env
 
-function PageSkeleton({ location, children }) {
+const PageSkeleton = withRouter(({ location, children }) => {
   const myClasses = classNames({
     homepage: true,
     'image-background': location.pathname === '/',
@@ -26,19 +26,41 @@ function PageSkeleton({ location, children }) {
   const [msg, setMsg] = useState([])
   const context = useContext(userContext)
   const { addToast } = useToasts()
+  const [isToastDisplayed, setIsToastDisplayed] = useState(false)
+
+  useEffect(() => {
+    if (context.store.isProfilCompleted > 1) {
+      if (!isToastDisplayed) {
+        addToast(
+          'Pour pouvoir accéder à la recherche, votre profil doit contenir au moins 1 tag, une image et votre bio doit être compléte',
+          {
+            appearance: 'warning',
+            autoDismiss: false
+          }
+        )
+        setIsToastDisplayed(true)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.store.isProfilCompleted])
   
-  // Voir ca demain !!!!
   useEffect(() => {
     if (context.socketIo) {
-
       context.socketIo.on('notifPrinting', type => {
-        addToast(`vous avez un nouveau ${type}`, {
-          appearance: 'success',
+        const user = context.store.user
+        user.nbNotifs += 1
+        //context.updateUser(user)
+        const msg =
+          type === 'unmatch'
+            ? "Malheureusement, vous venez d'être unmatch"
+            : `vous avez un nouveau ${type}`
+        addToast(msg, {
+          appearance: 'info',
           autoDismiss: true
         })
       })
     }
-  }, [addToast, context.socketIo])
+  }, [context.socketIo])
 
   // ~! Bouger ce truc ailleur
   const sendNewMail = () => {
@@ -58,8 +80,38 @@ function PageSkeleton({ location, children }) {
         setMsg(['Mail has been resend, please validate it', 'success'])
       })
       .catch(() => {
-        setMsg(['Error, mail has not been sent', 'danger'])
+        setMsg(['Error, mail has not been sent', 'error'])
       })
+  }
+
+  let body = <Columns.Column>{children}</Columns.Column>
+
+  if (context.store.isAuth === true) {
+    // quand il est log
+    if (context.store.user.verified_mail === false) {
+      body = (
+        <div>
+          {Object.entries(msg).length !== 0 && (
+            <MatchaModal
+              color={msg[1]}
+              msg={msg[0]}
+              setMsg={setMsg}
+            ></MatchaModal>
+          )}
+          <Content>
+            <h1>You must confirm your mail</h1>
+            <Button onClick={sendNewMail}>Click here to send new Mail</Button>
+          </Content>
+        </div>
+      )
+    } else if (
+      context.store.isProfilCompleted > 1 &&
+      location.pathname !== '/account' &&
+      location.pathname !== '/myProfil' &&
+      location.pathname !== '/images'
+    ) {
+      body = <Redirect to='account' />
+    }
   }
 
   return (
@@ -67,32 +119,12 @@ function PageSkeleton({ location, children }) {
       <OurHeader />
       <Section className={myClasses}>
         <Container>
-          <Columns>
-            {context.store.user.verified_mail === false ? (
-              <div>
-                {Object.entries(msg).length !== 0 && (
-                  <MatchaModal
-                    color={msg[1]}
-                    msg={msg[0]}
-                    setMsg={setMsg}
-                  ></MatchaModal>
-                )}
-                <Content>
-                  <h1>You must confirm your mail</h1>
-                  <Button onClick={sendNewMail}>
-                    Click here to send new Mail
-                  </Button>
-                </Content>
-              </div>
-            ) : (
-              <Columns.Column>{children}</Columns.Column>
-            )}
-          </Columns>
+          <Columns>{body}</Columns>
         </Container>
       </Section>
       <OurFooter />
     </div>
   )
-}
+})
 
 export default withRouter(PageSkeleton)

@@ -6,6 +6,12 @@ function getUserFromId(id) {
   return client.query(statement, [id])
 }
 
+function getArrayOfUsers(ids) {
+  const query = `SELECT * from users WHERE id = ANY (ARRAY[${ids}])`
+
+  return client.query(query, [])
+}
+
 function isUserAlreadyCreated(userInfo) {
   const statement =
     `SELECT * FROM users ` +
@@ -21,13 +27,11 @@ function isUserAlreadyCreated(userInfo) {
   return client.query(statement, values)
 }
 
-
 // aller chercher en plus une lat et une long
 // si le mec est online on prend / si il est hors-ligne
 // de puis moins de 2 heures on prend !
 function getCompleteUserInfo(requiredData) {
-
-  const statement = 
+  const statement =
     'SELECT users.*, MAX(geoloc.created_at) as latest_geoloc, geoloc.lat, ' +
     ' geoloc.long, online.*' +
     ' FROM users INNER JOIN geoloc ON geoloc.user_id = users.id ' +
@@ -39,9 +43,7 @@ function getCompleteUserInfo(requiredData) {
 }
 
 function getUserInfo(requiredData) {
-
-  const statement = 
-    'SELECT * from users where id = $1'
+  const statement = 'SELECT * from users where id = $1'
 
   return client.query(statement, [requiredData.id])
 }
@@ -52,10 +54,9 @@ function isUserExisting(requiredData) {
 }
 
 function createUser(userInfo) {
-  console.log("userInfos : ", userInfo)
   const statement =
     `INSERT INTO users` +
-    `(firstname, lastname, password, username, email, gender) ` +
+    `(firstname, lastname, password, username, email, birthdate) ` +
     `VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
   const values = [
     userInfo.firstname,
@@ -63,7 +64,7 @@ function createUser(userInfo) {
     userInfo.password,
     userInfo.username,
     userInfo.email,
-    userInfo.gender
+    userInfo.birthdate
   ]
   return client.query(statement, values)
 }
@@ -129,5 +130,6 @@ module.exports = {
   verifyMail,
   getUserInfo,
   getCompleteUserInfo,
+  getArrayOfUsers,
   banUser
 }
