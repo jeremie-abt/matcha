@@ -75,14 +75,17 @@ const Match = () => {
               <Button data-liked_id={elem[0].id} onClick={e => deleteMatch(e)}>
                 Supprimer matchs
               </Button>
-              <Link to={{
-                pathname: '/chat',
-                state:{
-                  roomId: elem[1],
-                  idToSend: elem[0].id
-                }
-              }}
-              className='navbar-item'>
+              <Link
+                to={{
+                  pathname: '/chat',
+                  state: {
+                    username: elem[0].username,
+                    roomId: elem[1],
+                    idToSend: elem[0].id
+                  }
+                }}
+                className='navbar-item'
+              >
                 chat
               </Link>
               <br />

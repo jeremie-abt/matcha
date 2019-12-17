@@ -93,8 +93,21 @@ io.on('connection', socket => {
     }
   })
 
-  socket.on('messageSent', (idToSend, msgMetadata) => {
-    socket.to(`room${idToSend}`).emit('messageReceived', msgMetadata)
+  socket.on('messageSent', (idToSend, msgMetadata, userId, username) => {
+    notificationsModel
+      .createNotification(userId, idToSend, 'message')
+      .then(() => {
+        manageNotif(io, {
+          userId,
+          receiverId: idToSend,
+          type: 'message',
+          username,
+          msgMetadata
+        })
+      })
+      .catch(err => {
+        throw err
+      })
   })
 })
 
