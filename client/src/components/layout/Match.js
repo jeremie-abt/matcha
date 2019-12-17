@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import userContext from '../../context/UserContext'
 import axios from 'axios'
-import { Button } from 'react-bulma-components'
-import { Link } from 'react-router-dom'
+import Profil from '../Profil/Profil'
 
 const Match = () => {
   // get all the match for the user Id
@@ -66,29 +65,16 @@ const Match = () => {
     return (
       <div>
         {match.map((elem, index) => {
+          console.log(elem[1])
           return (
-            <div key={index}>
-              Voici un match : {elem[0].id} || Bon pour le moment ca ne renvoie
-              qu'un int mais bon, je ne sais pas trop de quoi on aura besoins,
-              car la c'est juste des liens vers leurs chats respectifs donc je
-              verrai plus tard
-              <Button data-liked_id={elem[0].id} onClick={e => deleteMatch(e)}>
-                Supprimer matchs
-              </Button>
-              <Link to={{
-                pathname: '/chat',
-                state:{
-                  roomId: elem[1],
-                  idToSend: elem[0].id
-                }
-              }}
-              className='navbar-item'>
-                chat
-              </Link>
-              <br />
-              <br />
-              <br />
-            </div>
+            <Profil
+              userInfos={elem[0]}
+              roomId={elem[1]}
+              event={{ deleteMatch }}
+              isMatchProfil
+              fullProfil={false}
+              key={index}
+            />
           )
         })}
       </div>
