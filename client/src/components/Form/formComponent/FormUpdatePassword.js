@@ -4,16 +4,17 @@ import axios from 'axios'
 import FormConstructor from '../FormConstructor'
 import { useToasts } from 'react-toast-notifications'
 import Cookies from 'universal-cookie'
+import parseFormData from '../../../helpers/validation'
 
 const fields = [
   {
     name: 'password',
-    label: 'password',
+    label: 'mot de passe',
     type: 'password'
   },
   {
     name: 'confirmpassword',
-    label: 'confirmpassword',
+    label: 'confirmez votre mot de passe !',
     type: 'password'
   }
 ]
@@ -27,17 +28,6 @@ const buttonStyle = {
     fullwidth: true
   }
 }
-
-function parseFormData(formData) {
-  const { password, confirmpassword } = formData
-
-  if (confirmpassword === '' || password === '')
-    return "mot de passe pas assez complique (cette feature n'est pas vraiment implemente faudra pas oublier !)"
-  if (confirmpassword !== password)
-    return 'Les deux mots de passes doivent être identiques'
-  return true
-}
-
 function FormUpdatePassword({ setShowModal }) {
   const { addToast } = useToasts()
 

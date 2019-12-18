@@ -7,12 +7,12 @@ import PageSkeleton from '../components/layout/PageSkeleton'
 let fields = [
   {
     name: 'username',
-    label: 'Username',
+    label: 'pseudo',
     type: 'text'
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'mot de passe',
     type: 'password'
   }
 ]
