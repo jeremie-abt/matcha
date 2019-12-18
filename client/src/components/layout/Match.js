@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import userContext from '../../context/UserContext'
+import { Button, Card, Heading } from 'react-bulma-components'
 import axios from 'axios'
 import Profil from '../Profil/Profil'
 
@@ -61,34 +62,35 @@ const Match = () => {
     })
   }, [context.socketIo, match])
 
-  if (match && match.length) {
-    return (
-      <div>
-        {match.map((elem, index) => {
-          console.log(elem[1])
-          return (
-            <Profil
-              userInfos={elem[0]}
-              roomId={elem[1]}
-              event={{ deleteMatch }}
-              isMatchProfil
-              fullProfil={false}
-              key={index}
-            />
-          )
-        })}
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        Non tu n'as pas de match, pour augmenter ta visibilite tu peux me
-        contacter par mail abtjeremie@gmail.com et me faire un virement de 2500
-        euros pour avoir la version gold-premium++, et la tu auras pleins de
-        match, a toi de voir mon pote !
-      </div>
-    )
-  }
+  return (
+    <Card className='card-fullwidth'>
+      <Card.Content className='notif-card'>
+        <Heading size={3} className='has-text-centered title'>
+          Matchs
+        </Heading>
+        {match && match.length > 0 ? (
+          <div>
+            {match.map((elem, index) => {
+              return (
+                <Profil
+                  userInfos={elem[0]}
+                  roomId={elem[1]}
+                  event={{ deleteMatch }}
+                  isMatchProfil
+                  fullProfil={false}
+                  key={index}
+                />
+              )
+            })}
+          </div>
+        ) : (
+          <Button disabled fullwidth>
+            Aucune Matchs actuellement
+          </Button>
+        )}
+      </Card.Content>
+    </Card>
+  )
 }
 
 export default Match
