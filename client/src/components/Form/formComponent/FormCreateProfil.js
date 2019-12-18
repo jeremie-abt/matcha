@@ -7,17 +7,17 @@ import parseFormData from '../../../helpers/validation'
 const fields = [
   {
     name: 'firstname',
-    label: 'firstname',
+    label: 'prenom',
     type: 'text'
   },
   {
     name: 'lastname',
-    label: 'lastname',
+    label: 'nom',
     type: 'text'
   },
   {
     name: 'username',
-    label: 'username',
+    label: 'pseudo',
     type: 'text'
   },
   {
@@ -27,17 +27,16 @@ const fields = [
   },
   {
     name: 'password',
-    label: 'password',
+    label: 'mot de passe',
     type: 'password'
   },
   {
     name: 'confirmpassword',
-    label: 'confirmpassword',
+    label: 'confirmez votre mot de passe',
     type: 'password'
   },
   {
     name: 'birthdate',
-    title: 'birthdate',
     type: 'datepicker'
   }
 ]
@@ -76,7 +75,6 @@ function FormCreateProfil() {
       return true
     })
     if (isAllDataGiven) {
-      console.log("state ; ", state)
       const ret = parseFormData({ ...state, currentDate })
       if (ret === true) {
         // creation du user

@@ -9,12 +9,12 @@ import parseFormData from '../../../helpers/validation'
 const fields = [
   {
     name: 'password',
-    label: 'password',
+    label: 'mot de passe',
     type: 'password'
   },
   {
     name: 'confirmpassword',
-    label: 'confirmpassword',
+    label: 'confirmez votre mot de passe !',
     type: 'password'
   }
 ]

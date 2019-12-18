@@ -38,7 +38,7 @@ function parseFormData(formData) {
     // - at least 8 character
     //console.log("fiestname : ", user)
     const verifyPasswordPattern = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
       );
     if (password && confirmpassword) {
       if (!verifyPasswordPattern.exec(password)) {

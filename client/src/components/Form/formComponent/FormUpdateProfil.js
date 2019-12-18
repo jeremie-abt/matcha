@@ -13,17 +13,17 @@ import MatchaModal from '../../../components/miscellaneous/Modal'
 let fields = [
   {
     name: 'firstname',
-    label: 'Firstname',
+    label: 'prenom',
     type: 'text'
   },
   {
     name: 'lastname',
-    label: 'Lastname',
+    label: 'nom',
     type: 'text'
   },
   {
     name: 'username',
-    label: 'Username',
+    label: 'pseudo',
     type: 'text'
   },
   {
@@ -33,19 +33,18 @@ let fields = [
   },
   {
     name: 'gender',
-    title: 'Gender',
     type: 'radio',
     radioValues: ['male', 'female']
   },
   {
     name: 'tags',
-    title: 'Tags',
+    title: 'Interet',
     type: 'checkbox',
     checkboxValues: []
   },
   {
     name: 'bio',
-    label: 'Bio',
+    label: 'Description',
     type: 'text'
   }
 ]
