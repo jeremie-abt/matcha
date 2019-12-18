@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 import React from 'react'
 import classNames from 'classnames'
 import FormConstructor from '../FormConstructor'
@@ -31,6 +32,7 @@ const FormLogin = ({ fields, setUserLogged }) => {
     axios
       .post('/users/authenticate', state)
       .then(resp => {
+        if (resp.data === 'Wrong data') throw 'Wrong data'
         keepRefToToken = resp.data
         return axios.get('/users/getUser', {
           headers: {
@@ -57,12 +59,11 @@ const FormLogin = ({ fields, setUserLogged }) => {
         }
       })
       .catch(e => {
-        if (e.response.status === 401) {
+        if (e === 'wrong data') {
           addToast('Les données ne sont pas valide', {
             appearance: 'error',
             autoDismiss: true
           })
-          return
         } else {
           addToast('An error occured', {
             appearance: 'error',

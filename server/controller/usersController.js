@@ -50,7 +50,7 @@ function ManageAuthentification(req, res) {
       response.rows.length !== 1 ||
       response.rows[0].password !== cryptPassword
     ) {
-      res.status(401).send('Wrong data')
+      res.send('Wrong data')
       return
     }
     const user = response.rows[0]
