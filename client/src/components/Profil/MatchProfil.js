@@ -31,7 +31,10 @@ const MatchProfil = ({
 
   return (
     <Card className='profil-card'>
-      <Card.Content className='profil-content'>
+      <Card.Content
+        className='profil-content'
+        style={{ paddingBottom: '0.1rem' }}
+      >
         <Media>
           <Media.Item renderAs='figure' position='left'>
             {profilPicture ? (
@@ -49,7 +52,7 @@ const MatchProfil = ({
             </Heading>
           </Media.Item>
           <Media.Item>
-            <Button.Group position='right'>
+            <Button.Group position='right' className='baseline'>
               <Button data-liked_id={userInfos.id} onClick={event.deleteMatch}>
                 Supprimer le Match
               </Button>
