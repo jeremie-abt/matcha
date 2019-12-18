@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import UserProfil from './UserProfil'
+import MatchProfil from './MatchProfil'
 import SearchableProfil from './ProfilSearchable'
 import axios from 'axios'
 
@@ -9,6 +10,7 @@ function Profil({
   userInfos,
   event = null,
   fullProfil = true,
+  isMatchProfil = false,
   isLiked = null,
   ...props
 }) {
@@ -70,6 +72,17 @@ function Profil({
         userInfos={userInfos}
         profilPicture={profilPicture}
         images={images}
+        tags={tags}
+        onlineInfos={onlineInfos}
+      />
+    )
+  } else if (isMatchProfil) {
+    return (
+      <MatchProfil
+        userInfos={userInfos}
+        profilPicture={profilPicture}
+        event={event}
+        roomId={props.roomId}
         tags={tags}
         onlineInfos={onlineInfos}
       />

@@ -6,23 +6,24 @@ import axios from 'axios'
 import UserContext from '../../../context/UserContext'
 import ChangePasswordModal from '../../miscellaneous/ChangePasswordModal'
 import { Button, Card } from 'react-bulma-components'
+import parseFormData from '../../../helpers/validation'
 
 import MatchaModal from '../../../components/miscellaneous/Modal'
 
 let fields = [
   {
     name: 'firstname',
-    label: 'Firstname',
+    label: 'prenom',
     type: 'text'
   },
   {
     name: 'lastname',
-    label: 'Lastname',
+    label: 'nom',
     type: 'text'
   },
   {
     name: 'username',
-    label: 'Username',
+    label: 'pseudo',
     type: 'text'
   },
   {
@@ -32,19 +33,18 @@ let fields = [
   },
   {
     name: 'gender',
-    title: 'Gender',
     type: 'radio',
     radioValues: ['male', 'female']
   },
   {
     name: 'tags',
-    title: 'Tags',
+    title: 'Interet',
     type: 'checkbox',
     checkboxValues: []
   },
   {
     name: 'bio',
-    label: 'Bio',
+    label: 'Description',
     type: 'text'
   }
 ]
@@ -149,39 +149,11 @@ class FormUpdateProfil extends React.Component {
     return [after, blankMsgs]
   }
 
-  verifyFormData(formData) {
-    const BreakException = {}
-    let isAtLeastOneField = false
-    const presentFields = ['firstname', 'lastname', 'username', 'email', 'bio']
-    try {
-      Object.keys(formData).forEach(elem => {
-        if (presentFields.includes(elem)) {
-          throw BreakException
-        }
-      })
-    } catch (e) {
-      if (e !== BreakException) throw e
-      isAtLeastOneField = true
-    }
-    if (formData.tags.length > 0 || formData.gender) {
-      isAtLeastOneField = true
-    }
-    if (isAtLeastOneField === false) {
-      return "can't send empty data"
-    }
-    const { email } = formData
-    const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
-    if (email && email !== '' && !verifyMailPattern.exec(email))
-      return 'please send a valid email ...'
-    // faudrait faire gaff a la date
-    return true
-  }
-
   handleSubmit = ({ state, checkbox }) => {
     let formData = { ...state, ...checkbox }
     const retNullStrings = this.removeNullStrings(formData)
     formData = retNullStrings[0]
-    const retVerify = this.verifyFormData(formData)
+    const retVerify = parseFormData(formData)
     if (retVerify !== true) {
       this.setState({ msg: [retVerify, 'error'] })
       return null

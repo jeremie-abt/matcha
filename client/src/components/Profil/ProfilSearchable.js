@@ -146,9 +146,7 @@ function ProfilSearchable({
         </Tag.Group>
         <Content className='profil-last-online is-size-7'>
           <div className='profil-last-line' dateTime='2016-1-1'>
-            {
-              props.notif && <div>{props.notif.type}</div>
-            }
+            {props.notif && <div>{props.notif.type}</div>}
             {props.notif && (
               <Button
                 text
