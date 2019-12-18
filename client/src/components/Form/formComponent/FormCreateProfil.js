@@ -61,7 +61,7 @@ function FormCreateProfil({ setAccountCreated }) {
       'username',
       'email',
       'password',
-      'confirmpassword',
+      'confirmpassword'
     ]
     if (!currentDate) {
       setMsg(['remplissez tous le champs', 'error'])
@@ -79,9 +79,9 @@ function FormCreateProfil({ setAccountCreated }) {
       if (ret === true) {
         // creation du user
         axios
-          .post('/users', { ...state, birthdate:currentDate })
+          .post('/users', { ...state, birthdate: currentDate })
           .catch(e => {
-            console.log("err : ", e)
+            console.log('err : ', e)
             setMsg(['user deja existant', 'error'])
           })
           .then(resp => {
@@ -101,12 +101,9 @@ function FormCreateProfil({ setAccountCreated }) {
             if (resp) {
               setAccountCreated(true)
             }
-        })
+          })
           .catch(e => {
-            setMsg([
-              'Error contactez les dev si l\'erreur persiste',
-              'error'
-            ])
+            setMsg(["Error contactez les dev si l'erreur persiste", 'error'])
           })
       } else {
         setMsg([ret, 'error'])

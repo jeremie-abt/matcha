@@ -9,17 +9,19 @@ function LoginPage() {
 
   return (
     <div>
-      {
-        accountCreated &&
-        <Redirect to={{
-          pathname: '/',
-          state: {
-            msg: {
-              success: "ton profil a ete cree, tu dois maintenan cliquer sur le liens envoye par mail"
+      {accountCreated && (
+        <Redirect
+          to={{
+            pathname: '/',
+            state: {
+              msg: {
+                success:
+                  'ton profil a ete cree, tu dois maintenan cliquer sur le liens envoye par mail'
+              }
             }
-          }
-        }}/>
-      }
+          }}
+        />
+      )}
       <PageSkeleton>
         <Container>
           <Columns>
@@ -29,14 +31,13 @@ function LoginPage() {
                   <h1 className='register-title'>Join Matcha</h1>
                 </Content>
                 <Card.Content className='register-format'>
-                  <FormCreateProfil setAccountCreated={setAccountCreated}/>
+                  <FormCreateProfil setAccountCreated={setAccountCreated} />
                 </Card.Content>
               </Card>
             </Columns.Column>
           </Columns>
         </Container>
       </PageSkeleton>
-
     </div>
   )
 }

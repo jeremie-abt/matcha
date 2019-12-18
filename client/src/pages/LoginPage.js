@@ -6,7 +6,6 @@ import MyContext from '../context/UserContext'
 import PageSkeleton from '../components/layout/PageSkeleton'
 import { useToasts } from 'react-toast-notifications'
 
-
 let fields = [
   {
     name: 'username',
@@ -22,7 +21,7 @@ let fields = [
 
 const LoginPage = withRouter(({ location }) => {
   const { addToast } = useToasts()
-  
+
   // j'ai fais un useEffect pour pouvoir surveiller la variable
   // location.state, enfaite sinon je ne peux pas le rendre empty
   // je ne pense pas que ce soit possible d'ailleurs !
@@ -33,7 +32,7 @@ const LoginPage = withRouter(({ location }) => {
         autoDismiss: true
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state])
 
   return (
