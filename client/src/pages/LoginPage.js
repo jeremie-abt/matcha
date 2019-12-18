@@ -27,7 +27,7 @@ const LoginPage = withRouter(({ location }) => {
   // location.state, enfaite sinon je ne peux pas le rendre empty
   // je ne pense pas que ce soit possible d'ailleurs !
   useEffect(() => {
-    if (location.state.msg.success) {
+    if (location.state && location.state.msg.success) {
       addToast(location.state.msg.success, {
         appearance: 'success',
         autoDismiss: true
