@@ -1,3 +1,5 @@
+const verifyData = require('../helpers/validation')
+
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
@@ -79,6 +81,11 @@ function create(req, res) {
     }
     userAccountInfos[element] = value
   })
+
+  if (!verifyData(userAccountInfos)) {
+    res.status(500).send("invalid Data")
+    return 
+  }
   const hash = Crypto.SHA256(userAccountInfos.password).toString()
   userAccountInfos.password = hash
   userModel
@@ -142,6 +149,10 @@ function update(req, res) {
       toUpdateFields[elem] = req.body[elem]
     }
   })
+  if (!verifyData(toUpdateFields)) {
+    res.status(500).send("invalid Data")
+    return 
+  }
   if (Object.keys(toUpdateFields).length === 0) {
     // !~ quel status renvoyer ??
     res.status(404).send('no Data provided to update users')

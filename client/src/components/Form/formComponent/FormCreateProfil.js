@@ -2,21 +2,22 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import axios from 'axios'
 import FormConstructor from '../FormConstructor'
+import parseFormData from '../../../helpers/validation'
 
 const fields = [
   {
     name: 'firstname',
-    label: 'firstname',
+    label: 'prenom',
     type: 'text'
   },
   {
     name: 'lastname',
-    label: 'lastname',
+    label: 'nom',
     type: 'text'
   },
   {
     name: 'username',
-    label: 'username',
+    label: 'pseudo',
     type: 'text'
   },
   {
@@ -26,17 +27,16 @@ const fields = [
   },
   {
     name: 'password',
-    label: 'password',
+    label: 'mot de passe',
     type: 'password'
   },
   {
     name: 'confirmpassword',
-    label: 'confirmpassword',
+    label: 'confirmez votre mot de passe',
     type: 'password'
   },
   {
     name: 'birthdate',
-    title: 'birthdate',
     type: 'datepicker'
   }
 ]
@@ -49,25 +49,6 @@ const buttonStyle = {
   style: {
     fullwidth: true
   }
-}
-
-function parseFormData(formData) {
-  const { email, password, confirmpassword, currentDate } = formData
-
-  let tmpDate = new Date()
-  if (tmpDate - currentDate < 0) return 'Invalide Date'
-  tmpDate = new Date(
-      tmpDate.getFullYear() - 18,
-      tmpDate.getMonth(), tmpDate.getDate()
-  )
-  if (currentDate >= tmpDate) return 'Invalide Date'
-  const verifyMailPattern = RegExp('^.{1,25}@.{2,15}\\.[^.]{2,4}$')
-  if (confirmpassword !== password)
-    return 'Password and confirmpassword ne sont pas identiques ...'
-  else if (!verifyMailPattern.exec(email))
-    return 'veuillez mettre une addresse mail valide ...'
-  // faut faire des verifs sur les firstname et tout ?
-  return true
 }
 
 function FormCreateProfil({ setAccountCreated }) {
@@ -100,6 +81,7 @@ function FormCreateProfil({ setAccountCreated }) {
         axios
           .post('/users', { ...state, birthdate:currentDate })
           .catch(e => {
+            console.log("err : ", e)
             setMsg(['user deja existant', 'error'])
           })
           .then(resp => {

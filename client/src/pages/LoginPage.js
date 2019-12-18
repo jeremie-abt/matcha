@@ -10,12 +10,12 @@ import { useToasts } from 'react-toast-notifications'
 let fields = [
   {
     name: 'username',
-    label: 'Username',
+    label: 'pseudo',
     type: 'text'
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'mot de passe',
     type: 'password'
   }
 ]

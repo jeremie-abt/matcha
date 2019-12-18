@@ -43,7 +43,7 @@ const PageSkeleton = withRouter(({ location, children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.store.isProfilCompleted])
-  
+
   useEffect(() => {
     if (context.socketIo) {
       context.socketIo.on('notifPrinting', type => {
