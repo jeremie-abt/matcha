@@ -54,7 +54,7 @@ function OurNavbar() {
               <div className='navbar-item'>
                 <Link
                   to='/notifications'
-                  data-badge={context.store.user.nbNotifs}
+                  data-badge={context.store.user.nbNotifs <= 0 ? '' : '!'}
                   className={
                     'navbar-item has-dropdown has-badge-rounded has-badge-danger ' +
                     (context.store.user.nbNotifs <= 0

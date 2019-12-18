@@ -6,7 +6,7 @@ import UserContext from '../../context/UserContext'
 import Cookies from 'universal-cookie'
 import { Columns, Card } from 'react-bulma-components'
 import { useToasts } from 'react-toast-notifications'
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router'
 
 const funSentences = [
   'ne fait pas patienter ton match ...',
@@ -30,6 +30,7 @@ const MatchChat = withRouter(({ location }) => {
   const [chattingWithUser, setChattingWithUser] = useState({})
 
   const roomId = location.state.roomId
+  const username = location.state.username
   const idToSend = location.state.idToSend
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const MatchChat = withRouter(({ location }) => {
       })
       .then(resp => {
         const io = context.socketIo
-        io.emit('messageSent', idToSend, resp.data)
+        io.emit('messageSent', idToSend, resp.data, userId, username)
         let newMessageArray = [...message]
         newMessageArray.push(resp.data)
         setMessage(newMessageArray)
@@ -80,9 +81,6 @@ const MatchChat = withRouter(({ location }) => {
     })
   }, [context.socketIo, message])
 
-  // recuperer les messages, je me doute bien quon va changer ca
-  // mais autant faire au plus simple et rapide et faire les modifs
-  // quils faudra quand on fera du front
   useEffect(() => {
     axios.get('/messages/' + roomId).then(resp => {
       if (resp.data.length > 0) {
@@ -90,9 +88,8 @@ const MatchChat = withRouter(({ location }) => {
         setNoMessages(false)
       }
     })
-    // on fait quoi pour la gestion derreurs ??
   }, [roomId])
-  // recuperer tous les 100 dernieres messages ?
+
   return (
     <div>
       {noMessages && <div>{sentence}</div>}

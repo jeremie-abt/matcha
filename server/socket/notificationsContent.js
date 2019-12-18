@@ -19,8 +19,19 @@ const manageNotif = (io, infos) => {
     case 'unmatch':
       io.to(`room${infos.receiverId}`).emit('unmatchEmit', infos.userId)
       io.to(`room${infos.receiverId}`).emit('notifPrinting', 'unmatch')
+      break
+    case 'message':
+      io.to(`room${infos.receiverId}`).emit(
+        'messageReceived',
+        infos.msgMetadata
+      )
+      io.to(`room${infos.receiverId}`).emit(
+        'notifPrinting',
+        'message',
+        infos.username
+      )
+      break
     default:
-      //content = "don't know what the fuck i'm doing"
       break
   }
   return content
