@@ -60,7 +60,7 @@ const PageSkeleton = withRouter(({ location, children }) => {
         })
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.socketIo])
 
   // ~! Bouger ce truc ailleur
