@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react'
 import userContext from '../../context/UserContext'
+import { Button, Card, Heading } from 'react-bulma-components'
 import axios from 'axios'
-import { Button } from 'react-bulma-components'
-import { Link } from 'react-router-dom'
+import Profil from '../Profil/Profil'
 
 const Match = () => {
   // get all the match for the user Id
@@ -62,47 +62,35 @@ const Match = () => {
     })
   }, [context.socketIo, match])
 
-  if (match && match.length) {
-    return (
-      <div>
-        {match.map((elem, index) => {
-          return (
-            <div key={index}>
-              Voici un match : {elem[0].id} || Bon pour le moment ca ne renvoie
-              qu'un int mais bon, je ne sais pas trop de quoi on aura besoins,
-              car la c'est juste des liens vers leurs chats respectifs donc je
-              verrai plus tard
-              <Button data-liked_id={elem[0].id} onClick={e => deleteMatch(e)}>
-                Supprimer matchs
-              </Button>
-              <Link to={{
-                pathname: '/chat',
-                state:{
-                  roomId: elem[1],
-                  idToSend: elem[0].id
-                }
-              }}
-              className='navbar-item'>
-                chat
-              </Link>
-              <br />
-              <br />
-              <br />
-            </div>
-          )
-        })}
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        Non tu n'as pas de match, pour augmenter ta visibilite tu peux me
-        contacter par mail abtjeremie@gmail.com et me faire un virement de 2500
-        euros pour avoir la version gold-premium++, et la tu auras pleins de
-        match, a toi de voir mon pote !
-      </div>
-    )
-  }
+  return (
+    <Card className='card-fullwidth'>
+      <Card.Content className='notif-card'>
+        <Heading size={3} className='has-text-centered title'>
+          Matchs
+        </Heading>
+        {match && match.length > 0 ? (
+          <div>
+            {match.map((elem, index) => {
+              return (
+                <Profil
+                  userInfos={elem[0]}
+                  roomId={elem[1]}
+                  event={{ deleteMatch }}
+                  isMatchProfil
+                  fullProfil={false}
+                  key={index}
+                />
+              )
+            })}
+          </div>
+        ) : (
+          <Button disabled fullwidth>
+            Aucune Matchs actuellement
+          </Button>
+        )}
+      </Card.Content>
+    </Card>
+  )
 }
 
 export default Match
